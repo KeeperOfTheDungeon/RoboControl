@@ -5,7 +5,7 @@ class AbstractComponent:
 		self._name = meta_data["name"]
 
 
-
+ 
 
 
 """
@@ -23,10 +23,7 @@ public abstract class AbstractRobotComponent
 {
 
 	
-	
-	protected String name;
-	
-	protected int globalId;
+
 	
 	protected RemoteDataTransmitter transmitter;
 	

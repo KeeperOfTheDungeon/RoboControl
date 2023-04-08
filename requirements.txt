@@ -1,0 +1,8 @@
+# Required dependencies
+
+pyserial==3.5
+
+# Optional dependencies
+
+## Pretty printer for CLI
+rich[pretty]==13.3.3

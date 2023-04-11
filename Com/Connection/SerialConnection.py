@@ -5,31 +5,24 @@ from RoboControl.Com.Ascii.AsciiInput import AsciiInput
 
 import serial.tools.list_ports
 
+
 class SerialConnection(Connection):
 
-	def __init__(self):
-		pass
+    def __init__(self):
+        pass
 
+    def connect(self, data_packet_receiver):
+        ports = list(serial.tools.list_ports.comports())
 
-	def connect(self, data_packet_receiver):
+        for p in ports:
+            print(p[1])
 
+        port = "COM3"
 
-		ports = list(serial.tools.list_ports.comports())
+        self._serial_stream = serial.Serial(port, 115200)
 
-		for p in ports:
-			print(p[1])
-                
-		port = "COM3"
+        self._data_output = AsciiOutput(self._serial_stream)
+        self._data_input = AsciiInput(self._serial_stream)
+        super().connect(data_packet_receiver)
 
-		self._serial_stream = serial.Serial(port, 115200)
-
-
-		self._data_output = AsciiOutput(self._serial_stream)
-		self._data_input = AsciiInput(self._serial_stream)
-		super().connect(data_packet_receiver)
-		
-		pass
-
-
-
- 
+        pass

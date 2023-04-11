@@ -4,36 +4,27 @@ from RoboView.Robot.Viewer.RobotSettings import RobotSettings
 
 
 class Robot(AbstractRobot):
-	def __init__(self,name ):
-		super().__init__()
-		self._name = name
+    def __init__(self, name):
+        super().__init__()
+        self._name = name
 
+    def on_connected(self):
+        super().on_connected()
 
-	def on_connected(self):
-		super().on_connected()
+        # AbstractRobotDevice<?,?> dataHub = this.deviceList.getDeviceOnId(DataHub.ID);
+        # dataHub.remote_pingDevice();
 
-		# AbstractRobotDevice<?,?> dataHub = this.deviceList.getDeviceOnId(DataHub.ID);
-		# dataHub.remote_pingDevice();
+        for device in self._device_list:
+            device.set_transmitter(self._connection)
+            device.on_connected()
 
-		for device in self._device_list:
-			device.set_transmitter(self._connection)
-			device.on_connected()
+    def receive(self, remote_data):
+        source = remote_data.get_source_addres()
+        device = self.get_device_on_id(source)
 
-	
-			
-
-
-
-	def receive(self, remote_data):
-		source = remote_data.get_source_addres()
-		device = self.get_device_on_id(source)
-
-		if device is not None: 
-			device.receive(remote_data)
-			#	dataPacketLogger.addInputPacket(dataPacket);
-
-
-
+        if device is not None:
+            device.receive(remote_data)
+            # dataPacketLogger.addInputPacket(dataPacket);
 
 
 """
@@ -77,34 +68,34 @@ public class Robot extends AbstractRobot<Robot, RobotDevice<?,?>,RobotComponent<
 {
 
 
-	
+    
 //	protected RobotDeviceList deviceList=new RobotDeviceList();
-	
-	protected MorphologicModel morphologicModel;
-	protected AppearanceModel appearanceModel;
-	
-	
-	protected ArrayList<FieldOfView<?>> fieldsOfViews = new ArrayList<FieldOfView<?>>();  
+    
+    protected MorphologicModel morphologicModel;
+    protected AppearanceModel appearanceModel;
+    
+    
+    protected ArrayList<FieldOfView<?>> fieldsOfViews = new ArrayList<FieldOfView<?>>();  
 //	protected Vector<PerceptionSphere> perceptionSpheres = new Vector<PerceptionSphere>(); 
-	
+    
 
-	protected Navigator<?> navigator;
+    protected Navigator<?> navigator;
 
-	
-	protected Destination destination = new Destination();
-	protected NavigationPath navigationPath = new NavigationPath();
+    
+    protected Destination destination = new Destination();
+    protected NavigationPath navigationPath = new NavigationPath();
 
-	protected RobotBehavior<?> behavior;
+    protected RobotBehavior<?> behavior;
 
-	
-	
-	
+    
+    
+    
 protected void addMainHub(ComponentMetaData nameMetaData)
 {
-	ArrayList<ComponentMetaData> metaData = new ArrayList<ComponentMetaData> ();
-	metaData.add(nameMetaData);
-	
-	this.deviceList.add(new DataHub(metaData));
+    ArrayList<ComponentMetaData> metaData = new ArrayList<ComponentMetaData> ();
+    metaData.add(nameMetaData);
+    
+    this.deviceList.add(new DataHub(metaData));
 
 }
 
@@ -116,7 +107,7 @@ protected void addMainHub(ComponentMetaData nameMetaData)
  *//*
 public String getTypeName()
 {
-	return(typeName);
+    return(typeName);
 }
 
 
@@ -129,26 +120,26 @@ public String getTypeName()
  */
 public String getRobotName() 
 {
-	return (name);
+    return (name);
 }
 
 
 public void addFieldOfView(FieldOfView<?> fieldOfView)
 {
-	this.fieldsOfViews.add(fieldOfView);
+    this.fieldsOfViews.add(fieldOfView);
 }
 
 
 
 public FieldOfView<?> getFieldOfViewOnName(String name)
 {
-	
-	for (FieldOfView<?> fieldOfView: this.fieldsOfViews)
-	{
-		if (fieldOfView.getName().equals(name))
-			return(fieldOfView);
-	}
-	return(null);
+    
+    for (FieldOfView<?> fieldOfView: this.fieldsOfViews)
+    {
+        if (fieldOfView.getName().equals(name))
+            return(fieldOfView);
+    }
+    return(null);
 }
 
 /**
@@ -157,13 +148,13 @@ public FieldOfView<?> getFieldOfViewOnName(String name)
  */
 public FieldOfView<?> getFieldOfViewOnId(int id)
 {
-	
-	for (FieldOfView<?> fieldOfView: this.fieldsOfViews)
-	{
-		if (fieldOfView.hasId(id))
-			return(fieldOfView);
-	}
-	return(null);
+    
+    for (FieldOfView<?> fieldOfView: this.fieldsOfViews)
+    {
+        if (fieldOfView.hasId(id))
+            return(fieldOfView);
+    }
+    return(null);
 }
 
 
@@ -174,7 +165,7 @@ public FieldOfView<?> getFieldOfViewOnId(int id)
 
 public Destination getDestination()
 {
-	return(this.destination);
+    return(this.destination);
 }
 
 
@@ -182,7 +173,7 @@ public Destination getDestination()
 
 public NavigationPath getNavigationPath()
 {
-	return(this.navigationPath);
+    return(this.navigationPath);
 }
 
 
@@ -192,8 +183,8 @@ public NavigationPath getNavigationPath()
 @Override
 public void connect(Connection connection)
 {
-	connection.setRemote();
-	super.connect(connection);
+    connection.setRemote();
+    super.connect(connection);
 }
 
 
@@ -211,16 +202,16 @@ public void connect(Connection connection)
 
 public void onDisconnected()
 {
-	
-	for (RobotDevice<?,?> device : this.deviceList)
-	{
-		device.onDisconnected();
-	}
-	
-	for (RobotConnectionListener listener : 	this.connectionListener)
-	{
-		listener.disconnected(this);
-	}
+    
+    for (RobotDevice<?,?> device : this.deviceList)
+    {
+        device.onDisconnected();
+    }
+    
+    for (RobotConnectionListener listener : 	this.connectionListener)
+    {
+        listener.disconnected(this);
+    }
 }
 
 
@@ -234,26 +225,26 @@ public void onDisconnected()
 
 public Panorama[] getPanoramas()
 {
-	// TODO Auto-generated method stub
-	return null;
+    // TODO Auto-generated method stub
+    return null;
 }
 
 
 
 public RobotBehavior<?> getBehavior()
 {
-	// TODO Auto-generated method stub
-	return (this.behavior);
+    // TODO Auto-generated method stub
+    return (this.behavior);
 }
 
 
 
 public ArrayList<BehaviorControl> getControls()
 {
-	
-	ArrayList<BehaviorControl> controlls = this.behavior.getControls();
-	
-	 return(controlls);
+    
+    ArrayList<BehaviorControl> controlls = this.behavior.getControls();
+    
+     return(controlls);
 }
 
 

@@ -20,6 +20,13 @@ class Robot(AbstractRobot):
             device.set_transmitter(self._connection)
             device.on_connected()
 
+    def on_disconnected(self) -> None:
+        """ called when robot gets disconnected from remote device  """
+        for device in self._device_list:
+            # device.on_disconnected(self)
+            pass  # FIXME DataHub has no .on_disconnected
+        super().on_disconnected()
+
     def receive(self, remote_data: RemoteDataPacket) -> None:
         source = remote_data.get_source_address()
         device = self.get_device_on_id(source)
@@ -197,24 +204,6 @@ public void connect(Connection connection)
 
 
 
-/**
- * called when robot gets disconnected from remote device 
- */
-
-
-public void onDisconnected()
-{
-    
-    for (RobotDevice<?,?> device : this.deviceList)
-    {
-        device.onDisconnected();
-    }
-    
-    for (RobotConnectionListener listener : 	this.connectionListener)
-    {
-        listener.disconnected(this);
-    }
-}
 
 
 

@@ -25,7 +25,7 @@ class Connection:
         pass
 
     def disconnect(self) -> None:
-        pass
+        self._data_input.running = False
 
     def set_remote(self) -> None:
         self._data_output.set_remote()

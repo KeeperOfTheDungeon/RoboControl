@@ -37,10 +37,10 @@ class AbstractRobot:
         self.on_connected()
 
     # FIXME why does this accept a connection parameter?
-    def disconnect(self, connection: Connection) -> None:
+    def disconnect(self, _connection: Connection = None) -> None:
+        self._connection.disconnect()
         # this.deviceList.setTransmitter(null);
-        # this.onDisconnected();
-        pass
+        self.on_disconnected()
 
     def receive(self, data_packet: RemoteDataPacket) -> None:
 

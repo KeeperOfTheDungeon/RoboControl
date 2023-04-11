@@ -1,8 +1,14 @@
+from typing import Callable, TypeAlias
+
+from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 
 REMOTE_CHANEL_ID = 1
 REMOTE_NODE_ID = 1
+
+# FIXME what exactly are listeners?
+Listener: TypeAlias = [Callable or any]
 
 
 class Connection:
@@ -14,16 +20,16 @@ class Connection:
         self.connection_name = ""
         self.connection_partner = ""
 
-    def connect(self, data_packet_receiver):
+    def connect(self, data_packet_receiver: Listener) -> None:
         self._data_input.add_listener(data_packet_receiver)
         pass
 
-    def disconnect(self):
+    def disconnect(self) -> None:
         pass
 
-    def set_remote(self):
+    def set_remote(self) -> None:
         self._data_output.set_remote()
         pass
 
-    def transmitt(self, data_packet):
+    def transmitt(self, data_packet: RemoteDataPacket) -> None:
         self._data_output.transmitt(data_packet)

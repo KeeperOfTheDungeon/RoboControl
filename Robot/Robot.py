@@ -1,14 +1,16 @@
 from asyncio.windows_events import NULL
+
+from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot.AbstractRobot import AbstractRobot
 from RoboView.Robot.Viewer.RobotSettings import RobotSettings
 
 
 class Robot(AbstractRobot):
-    def __init__(self, name):
+    def __init__(self, name: str):
         super().__init__()
         self._name = name
 
-    def on_connected(self):
+    def on_connected(self) -> None:
         super().on_connected()
 
         # AbstractRobotDevice<?,?> dataHub = this.deviceList.getDeviceOnId(DataHub.ID);
@@ -18,8 +20,8 @@ class Robot(AbstractRobot):
             device.set_transmitter(self._connection)
             device.on_connected()
 
-    def receive(self, remote_data):
-        source = remote_data.get_source_addres()
+    def receive(self, remote_data: RemoteDataPacket) -> None:
+        source = remote_data.get_source_address()
         device = self.get_device_on_id(source)
 
         if device is not None:

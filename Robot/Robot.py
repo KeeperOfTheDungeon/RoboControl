@@ -1,8 +1,8 @@
-from asyncio.windows_events import NULL
-
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot.AbstractRobot import AbstractRobot
-from RoboView.Robot.Viewer.RobotSettings import RobotSettings
+
+# from asyncio.windows_events import NULL
+# from RoboView.Robot.Viewer.RobotSettings import RobotSettings
 
 
 class Robot(AbstractRobot):
@@ -22,8 +22,8 @@ class Robot(AbstractRobot):
 
     def on_disconnected(self) -> None:
         """ called when robot gets disconnected from remote device  """
-        for device in self._device_list:
-            # device.on_disconnected(self)
+        for _device in self._device_list:
+            # _device.on_disconnected(self)
             pass  # FIXME DataHub has no .on_disconnected
         super().on_disconnected()
 

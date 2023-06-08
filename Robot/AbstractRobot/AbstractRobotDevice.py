@@ -6,10 +6,12 @@ from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Robot.AbstractRobot.AbstractProtocol import AbstractProtocol
-from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
 from RoboControl.Robot.Component.statistic.ComStatus import ComStatus
 from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcerssorList
+
+# from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
+
 
 
 class AbstractRobotDevice:
@@ -45,8 +47,8 @@ class AbstractRobotDevice:
     def get_id(self):
         return self._id
 
-    def has_id(self, id):
-        if self._id == id:
+    def has_id(self, query_id):
+        if self._id == query_id:
             return True
         return False
 
@@ -60,29 +62,25 @@ class AbstractRobotDevice:
     def find_copmonent_on_name(self, name):
         pass
 
-    def find_copmonent_on_global_is(self, id):
+    def find_copmonent_on_global_is(self, query_id):
         pass
 
     def get_component_count(self):
-        return len(self.components)
+        return len(self._component_list)
 
     def add_cpu_status_listener(self, listener):
-        self._cpu_status_listener.append(listener)
+        # self._cpu_status_listener.append(listener)
+        self._cpu_status.add_status_listener(listener)
 
     def remove_cpu_status_listener(self, listener):
-        self._cpu_status_listener.remove(listener)
+        # self._cpu_status_listener.remove(listener)
+        self._cpu_status.remove_status_listener(listener)
 
     def add_com_status_listener(self, listener):
         self._com_status.add_status_listener(listener)
 
     def remove_com_status_listener(self, listener):
         self._com_status.remove_status_listener(listener)
-
-    def add_cpu_status_listener(self, listener):
-        self._cpu_status.add_status_listener(listener)
-
-    def remove_cpu_status_listener(self, listener):
-        self._cpu_status.remove_status_listener(listener)
 
     def receive(self, data_packet):
         self.parse_data_packet(data_packet)
@@ -97,20 +95,20 @@ class AbstractRobotDevice:
 
     def parse_data_packet(self, data_packet):
 
-        id = data_packet.get_id()
+        query_id = data_packet.get_id()
         processor = None
 
         if isinstance(data_packet, RemoteCommand):
-            processor = self._remote_command_processor_list.find_on_id(id)
+            processor = self._remote_command_processor_list.find_on_id(query_id)
 
         elif isinstance(data_packet, RemoteMessage):
-            processor = self._remote_message_processor_list.find_on_id(id)
+            processor = self._remote_message_processor_list.find_on_id(query_id)
 
         elif isinstance(data_packet, RemoteStream):
-            processor = self._remote_stream_processor_list.find_on_id(id)
+            processor = self._remote_stream_processor_list.find_on_id(query_id)
 
         elif isinstance(data_packet, RemoteException):
-            processor = self._remote_exception_processor_list.find_on_id(id)
+            processor = self._remote_exception_processor_list.find_on_id(query_id)
 
         if processor is not None:
             remote_data = processor.get_remote_data()

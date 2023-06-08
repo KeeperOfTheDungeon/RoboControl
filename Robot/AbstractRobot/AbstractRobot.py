@@ -1,11 +1,12 @@
 from typing import Optional, TypeAlias, Callable
 
 from RoboControl.Com.Connection.Connection import Connection
-from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot import AbstractDevice
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
+
+# from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
+# from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 
 # FIXME what exactly are listeners?
 Listener: TypeAlias = [Callable or any]
@@ -44,8 +45,7 @@ class AbstractRobot:
 
     def receive(self, data_packet: RemoteDataPacket) -> None:
 
-        # FIXME .get_source_addres() ? (which is also a typo)
-        source = data_packet.get_source()
+        source = data_packet.get_source_address()
 
         for device in self._device_list:
             if device.sget_id() == source:

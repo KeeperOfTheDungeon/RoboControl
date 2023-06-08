@@ -7,6 +7,7 @@ class RemoteDataPacket:
 
     def __init__(self, type_name):
         self._type_name = type_name
+        self.data = None
 
     # FIXME not used?
     # noinspection PyAttributeOutsideInit

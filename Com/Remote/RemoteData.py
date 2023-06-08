@@ -1,3 +1,4 @@
+# noinspection PyShadowingBuiltins
 class RemoteData:
 
     def __init__(self, id, name, description):
@@ -62,23 +63,23 @@ class RemoteData:
                 index += parameter.parse_from_buffer(payload, index)
 
     def to_string(self):
+        # WIP pick one
+        _ = """
         print(self._name, "destination -", self._destination_addres, "| source -", self._source_addres, "| id -",
               self._id)
 
         for parameter in self._parameter_list:
             print(parameter.get_name(), parameter.get_value())
+        """
+        print(self._name, " : lenge - ", len(self._payload))
+        for byte in self._payload:
+            print(byte, end=", ")
 
     def get_name(self):
         return self._name
 
     def get_description(self):
         return self._description
-
-    def to_string(self):
-        print(self._name, " : lenge - ", len(self._payload))
-
-        for byte in self._payload:
-            print(byte, end=", ")
 
 
 """package de.hska.lat.comm.remote;

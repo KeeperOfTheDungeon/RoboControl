@@ -7,7 +7,9 @@ from serial.tools.list_ports_common import ListPortInfo
 from RoboControl.Com.Ascii.AsciiInput import AsciiInput
 from RoboControl.Com.Ascii.AsciiOutput import AsciiOutput
 from RoboControl.Com.Connection.Connection import Connection
-from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii
+
+# from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii
+
 
 # FIXME what exactly are listeners?
 Listener: TypeAlias = [Callable or any]

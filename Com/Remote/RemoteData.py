@@ -2,8 +2,8 @@
 class RemoteData:
 
     def __init__(self, id, name, description):
-        self._source_addres = 0
-        self._destination_addres = 0
+        self._source_address = 0
+        self._destination_address = 0
         self._id = id
 
         self._name = name
@@ -26,17 +26,17 @@ class RemoteData:
     def has_id(self, id):
         return self._id == id
 
-    def get_destination_addres(self):
-        return self._destination_addres
+    def get_destination_address(self):
+        return self._destination_address
 
-    def set_destination_addres(self, destination):
-        self._destination_addres = destination
+    def set_destination_address(self, destination):
+        self._destination_address = destination
 
-    def get_source_addres(self):
-        return self._source_addres
+    def get_source_address(self):
+        return self._source_address
 
-    def set_source_addres(self, source):
-        self._source_addres = source
+    def set_source_address(self, source):
+        self._source_address = source
 
     def get_data_packet(self):
         pass
@@ -65,7 +65,7 @@ class RemoteData:
     def to_string(self):
         # WIP pick one
         _ = """
-        print(self._name, "destination -", self._destination_addres, "| source -", self._source_addres, "| id -",
+        print(self._name, "destination -", self._destination_address, "| source -", self._source_address, "| id -",
               self._id)
 
         for parameter in self._parameter_list:

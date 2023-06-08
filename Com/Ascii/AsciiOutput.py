@@ -16,7 +16,7 @@ class AsciiOutput(RemoteDataOutput):
 
     def transmitt(self, data_packet):
         print("transmitt")
-        data_packet.set_source_addres(1)
+        data_packet.set_source_address(1)
         self._packet_queue.append(data_packet)
 
         self.transmitt_packet(data_packet)

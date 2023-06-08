@@ -18,10 +18,10 @@ class RemoteDataPacket:
         # this.timestamp=new Date();
 
     def get_source_address(self):
-        return self._source_addres
+        return self._source_address
 
     def get_destination_address(self):
-        return self._source_addres
+        return self._destination_address
 
     def alocate(self, size):
         self.data = bytearray(size)

@@ -86,7 +86,7 @@ class AbstractRobotDevice:
         self.parse_data_packet(data_packet)
 
     def send_data(self, data_packet):
-        data_packet.set_destination_addres(self.get_id())
+        data_packet.set_destination_address(self.get_id())
 
         self._transmitter.transmitt(data_packet)
 

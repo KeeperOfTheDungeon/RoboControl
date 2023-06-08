@@ -57,10 +57,10 @@ class DataPacketAscii(RemoteDataPacket):
 
         index = 1
 
-        remote_data._destination_addres = int(self._data_buffer[index:index + 2], 16)
+        remote_data._destination_address = int(self._data_buffer[index:index + 2], 16)
         index += 2
 
-        remote_data._source_addres = int(self._data_buffer[index:index + 2], 16)
+        remote_data._source_address = int(self._data_buffer[index:index + 2], 16)
         index += 2
 
         remote_data._id = int(self._data_buffer[index:index + 2], 16)
@@ -118,13 +118,13 @@ class DataPacketAscii(RemoteDataPacket):
         print(type(data_packet))
         index += 1
 
-        destination = data_packet.get_destination_addres()
+        destination = data_packet.get_destination_address()
         self._data_buffer[index] = get_char(destination >> 4)
         index += 1
         self._data_buffer[index] = get_char(destination & 0xf)
         index += 1
 
-        source = data_packet.get_source_addres()
+        source = data_packet.get_source_address()
         self._data_buffer[index] = get_char(source >> 4)
         index += 1
         self._data_buffer[index] = get_char(source & 0xf)

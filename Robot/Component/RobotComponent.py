@@ -28,7 +28,7 @@ class RobotComponent(AbstractComponent):
         self._transmitter = transmitter
 
     def send_data(self, remote_data):
-        remote_data.set_destination_addres(self._device_address)
+        remote_data.set_destination_address(self._device_address)
         if (self._transmitter is not None):
             self._transmitter.transmitt(remote_data)
         return None

@@ -4,10 +4,10 @@ import serial.tools.list_ports
 from serial import Serial
 from serial.tools.list_ports_common import ListPortInfo
 
+from RoboControl.Com.Ascii.AsciiInput import AsciiInput
+from RoboControl.Com.Ascii.AsciiOutput import AsciiOutput
 from RoboControl.Com.Connection.Connection import Connection
 from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii
-from RoboControl.Com.Ascii.AsciiOutput import AsciiOutput
-from RoboControl.Com.Ascii.AsciiInput import AsciiInput
 
 # FIXME what exactly are listeners?
 Listener: TypeAlias = [Callable or any]
@@ -32,7 +32,7 @@ class SerialConnection(Connection):
         self._data_output = AsciiOutput(self._serial_stream)
         self._data_input = AsciiInput(self._serial_stream)
         super().connect(data_packet_receiver)
-    
+
     def disconnect(self) -> None:
         SerialConnection.open_streams[self.port] = None
         super().disconnect()

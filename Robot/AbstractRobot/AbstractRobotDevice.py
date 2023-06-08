@@ -1,4 +1,5 @@
 import copy
+
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteException import RemoteException
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
@@ -12,128 +13,108 @@ from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteP
 
 
 class AbstractRobotDevice:
-        
 
+    def __init__(self, component_config):
+        self._name = "AbstractDevice"
+        self._id = 0
 
-	def __init__(self, component_config):
-		self._name ="AbstractDevice"
-		self._id = 0
+        self._remote_command_processor_list = RemoteProcerssorList()
+        self._remote_message_processor_list = RemoteProcerssorList()
+        self._remote_stream_processor_list = RemoteProcerssorList()
+        self._remote_exception_processor_list = RemoteProcerssorList()
 
+        self._component_list = list()
+        self._cpu_status_listener = list()
+        self._com_status_listener = list()
+        self._protocol = AbstractProtocol()
 
-		self._remote_command_processor_list = RemoteProcerssorList()
-		self._remote_message_processor_list = RemoteProcerssorList()
-		self._remote_stream_processor_list = RemoteProcerssorList()
-		self._remote_exception_processor_list = RemoteProcerssorList()
+        self._transmitter = RemoteDataOutput()
+        self._id = component_config.get_id()
 
+        self._com_status = ComStatus()
+        self._cpu_status = CpuStatus()
 
-		self._component_list = list() 
-		self._cpu_status_listener = list()
-		self._com_status_listener = list()
-		self._protocol = AbstractProtocol()
+    def set_transmitter(self, transmitter):
+        self._transmitter = transmitter
+        for component in self._component_list:
+            component.set_transmitter(transmitter)
 
-	
-		self._transmitter = RemoteDataOutput()
-		self._id = component_config.get_id()
+    def get_name(self):
+        return self._name
 
-		self._com_status = ComStatus()
-		self._cpu_status = CpuStatus()
-		
+    def get_id(self):
+        return self._id
 
+    def has_id(self, id):
+        if self._id == id:
+            return True
+        return False
 
-	def set_transmitter(self, transmitter):
-		self._transmitter = transmitter
-		for component in self._component_list:
-			component.set_transmitter(transmitter)
+    def add_components(self, components):
+        for component in components:
+            self._component_list.append(component)
 
-	def get_name(self):
-		return self._name
+    def get_component(self, index):
+        pass
 
-	def get_id(self):
-		return self._id
+    def find_copmonent_on_name(self, name):
+        pass
 
+    def find_copmonent_on_global_is(self, id):
+        pass
 
-	def has_id(self, id):
-		if self._id == id:
-			return True
-		return False
+    def get_component_count(self):
+        return len(self.components)
 
+    def add_cpu_status_listener(self, listener):
+        self._cpu_status_listener.append(listener)
 
-	def add_components(self, components):
-		for component in components:
-			self._component_list.append(component)
+    def remove_cpu_status_listener(self, listener):
+        self._cpu_status_listener.remove(listener)
 
+    def add_com_status_listener(self, listener):
+        self._com_status.add_status_listener(listener)
 
-	def get_component(self, index):
-		pass
+    def remove_com_status_listener(self, listener):
+        self._com_status.remove_status_listener(listener)
 
-	def find_copmonent_on_name(self, name):
-		pass
+    def add_cpu_status_listener(self, listener):
+        self._cpu_status.add_status_listener(listener)
 
-	def find_copmonent_on_global_is(self, id):
-		pass
+    def remove_cpu_status_listener(self, listener):
+        self._cpu_status.remove_status_listener(listener)
 
-	def get_component_count(self):
-		return len(self.components)
+    def receive(self, data_packet):
+        self.parse_data_packet(data_packet)
 
-	def add_cpu_status_listener(self, listener):
-		self._cpu_status_listener.append(listener)
+    def send_data(self, data_packet):
+        data_packet.set_destination_addres(self.get_id())
 
-	def remove_cpu_status_listener(self, listener):
-		self._cpu_status_listener.remove(listener)
+        self._transmitter.transmitt(data_packet)
 
+    def on_connected(self):
+        pass
 
-	def add_com_status_listener(self, listener):
-		self._com_status.add_status_listener(listener)
+    def parse_data_packet(self, data_packet):
 
-	def remove_com_status_listener(self, listener):
-		self._com_status.remove_status_listener(listener)
+        id = data_packet.get_id()
+        processor = None
 
-	def add_cpu_status_listener(self, listener):
-		self._cpu_status.add_status_listener(listener)
+        if isinstance(data_packet, RemoteCommand):
+            processor = self._remote_command_processor_list.find_on_id(id)
 
-	def remove_cpu_status_listener(self, listener):
-		self._cpu_status.remove_status_listener(listener)
+        elif isinstance(data_packet, RemoteMessage):
+            processor = self._remote_message_processor_list.find_on_id(id)
 
+        elif isinstance(data_packet, RemoteStream):
+            processor = self._remote_stream_processor_list.find_on_id(id)
 
+        elif isinstance(data_packet, RemoteException):
+            processor = self._remote_exception_processor_list.find_on_id(id)
 
-	def receive(self, data_packet):
-		self.parse_data_packet(data_packet)
+        if processor is not None:
+            remote_data = processor.get_remote_data()
+            remote_stream = copy.copy(remote_data)
+            remote_stream.parse_payload(data_packet.get_payload())
 
-
-	def send_data(self, data_packet):
-		data_packet.set_destination_addres(self.get_id())	
-		
-		self._transmitter.transmitt(data_packet)
-
-	def on_connected(self):
-		pass	
-
-
-
-
-	def parse_data_packet(self, data_packet):
-
-		id = data_packet.get_id()
-		processor = None
-		
-		if isinstance(data_packet, RemoteCommand):
-			processor = self._remote_command_processor_list.find_on_id(id)
-			
-
-		elif isinstance(data_packet, RemoteMessage):
-			processor = self._remote_message_processor_list.find_on_id(id)
-
-		elif isinstance(data_packet, RemoteStream):
-			processor = self._remote_stream_processor_list.find_on_id(id)
-
-		elif isinstance(data_packet, RemoteException):
-			processor = self._remote_exception_processor_list.find_on_id(id)	
-
-		if processor is not None:
-			remote_data = processor.get_remote_data()
-			remote_stream = copy.copy(remote_data)
-			remote_stream.parse_payload(data_packet.get_payload())
-
-			processor.execute(remote_stream)
-
-
+            processor.execute(remote_stream)

@@ -1,10 +1,11 @@
 from RoboControl.Com.Remote.RemoteData import RemoteData
 
+
 class RemoteCommand(RemoteData):
 
-	def __init__(self,id, name, description):
-		super().__init__(id, name, description)
-        
+    def __init__(self, id, name, description):
+        super().__init__(id, name, description)
+
 
 """package de.hska.lat.comm.remote;
 

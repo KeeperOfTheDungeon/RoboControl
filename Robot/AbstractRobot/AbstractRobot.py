@@ -1,6 +1,7 @@
 from typing import Optional, TypeAlias, Callable
 
 from RoboControl.Com.Connection.Connection import Connection
+from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot import AbstractDevice
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
@@ -23,13 +24,16 @@ class AbstractRobot:
         # settings
         # connection listener
 
-        # dataPacket logger
+        self._data_packet_logger = DataPacketLogger()
 
         # FIXME is this really optional?
         self._connection: Optional[Connection] = None
 
     def get_name(self) -> str:
         return self._name
+
+    def get_type_name(self) -> str:
+        return self._type_name
 
     def connect(self, connection: Connection) -> None:
         print("connect")
@@ -50,7 +54,7 @@ class AbstractRobot:
         for device in self._device_list:
             if device.sget_id() == source:
                 device.deliver_packet(data_packet)
-            # data logger log data packet
+            self._data_packet_logger.add_input_packet(data_packet)
 
     def get_connection(self) -> Connection:
         return self._connection
@@ -75,7 +79,7 @@ class AbstractRobot:
         pass
 
     def get_device_list(self) -> list[AbstractDevice]:
-        pass
+        return self._device_list
 
     def get_device_count(self) -> int:
         return len(self._device_list)
@@ -87,3 +91,9 @@ class AbstractRobot:
     def on_disconnected(self) -> None:
         for listener in self._connection_listener:
             listener.disconnect(self)
+
+    def get_data_packet_logger(self) -> DataPacketLogger:
+        return self._data_packet_logger
+
+    def set_data_packet_logger(self, data_packet_logger: DataPacketLogger):
+        self._data_packet_logger = data_packet_logger

@@ -1,12 +1,18 @@
-class RemoteDataOutput:
-    _running = False
+from typing import TypeAlias
 
+from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+
+Byte: TypeAlias = int
+
+
+class RemoteDataOutput:
     _packet_queue = list()
     _listener_list = list()
-    _remote = False
+    _is_remote = False
+    _is_running = False
 
-    def __init__(self):
-        pass
+    # def __init__(self, statistic: ComStatistic):
+    #     self.statistic = statistic
 
     def run(self):
         pass
@@ -17,27 +23,17 @@ class RemoteDataOutput:
     def remove_listener(self, liustener):
         pass
 
-    def is_runing(self):
-        pass
+    def is_running(self):
+        return self._is_running
 
     def set_remote(self):
-        self._remote = True
+        self._is_remote = True
 
-    def transmitt(self, data_packet):
-        pass
+    def get_remote(self):
+        return self._is_remote
 
+    def transmitt(self, data_packet: RemoteDataPacket):
+        return False
 
-"""
-	if (isRemote)
-	{
-		remoteData.setSource(deviceId);
-	}
-	else
-	{
-		remoteData.setDestination(deviceId);
-	}
-	
-	
-	dataPacket= remoteData.getDataPacket();
-	dataPacket.setRemoteData(remoteData);
-"""
+    def send_byte(self, token: Byte) -> bool:
+        return False

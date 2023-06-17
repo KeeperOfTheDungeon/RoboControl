@@ -30,7 +30,7 @@ class AsciiInput(RemoteDataInput):
                     print("dp")
                     # check
                     remote_data = data_packet.decode()
-                    remote_data.to_string()
+                    print(str(remote_data))
 
                     self.deliver_packet(remote_data)
                     # deliver !

@@ -1,5 +1,11 @@
+from typing import List
+
+from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+
+
 # noinspection PyShadowingBuiltins
 class RemoteData:
+    _type_name: str = "generic"
 
     def __init__(self, id, name, description):
         self._source_address = 0
@@ -8,7 +14,7 @@ class RemoteData:
 
         self._name = name
         self._description = description
-        self._parameter_list = list()
+        self._parameter_list: List[RemoteParameter] = list()
         self._payload = bytearray()
 
     def set_id(self, id):
@@ -38,12 +44,29 @@ class RemoteData:
     def set_source_address(self, source):
         self._source_address = source
 
-    def get_data_packet(self):
-        pass
+    # noinspection PyMethodMayBeStatic
+    def get_data_packet(self) -> None:
+        return None
 
-    def make_data_packet(self, data_packet):
-        # data_packet.set_remote_data()
-        pass
+    def make_data_packet(self, data_packet: "RemoteDataPacket") -> "RemoteDataPacket":
+        data_packet.set_remote_data(self)
+        message_data = bytearray(self.get_payload_size())
+        for parameter in self._parameter_list:
+            message_data.extend(parameter.get_as_buffer())
+        data_packet.set_data(message_data)
+        return data_packet
+
+    def parse_data_packet_data(self, data_packet: "RemoteDataPacket") -> None:
+        data_index = 0
+        data_buffer = data_packet.get_data()
+        for parameter in self._parameter_list:
+            data_index += parameter.parse_from_buffer(data_buffer, data_index)
+        # TODO and?
+
+    def parse_data_packet(self, data_packet: "RemoteDataPacket") -> None:
+        self._source_address = data_packet.get_source_address()
+        self._destination_address = data_packet.get_destination_address()
+        self.parse_data_packet_data(data_packet)
 
     def set_payload(self, payload):
         self._payload = payload
@@ -62,141 +85,27 @@ class RemoteData:
             for parameter in self._parameter_list:
                 index += parameter.parse_from_buffer(payload, index)
 
-    def to_string(self):
-        # WIP pick one
-        _ = """
-        print(self._name, "destination -", self._destination_address, "| source -", self._source_address, "| id -",
-              self._id)
+    def __str__(self) -> str:
+        res = f"RemoteData({self._name}, id={self._id}): {self._description}"
+        res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
+        res += f"\n\tpayload: " + ",".join([str(b) for b in self._payload])
+        res += f"\n\tparams: " + self.get_parameters_as_string(True)
+        return res
 
-        for parameter in self._parameter_list:
-            print(parameter.get_name(), parameter.get_value())
-        """
-        print(self._name, " : lenge - ", len(self._payload))
-        for byte in self._payload:
-            print(byte, end=", ")
-
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
-    def get_description(self):
+    def get_description(self) -> str:
         return self._description
 
+    def get_type_name(self) -> str:
+        return self._type_name
 
-"""package de.hska.lat.comm.remote;
+    def get_parameter_count(self) -> int:
+        return len(self._parameter_list)
 
+    def get_parameters_as_string(self, description: bool) -> str:
+        return ",".join([p.get_as_string(description) for p in self._parameter_list])
 
-
-    protected int id;
-
-    
-    protected int destination;
-    protected int source;
-
-    
-public RemoteData()
-{
-}
-
-"""
-
-"""
-protected RemoteDataPacket makeDataPacket(RemoteDataPacket dataPacket)
-{
-    
-
-    dataPacket.setRemoteData(this);
-    
-    
-    ByteBuffer messageData = ByteBuffer.allocate(this.getBufferSize());
-    
-    
-    for (RemoteParameter<?> parameter : this)
-    {
-        parameter.putData(messageData);
-    }
-    
-    dataPacket.setData(messageData.array());
-    
-    return(dataPacket);
-}
-
-
-
-
-
-
-
-public void parseDataPacket(RemoteDataPacket packet)
-{
-    this.source = packet.getSourceAddres();
-    this.destination = packet.getDestinationAddres();
-    
-    this.parseDataPacketData(packet);
-}
-
-
-
-
-
-public void parseDataPacketData(RemoteDataPacket packet)
-{
-    int dataIndex;
-    
-    ByteBuffer dataBuffer;
-    
-    dataIndex=0;
-    
-    dataBuffer = packet.getDataBuffer();
-    
-    for (RemoteParameter<?> parameter : this)
-    {
-        dataIndex+=parameter.parseFromBuffer(dataBuffer, dataIndex);
-    }
-
-}
-
-public String getName() 
-{
-    return (RemoteData.name);
-}
-
-public String getDescription() 
-{
-    return(RemoteData.description);
-}
-
-
-public String getTypeName()
-{
-    return ("generic");
-}
-
-
-public int getParameterCount()
-{
-    return(this.size());
-}
-
-
-
-public String getParametersAsString(boolean description)
-{
-    String parameters = new String();
-    boolean first=true;
-    
-    for (RemoteParameter<?> parameter : this)
-    {
-        if (first!=true)
-        {
-            parameters +=  ", ";
-        }
-        parameters += parameter.getAsString(description);
-        first=false;
-    }
-
-    
-    return(parameters);
-}
-
-}
-"""
+    def get_parameter_list(self) -> List[RemoteParameter]:
+        return self._parameter_list

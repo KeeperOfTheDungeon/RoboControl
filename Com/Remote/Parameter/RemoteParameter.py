@@ -1,27 +1,32 @@
 class RemoteParameter:
-    def __init__(self, name, description, size):
+    def __init__(self, name: str, description: str, size: int):
         self._name = name
-        self._descritption = description
+        self._description = description
         self._byte_size = size
-        pass
+        self._value = None
 
     def get_name(self):
         return self._name
 
-    def get_descritption(self):
-        return self._descritption
+    def get_description(self):
+        return self._description
 
     def get_byte_size(self):
         return self._byte_size
 
     def get_as_buffer(self):
-        pass
+        raise ValueError("WIP RemoteParameter.get_as_buffer not yet implemented")
 
     def put_data(self):
-        pass
+        raise ValueError("WIP RemoteParameter.put_data not yet implemented")
 
     def parse_from_buffer(self, data_buffer, index):
-        pass
+        raise ValueError("WIP RemoteParameter.parse_from_buffer not yet implemented")
 
-    def get_as_string(self):
-        return "unknown"
+    def get_as_string(self, description: bool):
+        if description:
+            return self._name + "=" + str(self._value)
+        return str(self._value)
+
+    def set_value(self, value: object) -> None:
+        self._value = value

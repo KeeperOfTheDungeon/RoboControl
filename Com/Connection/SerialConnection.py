@@ -1,4 +1,4 @@
-from typing import TypeAlias, Callable, Optional
+from typing import TypeAlias, Callable, Optional, Dict
 
 import serial.tools.list_ports
 from serial import Serial
@@ -16,6 +16,8 @@ Listener: TypeAlias = [Callable or any]
 class SerialConnection(Connection):
     port: str = "COM4"
 
+    open_streams: Dict[str, Optional[Serial]] = {}
+
     def __init__(self):
         super().__init__()
 
@@ -23,12 +25,16 @@ class SerialConnection(Connection):
         self._serial_stream: Optional[Serial] = None
 
     def connect(self, data_packet_receiver: Listener) -> None:
-        self._serial_stream = serial.Serial(self.port, 115200)
+        if not self.open_streams.get(self.port):
+            SerialConnection.open_streams[self.port] = serial.Serial(self.port, 115200)
+        self._serial_stream = SerialConnection.open_streams[self.port]
+
         self._data_output = AsciiOutput(self._serial_stream)
         self._data_input = AsciiInput(self._serial_stream)
         super().connect(data_packet_receiver)
     
     def disconnect(self) -> None:
+        SerialConnection.open_streams[self.port] = None
         super().disconnect()
         self._serial_stream.close()
 

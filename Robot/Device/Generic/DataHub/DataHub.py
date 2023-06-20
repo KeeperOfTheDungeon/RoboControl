@@ -5,9 +5,6 @@ from RoboControl.Robot.Device.RobotDevice import RobotDevice
 
 class DataHub(RobotDevice):
 
-    def __init__(self, component_config):
-        super().__init__(component_config)
-
     def build(self):
         self._protocol = DeviceProtocol(self)
 

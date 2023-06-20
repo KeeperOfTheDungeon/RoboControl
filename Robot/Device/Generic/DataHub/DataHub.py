@@ -2,14 +2,16 @@ from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Robot.Device.Protocol.DeviceProtocol import DeviceProtocol
 from RoboControl.Robot.Device.RobotDevice import RobotDevice
 
-class DataHub(RobotDevice):
-	
-	def __init__(self, component_config):
-		super().__init__(component_config)
 
-	def build(self):
-		self._protocol = DeviceProtocol(self)
-                
+class DataHub(RobotDevice):
+
+    def __init__(self, component_config):
+        super().__init__(component_config)
+
+    def build(self):
+        self._protocol = DeviceProtocol(self)
+
+
 """
 package de.hska.lat.robot.device.generic.dataHub;
 
@@ -30,24 +32,24 @@ import de.hska.lat.robot.device.protocol.Msg_pingResponse;
 
 public class DataHub  extends RobotDevice<DeviceEventNotifier, DataHubProtocol> {
 
-	
-	public static final String NAME = "DataHub";
-	public static final String ROBOT_NAME = "name";
-	public static final int ID = 0;
-	
-	protected TextSet texts;
-	
-	
+    
+    public static final String NAME = "DataHub";
+    public static final String ROBOT_NAME = "name";
+    public static final int ID = 0;
+    
+    protected TextSet texts;
+    
+    
 public DataHub(ArrayList<ComponentMetaData> metaData) 
 {
-	super(DataHub.NAME, DataHub.ID);
-	aquisators= DataHubAquisator.aquisators;
-	
-	
-	this.addTexts(metaData);
-	
-	this.protocol=new DataHubProtocol(this);
-	
+    super(DataHub.NAME, DataHub.ID);
+    aquisators= DataHubAquisator.aquisators;
+    
+    
+    this.addTexts(metaData);
+    
+    this.protocol=new DataHubProtocol(this);
+    
 }
 
 
@@ -55,15 +57,15 @@ public DataHub(ArrayList<ComponentMetaData> metaData)
 protected void addTexts(ArrayList<ComponentMetaData> texts)
 {
 
-	
-	this.texts = new TextSet(texts,DataHubProtocol.getTextProtocol(this.getId()));
-	
-	for (Text text : this.texts)
-	{
-		this.componentList.add(text);
-	}
-	
-	this.setList.add(this.texts);
+    
+    this.texts = new TextSet(texts,DataHubProtocol.getTextProtocol(this.getId()));
+    
+    for (Text text : this.texts)
+    {
+        this.componentList.add(text);
+    }
+    
+    this.setList.add(this.texts);
 
 }
  
@@ -72,9 +74,9 @@ protected void addTexts(ArrayList<ComponentMetaData> texts)
 @Override
 protected void processPingResponse(Msg_pingResponse remoteMessage)
 {
-	super.processPingResponse(remoteMessage);
-	
-	
+    super.processPingResponse(remoteMessage);
+    
+    
 }
 
 
@@ -84,8 +86,8 @@ protected void processPingResponse(Msg_pingResponse remoteMessage)
  */
 public TextSet getTexts()
 {
-	return(this.texts);
-	
+    return(this.texts);
+    
 }
 
 
@@ -93,10 +95,10 @@ public TextSet getTexts()
 @Override
 public void loadSetup()
 {
-	for(Text text : this.texts)
-	{
-		text.remote_getText();
-	}
+    for(Text text : this.texts)
+    {
+        text.remote_getText();
+    }
 }
 
 

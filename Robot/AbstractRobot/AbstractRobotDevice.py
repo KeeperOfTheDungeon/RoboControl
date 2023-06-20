@@ -10,15 +10,16 @@ from RoboControl.Robot.Component.statistic.ComStatus import ComStatus
 from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcerssorList
 
+
 # from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
 
 
-
 class AbstractRobotDevice:
+    _name: str = "AbstractRobotDevice"
 
     def __init__(self, component_config):
-        self._name = "AbstractDevice"
-        self._id = 0
+        self._name = component_config.get_name()
+        self._id = component_config.get_id()
 
         self._remote_command_processor_list = RemoteProcerssorList()
         self._remote_message_processor_list = RemoteProcerssorList()
@@ -31,7 +32,6 @@ class AbstractRobotDevice:
         self._protocol = AbstractProtocol()
 
         self._transmitter = RemoteDataOutput()
-        self._id = component_config.get_id()
 
         self._com_status = ComStatus()
         self._cpu_status = CpuStatus()

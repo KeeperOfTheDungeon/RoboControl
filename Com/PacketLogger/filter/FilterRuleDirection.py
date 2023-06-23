@@ -1,22 +1,17 @@
+from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacketType, LoggedDataPacket
 from RoboControl.Com.PacketLogger.filter.DataPacketFilterRule import DataPacketFilterRule
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 
 
 class FilterRuleDirection(DataPacketFilterRule):
-    _device_id: int
     name: str = "direction filter"
 
-    def check(self, data_packet: RemoteDataPacket) -> bool:
-        raise ValueError("WIP FilterRuleDirection.check not implemented")
-        return False
+    def __init__(self, allow_direction: LoggedDataPacketType):
+        self._allow_direction = allow_direction
 
-    def set_device_id(self, device_id: int) -> None:
-        """
-        "Set this filters device ID"
-        :param device_id: "id of device that should be filtered"
-        :return:
-        """
-        self._device_id = device_id
+    def does_pass(self, data_packet: LoggedDataPacket) -> bool:
+        return data_packet.get_direction_as_string() == self._allow_direction.value
 
-    def get_name(self):
-        return FilterRuleDirection.name
+    def as_dict(self) -> dict:
+        return {
+            "direction": self._allow_direction.value
+        }

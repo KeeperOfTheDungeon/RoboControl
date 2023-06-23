@@ -9,16 +9,21 @@ import tkinter as tk
 import tkinter.filedialog
 
 from RoboControl.Com.PacketLogger.LoggedDataPacket import DisplayDataWidth_e, DisplayFormat_e, LoggedDataPacket
+from RoboView.Robot.Ui.utils.colors import Color
 
 Renderer = Callable[[object], str]
 
 
 class Column:
+    EMPTY_VALUE = ""
+
     def __init__(self, name):
         self.name = name
         self.index = 0
 
     def render(self, value: object) -> str:
+        if value is None:
+            return self.EMPTY_VALUE
         return str(value)
 
     def parse(self, raw_value: object) -> object:
@@ -36,6 +41,8 @@ class NumberColumn(Column):
 
 class TimestampColumn(Column):
     def render(self, value: datetime.datetime) -> str:
+        if value is None:
+            return self.EMPTY_VALUE
         return value.isoformat(sep=' ', timespec='milliseconds')
 
 
@@ -46,6 +53,8 @@ class PacketColumn(Column):
         self._data_format = DisplayFormat_e.DECIMAL
 
     def render(self, data_packet: LoggedDataPacket) -> str:
+        if data_packet is None:
+            return self.EMPTY_VALUE
         if self._data_format == DisplayFormat_e.DECIMAL:
             return data_packet.get_data_as_string(self._data_width, False)
         elif self._data_format == DisplayFormat_e.DECIMAL:
@@ -64,9 +73,12 @@ class PacketColumn(Column):
     def set_data_format(self, data_format: DisplayFormat_e) -> None:
         self._data_format = data_format
 
+    def get_as_raw(self, raw_value: LoggedDataPacket):
+        return raw_value.get_data_as_string(self._data_width, False)
+
 
 class Row:
-    def __init__(self, columns: List[Column], values: List[object]):
+    def __init__(self, columns: List[Column], values: List[object], tags=None):
         if len(values) != len(columns):
             raise ValueError(f"Column size {len(columns)} doesn't match values size {len(values)}")
         self.cells = OrderedDict()
@@ -74,6 +86,7 @@ class Row:
             column = columns[index]
             self.cells[column.name] = Cell(column, value)
         self._columns = None
+        self.tags = tags
 
     def get_cell(self, index: int = None, column_name: str = None) -> Optional["Cell"]:
         if index is None and column_name is None:
@@ -164,14 +177,17 @@ class TableModel:
             return None
         return row.get_cell(index=column_index)
 
-    def add_row(self, values: List[object]) -> bool:
+    def add_row(self, values: List[object], tags=None) -> Optional[Row]:
         if not self.is_recording:
-            return False
+            return None
         if self.rows_size >= self.max_size:
             self._rows.pop(0)
-        self._rows.append(Row(self._columns, values))
+        row = Row(self._columns, values)
+        if tags:
+            row.tags = tags
+        self._rows.append(row)
         self.on_change()
-        return True
+        return row
 
     def clear(self) -> None:
         self._rows = []
@@ -184,6 +200,8 @@ class TableModel:
         for column in self.column_names:
             table.column(column, anchor="c", minwidth=100, width=100, stretch=False)
             table.heading(column, text=column)
+        table.tag_configure('green', background=Color.LIMEGREEN)
+        table.tag_configure('red', background=Color.RED)
         return table
 
     def save_as(self) -> None:
@@ -211,3 +229,12 @@ class TableModel:
     def on_change(self) -> None:
         for listener in self._listeners:
             listener.on_change()
+
+    def paint_on_table(self, table: ttk.Treeview) -> None:
+        table.delete(*table.get_children())
+        for row in self._rows:
+            table_row = []
+            for column_index in range(self.columns_size):
+                cell = row.get_cell(column_index)
+                table_row.append(str(cell))
+            table.insert('', tk.END, values=table_row, tags=row.tags or "")

@@ -1,23 +1,52 @@
 from typing import List
 
-from RoboControl.Com.PacketLogger.filter.FilterRuleBlock import FilterRuleBlock
+from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacketType, LoggedDataPacket
+from RoboControl.Com.PacketLogger.filter.DataPacketFilterRule import DataPacketFilterRule
+from RoboControl.Com.PacketLogger.filter.FilterRuleDevice import FilterRuleSource, FilterRuleDestination
+from RoboControl.Com.PacketLogger.filter.FilterRuleDirection import FilterRuleDirection
 
 
 class DataPacketFilter:
-    _name: str
-    blocks: List[FilterRuleBlock]
+    ALLOW_ALL: str = "all"
 
-    def get_name(self) -> str:
-        """ "Get actual name of this filter" """
-        return self._name
+    def __init__(self, name):
+        self.name: str = name
+        self._rules: List[DataPacketFilterRule] = []
 
-    def set_name(self, new_name: str) -> None:
-        """ "set new Name of this filter" """
-        self._name = new_name
+    def append(self, rule: DataPacketFilterRule) -> None:
+        self._rules.append(rule)
 
-    def add_filter_block(self) -> None:
-        new_rule_block = FilterRuleBlock()
-        self.blocks.append(new_rule_block)
+    @property
+    def size(self) -> int:
+        return len(self._rules)
 
-    def __str__(self):
-        return self._name
+    def get_rules(self):
+        return self._rules
+
+    def check(self, data_packet: LoggedDataPacket) -> bool:
+        for rule in self._rules:
+            if not rule.check(data_packet):
+                return False
+        return True
+
+    def __repr__(self):
+        return f"DataPacketFilter({self.name},{self.size})"
+
+    __str__ = __repr__
+
+    @staticmethod
+    def get_example_filters() -> List["DataPacketFilter"]:
+        empty = DataPacketFilter(DataPacketFilter.ALLOW_ALL)
+        r1 = FilterRuleDirection(LoggedDataPacketType.IN)
+        r5 = FilterRuleSource(1)
+        r5.set_type(False)
+        f1 = DataPacketFilter("inFromExt")
+        f1.append(r1)
+        f1.append(r5)
+        r2 = FilterRuleDirection(LoggedDataPacketType.IN)
+        r6 = FilterRuleDestination(1)
+        r2.set_type(False)
+        f2 = DataPacketFilter("out2con")
+        f2.append(r2)
+        f2.append(r6)
+        return [empty, f1, f2]

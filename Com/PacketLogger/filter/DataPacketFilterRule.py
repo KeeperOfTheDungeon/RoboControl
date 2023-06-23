@@ -1,35 +1,30 @@
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from abc import abstractmethod
+from enum import Enum
+
+from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacket
+
+
+class DataPacketFilterRuleType(Enum):
+    PASS = True
+    FAIL = False
 
 
 class DataPacketFilterRule:
-    """ "superclass for all DataPacket filters" """
+    name: str = "generic_rule"
+    filter_type: DataPacketFilterRuleType = DataPacketFilterRuleType.PASS
+    """ a pass filter returns true on match when checking packets. block filter returns false. """
 
-    _pass_filter: bool = True
+    @property
+    def is_pass(self) -> bool:
+        return True if (self.filter_type == DataPacketFilterRuleType.PASS) else False
 
-    def is_pass_filter(self) -> bool:
-        """ "returns actual type of this filter (pass filter or block filter)" """
-        return self._pass_filter
+    def set_type(self, is_pass: bool) -> None:
+        self.filter_type = DataPacketFilterRuleType.PASS if is_pass else DataPacketFilterRuleType.FAIL
 
-    def set_pass_filter(self, status: bool) -> None:
-        """
-        set this filter type to pass (true) or block (false) filter.
-          a pass filter returns true on match when checking packets.
-          block filter returns false on match when checking packets.
-        :param status:
-        :return:
-        """
-        self._pass_filter = status
-
-    # TODO abstract
-    def check(self, data_packet: RemoteDataPacket) -> bool:
-        """
-        "Check given RemoteMessage"
-
-        :param data_packet:
-        :return: "true when given RemoteMessage has passed this filters check, false if not"
-        """
+    @abstractmethod
+    def does_pass(self, data_packet: LoggedDataPacket) -> bool:
         raise ValueError("Not implemented")
 
-    # TODO abstract
-    def get_name(self) -> str:
-        raise ValueError("Not implemented")
+    def check(self, data_packet: LoggedDataPacket) -> bool:
+        res = self.does_pass(data_packet)
+        return res if self.is_pass else (not res)

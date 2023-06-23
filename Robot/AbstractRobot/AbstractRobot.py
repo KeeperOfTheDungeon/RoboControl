@@ -6,9 +6,6 @@ from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot import AbstractDevice
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 
-# from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-# from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-
 # FIXME what exactly are listeners?
 Listener: TypeAlias = [Callable or any]
 

@@ -1,11 +1,12 @@
-from typing import List
+from typing import List, Optional
 
 from RoboControl.Com.Connection import Connection
 from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacket, DisplayFormat_e, DisplayDataWidth_e, \
     LoggedDataPacketType
+from RoboControl.Com.PacketLogger.filter.DataPacketFilter import DataPacketFilter
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
-from RoboControl.Com.PacketLogger.TableModel import TableModel, Column, TimestampColumn, PacketColumn
+from RoboControl.Com.PacketLogger.TableModel import TableModel, Column, TimestampColumn, PacketColumn, Row
 
 
 class DataPacketLogger(TableModel):
@@ -30,6 +31,9 @@ class DataPacketLogger(TableModel):
         self.max_size = self.DEFAULT_MAX_SIZE
         self._cursor = 0
 
+        self.all_filters = DataPacketFilter.get_example_filters()
+        self.filter: Optional[DataPacketFilter] = self.all_filters[0]
+
     def set_device_list(self, device_list: List[AbstractRobotDevice]) -> None:
         self._device_list = device_list
 
@@ -37,9 +41,8 @@ class DataPacketLogger(TableModel):
         raise ValueError("WIP")
 
     def get_as_raw(self, row: int):
-        raise ValueError("WIP")
-        row: LoggedDataPacket = self.rows[row]
-        return row.get_data_as_string(self.rows.get_standard_data_width(), False)
+        raw_value = self.get_row(row).get_cell(column_name="data").raw_value
+        return self._data_column.get_as_raw(raw_value)
 
     def set_data_width(self, new_width: DisplayDataWidth_e) -> None:
         self._data_column.set_data_width(new_width)
@@ -49,9 +52,12 @@ class DataPacketLogger(TableModel):
         self._data_column.set_data_format(new_format)
         self.on_change()
 
-    def _add_packet(self, data_packet: RemoteDataPacket, data_packet_type: LoggedDataPacketType) -> bool:
+    def _add_packet(self, data_packet: RemoteDataPacket, data_packet_type: LoggedDataPacketType) -> Optional[Row]:
         packet = LoggedDataPacket(data_packet, data_packet_type, self._cursor)
         self._cursor += 1
+        if self.filter and self.filter.name != DataPacketFilter.ALLOW_ALL:
+            if not self.filter.check(packet):
+                return None
 
         def parse_device(device_list, device_id) -> str:
             if Connection.REMOTE_CHANEL_ID == device_id:
@@ -70,8 +76,14 @@ class DataPacketLogger(TableModel):
         ]
         return self.add_row(values)
 
-    def add_input_packet(self, data_packet: RemoteDataPacket) -> bool:
+    def add_input_packet(self, data_packet: RemoteDataPacket) -> Optional[Row]:
         return self._add_packet(data_packet, LoggedDataPacketType.IN)
 
-    def add_output_packet(self, data_packet: RemoteDataPacket) -> bool:
+    def add_output_packet(self, data_packet: RemoteDataPacket) -> Optional[Row]:
         return self._add_packet(data_packet, LoggedDataPacketType.OUT)
+
+    def get_filter_by_name(self, filter_name: str) -> Optional[DataPacketFilter]:
+        for filter_candidate in self.all_filters:
+            if filter_candidate.name == filter_name:
+                return filter_candidate
+        return None

@@ -30,6 +30,9 @@ class LoggedDataPacket:
         self._data_packet_type = data_packet_type
         self._number = number
 
+    def get_data_packet(self) -> "RemoteDataPacket":
+        return self._data_packet
+
     def get_destination(self) -> int:
         return self._data_packet.get_destination_address()
 

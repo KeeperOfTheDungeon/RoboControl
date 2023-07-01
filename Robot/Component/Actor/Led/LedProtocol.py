@@ -2,32 +2,7 @@ from RoboControl.Robot.Component.Actor.ActorProtocol import ActorProtocol
 
 
 class LedProtocol(ActorProtocol):
-	def __init__(self, device_id,
-						cmd_set_settings_id,
-						cmd_get_settings_id,
-						cmd_save_defaults_id,
-						cmd_load_defaults_id,
-						msg_settings_id,
-	
-						cmd_set_brightness_id,
-						cmd_get_brightness_id,
-						msg_brightnessid,
-						stream_brightness_id,
-						
-
-						):
-
-		super().__init__(device_id,
-						cmd_set_settings_id,
-						cmd_get_settings_id,
-						cmd_save_defaults_id,
-						cmd_load_defaults_id,
-						msg_settings_id,
-	
-						cmd_set_brightness_id,
-						cmd_get_brightness_id,
-						msg_brightnessid,
-						stream_brightness_id)
+	pass
 
 """
 

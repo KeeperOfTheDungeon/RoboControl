@@ -62,7 +62,10 @@ class DataPacketLogger(TableModel):
         def parse_device(device_list, device_id) -> str:
             if Connection.REMOTE_CHANEL_ID == device_id:
                 return "Connection"
-            return device_list[device_id].get_name()
+            for device in device_list:
+                if device.get_id() == device_id:
+                    return device.get_name()
+            return f"?? ({device_id})"
 
         values = [
             int(packet.get_number()),

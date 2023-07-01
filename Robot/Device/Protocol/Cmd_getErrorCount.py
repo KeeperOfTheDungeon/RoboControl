@@ -5,8 +5,8 @@ from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
 class Cmd_getErrorCount(RemoteCommand):
 
-    def __init__(self):
-        super().__init__("getErrorCounts", "get count of errors on device")
+    def __init__(self, id: int = DeviceProtocol.CMD_GET_ERROR_COUNT):
+        super().__init__(id, "getErrorCounts", "get count of errors on device")
 
     @staticmethod
     def get_command():

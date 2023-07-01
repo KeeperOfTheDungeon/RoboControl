@@ -93,7 +93,7 @@ class AbstractRobotDevice:
             self._component_list.append(component)
 
     def get_component(self, index: int) -> RobotComponent:
-        pass
+        return self._component_list[index]
 
     def find_copmonent_on_name(self, name):
         pass

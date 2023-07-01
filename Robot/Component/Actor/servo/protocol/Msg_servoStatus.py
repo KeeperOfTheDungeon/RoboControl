@@ -9,7 +9,7 @@ SENSOR_INDEX = 0
 INDEX_STATUS = 1
 
 
-class Msg_servoSpeed(RemoteMessage):
+class Msg_servoStatus(RemoteMessage):
 
     def __init__(self, id):
         super().__init__(id, "msg_servoStatus", "actual servo status")
@@ -20,7 +20,7 @@ class Msg_servoSpeed(RemoteMessage):
 
     @staticmethod
     def get_command(id):
-        return Msg_servoSpeed(id)
+        return Msg_servoStatus(id)
 
     def get_index(self):
         return self._parameter_list[SENSOR_INDEX].get_value()

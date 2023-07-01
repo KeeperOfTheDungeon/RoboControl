@@ -1,5 +1,5 @@
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.Parameter import RemoteParameterUint8
+from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
 
 
 class Cmd_setLedColor(RemoteCommand):
@@ -27,7 +27,7 @@ class Cmd_setLedColor(RemoteCommand):
     def get_command(id, index, brightness):
         cmd = Cmd_setLedColor(id)
         cmd.set_data(index, brightness)
-        return (cmd)
+        return cmd
 
 
 """

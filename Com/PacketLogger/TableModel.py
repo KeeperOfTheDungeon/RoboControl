@@ -231,7 +231,9 @@ class TableModel:
             listener.on_change()
 
     def paint_on_table(self, table: ttk.Treeview) -> None:
-        table.delete(*table.get_children())
+        old_data = table.get_children()
+        if old_data:
+            table.delete(*old_data)
         for row in self._rows:
             table_row = []
             for column_index in range(self.columns_size):

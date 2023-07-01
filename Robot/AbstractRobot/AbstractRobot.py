@@ -22,6 +22,7 @@ class AbstractRobot:
         # connection listener
 
         self._data_packet_logger = DataPacketLogger()
+        self._data_packet_logger.set_device_list(self.get_device_list())
 
         # FIXME is this really optional?
         self._connection: Optional[Connection] = None

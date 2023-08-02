@@ -4,7 +4,7 @@ from time import sleep
 from serial import Serial
 
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
-from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii
+from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
 
 
 class AsciiInput(RemoteDataInput):
@@ -19,14 +19,14 @@ class AsciiInput(RemoteDataInput):
     def run(self) -> None:
         print("x is running")
 
-        data_packet = DataPacketAscii()
+        data_packet = DataPacketPico()
 
         while self.running:
 
             if self._serial_input.in_waiting > 1:
                 token = self._serial_input.read(1)
 
-                if data_packet.putToken(token):
+                if data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
                     print("dp")
                     # check
                     remote_data = data_packet.decode()
@@ -37,7 +37,7 @@ class AsciiInput(RemoteDataInput):
                     # super().deliver_packet(data_packet)
                     # clear packet
 
-                    data_packet = DataPacketAscii()
+                    data_packet = DataPacketPico()
 
             else:
                 sleep(0.001)

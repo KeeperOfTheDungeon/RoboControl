@@ -8,21 +8,18 @@ from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 
 # TODO "make enum"
-COMMAND_START_TOKEN = b'#'
-COMMAND_START_TOKEN_STR = str(chr(ord(COMMAND_START_TOKEN)))
+COMMAND_START_TOKEN = 0x1FA
 
-MESSAGE_START_TOKEN = b'*'
-MESSAGE_START_TOKEN_STR = str(chr(ord(MESSAGE_START_TOKEN)))
+MESSAGE_START_TOKEN = 0x1FB
 
-STREAM_START_TOKEN = b'$'
-STREAM_START_TOKEN_STR = str(chr(ord(STREAM_START_TOKEN)))
+STREAM_START_TOKEN = 0x1FC
 
-EXCEPTION_START_TOKEN = b'^'
-ALLERT_START_TOKEN = b'!'
+EXCEPTION_START_TOKEN = 0x1F3
+ALLERT_START_TOKEN = 0x1F4
 
-OK_START_TOKEN = b'O'
-FAIL_START_TOKEN = b'N'
-END_TOKEN = b';'
+OK_START_TOKEN = 0x1FD
+FAIL_START_TOKEN = 0x1FE
+END_TOKEN = 0x1FF
 
 Byte: TypeAlias = int
 
@@ -36,21 +33,17 @@ class DataPacketPico(RemoteDataPacket):
         pass
 
     def decode(self) -> RemoteData:
+        message_type = self._data_buffer[0]
 
-        # print(self.data_buffer)
-        index = 0
-
-        message_type = self._data_buffer[index]
-
-        if message_type == COMMAND_START_TOKEN_STR:
+        if message_type == COMMAND_START_TOKEN:
             print("Message sync")
             remote_data = RemoteCommand(0, "", "")
             self.do_decode(remote_data)
-        elif message_type == MESSAGE_START_TOKEN_STR:
+        elif message_type == MESSAGE_START_TOKEN:
             print("Message sync")
             remote_data = RemoteMessage(0, "", "")
             self.do_decode(remote_data)
-        elif message_type == STREAM_START_TOKEN_STR:
+        elif message_type == STREAM_START_TOKEN:
             print("Stream sync")
             remote_data = RemoteStream(0, "", "")
             self.do_decode(remote_data)

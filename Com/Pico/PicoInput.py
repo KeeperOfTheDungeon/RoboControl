@@ -33,7 +33,6 @@ class PicoInput(RemoteDataInput):
 
                 if data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
                     print("dp")
-                    # check
                     remote_data = data_packet.decode()
                     print(str(remote_data))
 

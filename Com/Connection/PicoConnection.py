@@ -1,5 +1,5 @@
 from RoboControl.Com.Pico.PicoInput import PicoInput
-from RoboControl.Com.Pico.AsciiOutput import PicoOutput
+from RoboControl.Com.Pico.PicoOutput import PicoOutput
 from RoboControl.Com.Connection.Connection import Connection
 
 # from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii

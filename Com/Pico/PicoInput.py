@@ -55,8 +55,6 @@ class PicoInput(RemoteDataInput):
         wait(0, pins, 2)
         wait(1, pins, 2)
         jmp(pin, 'ready')
-        
-        # prüfen ob vorher 1 und jetzt 0
 
         # accept message
         set(x, 8)

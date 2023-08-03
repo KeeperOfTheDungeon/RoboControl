@@ -2,10 +2,13 @@ import traceback
 from typing import TypeAlias
 
 from serial import Serial
+from machine import Pin
+from time import sleep
+import rp2
 
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
-from RoboControl.Com.Ascii import DataPacketAscii
+from RoboControl.Com.Pico import DataPacketPico
 from RoboControl.Com.Remote.RemoteCommandDataPacket import RemoteCommandDataPacket
 from RoboControl.Com.Remote.RemoteMessageDataPacket import RemoteMessageDataPacket
 from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
@@ -13,97 +16,73 @@ from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
 Byte: TypeAlias = int
 
 
-class AsciiOutput(RemoteDataOutput):
+class PicoOutput(RemoteDataOutput):
 
-    def __init__(self, serial_output: Serial,
-                 # ComStatistic statistic
-                 ):
-        # super().__init__(statistic)
-        self._output_stream = serial_output
+    def __init__(self):
+        self._state_machine_tx = rp2.StateMachine(0, self.tx, freq=1000000, out_base=Pin(0), sideset_base=Pin(0))
 
-        self._data_out_buffer = bytearray(256)
+        self._state_machine_tx.active(1)
+        self._data_out_buffer = int(256)
         self.out_byte_pointer = 0
 
-    def transmitt(self, data_packet: RemoteDataPacket) -> None:
-        print("transmit:")
-        print("\n".join(["|  " + line for line in str(data_packet).splitlines()]))
-        print("\n".join(["|  |  " + line for line in str(data_packet.get_remote_data()).splitlines()]))
-        # data_packet.set_source_address(1)
-        self._packet_queue.append(data_packet)
-
-        self.transmitt_packet(data_packet)
-        pass
-
-    def transmitt_packet(self, data_packet: RemoteDataPacket):
-        ascii_data = DataPacketAscii.DataPacketAscii()
-        ascii_data.code(data_packet)
-        self.send(ascii_data)
-
-    def send(self, ascii_data):
-        self._output_stream.write(ascii_data.get_ascii_buffer())
-
-    @staticmethod
-    def get_hex_hi_value(data_byte: Byte) -> Byte:
-        return AsciiOutput.get_hex_lo_value(data_byte >> 4)
-
-    @staticmethod
-    def get_hex_lo_value(data_byte: Byte) -> Byte:
-        value = data_byte & 0x0f
-        if value > 9:
-            value += 0x37
-        else:
-            value += 0x30
-        return value
-
-    def send_byte(self, token: Byte) -> bool:
-        self.send_token(self.get_hex_hi_value(token))
-        self.send_token(self.get_hex_lo_value(token))
-        return True
-
     def send_token(self, token: Byte) -> bool:
-        if self._output_stream is not None:
+        if self._state_machine_tx is not None:
             self._data_out_buffer[self.out_byte_pointer] = token
             self.out_byte_pointer += 1
-            # self.statistic.count_up_send_chars()
         return True
 
     def transmit(self, data_packet: RemoteDataPacket) -> bool:
-        # TODO "transmit exception -> break & error !!"
         self.out_byte_pointer = 0
         if isinstance(data_packet, RemoteCommandDataPacket):
-            self.send_token(DataPacketAscii.COMMAND_START_TOKEN)
+            self.send_token(DataPacketPico.COMMAND_START_TOKEN)
         elif isinstance(data_packet, RemoteMessageDataPacket):
-            self.send_token(DataPacketAscii.MESSAGE_START_TOKEN)
+            self.send_token(DataPacketPico.MESSAGE_START_TOKEN)
         elif isinstance(data_packet, RemoteStreamDataPacket):
-            self.send_token(DataPacketAscii.STREAM_START_TOKEN)
+            self.send_token(DataPacketPico.STREAM_START_TOKEN)
         else:
-            """
-            packet_type = data_packet.get_type()
-            if packet_type == COMMAND:
-                self.send_token(DataPacketAscii.COMMAND_START_TOKEN)
-            elif packet_type == MESSAGE:
-                self.send_token(DataPacketAscii.MESSAGE_START_TOKEN)
-            elif packet_type == STREAM:
-                self.send_token(DataPacketAscii.STREAM_START_TOKEN)
-            elif packet_type == OK:
-                self.send_token(DataPacketAscii.OK_START_TOKEN)
-            elif packet_type == FAIL:
-                self.send_token(DataPacketAscii.FAIL_START_TOKEN)
-            else:
-                return False
-            """
             raise ValueError("WIP: packet_types are not implemented")
-        self.send_byte(data_packet.get_destination_address())
-        self.send_byte(data_packet.get_source_address())
-        self.send_byte(data_packet.get_command())
+        self.send_token(data_packet.get_destination_address())
+        self.send_token(data_packet.get_source_address())
+        self.send_token(data_packet.get_command())
         for index in range(0, len(data_packet.get_data())):
-            self.send_byte(data_packet.get_byte(index))
-        self.send_token(DataPacketAscii.END_TOKEN)
-        # self.statistic.count_up_send_packets()
+            self.send_token(data_packet.get_byte(index))
+        self.send_token(DataPacketPico.END_TOKEN)
 
         try:
-            self._output_stream.write(self._data_out_buffer)
-            # self._output_stream.flush()
+            for token in self._data_out_buffer:
+                self._state_machine_tx.put(token)
         except Exception as e:
             traceback.print_exception(e)
         return False
+
+    @rp2.asm_pio(out_init=rp2.PIO.OUT_HIGH,
+             out_shiftdir=rp2.PIO.SHIFT_RIGHT,
+             sideset_init=rp2.PIO.OUT_HIGH)
+    def tx():
+        wrap_target()
+
+        #start bit
+        pull()
+        wait(0, pins, 2)
+        set(x, 8)    .side(0)
+        wait(1, pins, 2)
+
+        # message
+        label('loop')
+        wait(0, pins, 2)
+        out(pins, 1)
+        wait(1, pins, 2)
+        jmp(x_dec, 'loop')
+
+        #end bit
+        wait(0, pins, 2)
+        mov(x,x)    .side(1)
+        wait(1, pins, 2)
+        
+        
+        wait(0, pins, 2)
+        mov(x,x)    .side(1)
+        wait(1, pins, 2)
+
+        wrap()
+

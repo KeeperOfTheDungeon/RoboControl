@@ -12,6 +12,9 @@ class PicoConnection(Connection):
 
     def __init__(self):
         super().__init__()
+        # clear programs form pio for clean restart
+        rp2.PIO(0).remove_program()
+        rp2.PIO(1).remove_program()
 """
         # FIXME this isn't really optional is it
         self._serial_stream: Optional[Serial] = None

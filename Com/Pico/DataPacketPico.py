@@ -66,7 +66,7 @@ class DataPacketPico(RemoteDataPacket):
 
         data_size = len(self._data_buffer) - (BUFFER_OFFSET_PAYLOAD + 1)
 
-        payload = bytearray(int(data_size))
+        payload = bytearray(int(data_size)) # TODO make with RemoteData class compatible
         index = 0
         while (index + BUFFER_OFFSET_PAYLOAD) < (len(self._data_buffer) - 1):
             value = int(self._data_buffer[index + BUFFER_OFFSET_PAYLOAD], 16)
@@ -85,50 +85,29 @@ class DataPacketPico(RemoteDataPacket):
 
     def code(self, data_packet: RemoteDataPacket):
         remote_data = data_packet.get_remote_data()
-        payload_size = remote_data.get_payload_size() * 2
-        payload_size += 8
+        frame_size = remote_data.get_payload_size()
+        frame_size += BUFFER_OFFSET_PAYLOAD + 1 # one extra for the end byte
 
-        self._data_buffer = bytearray(payload_size)
-
-        index = 0
+        self._data_buffer = bytearray(frame_size)
 
         # command mark
         if isinstance(remote_data, RemoteCommand):
-            self._data_buffer[index] = ord(COMMAND_START_TOKEN)
+            self._data_buffer[BUFFER_OFFSET_MESSAGE_TYPE] = COMMAND_START_TOKEN
         elif isinstance(remote_data, RemoteMessage):
-            self._data_buffer[index] = ord(MESSAGE_START_TOKEN)
-
+            self._data_buffer[BUFFER_OFFSET_MESSAGE_TYPE] = MESSAGE_START_TOKEN
         print(type(remote_data))
-        index += 1
 
-        destination = remote_data.get_destination_address()
-        self._data_buffer[index] = get_char(destination >> 4)
-        index += 1
-        self._data_buffer[index] = get_char(destination & 0xf)
-        index += 1
-
-        source = remote_data.get_source_address()
-        self._data_buffer[index] = get_char(source >> 4)
-        index += 1
-        self._data_buffer[index] = get_char(source & 0xf)
-        index += 1
-
-        command = remote_data.get_id()
-        self._data_buffer[index] = get_char(command >> 4)
-        index += 1
-        self._data_buffer[index] = get_char(command & 0xf)
-        index += 1
-
+        self._data_buffer[BUFFER_OFFSET_DEST_ADDRESS] = remote_data.get_destination_address()
+        self._data_buffer[BUFFER_OFFSET_SRC_ADDRESS] = remote_data.get_source_address()
+        self._data_buffer[BUFFER_OFFSET_ID] = remote_data.get_id()
         # send Data payload
 
-        self._data_buffer[len(self._data_buffer) - 1] = ord(END_TOKEN)
-
+        self._data_buffer[len(self._data_buffer) - 1] = END_TOKEN
+        index = BUFFER_OFFSET_PAYLOAD
         for parameter in remote_data.get_parameter_list():
             buffer = parameter.get_as_buffer()
             for byte in buffer:
-                self._data_buffer[index] = get_char(byte >> 4)
-                index += 1
-                self._data_buffer[index] = get_char(byte & 0xf)
+                self._data_buffer[index] = byte
                 index += 1
 
     def get_buffer(self):
@@ -147,18 +126,6 @@ def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:
         source_address: Byte = get_byte(data_buffer, 3)
         command: Byte = get_byte(data_buffer, 5)
         first_token = data_buffer[0]
-        """
-        if first_token == COMMAND_START_TOKEN:
-            packet_type = DataPacketType.COMMAND
-        elif first_token == MESSAGE_START_TOKEN:
-            packet_type = DataPacketType.MESSAGE
-        elif first_token == STREAM_START_TOKEN:
-            packet_type = DataPacketType.STREAM
-        elif first_token == OK_START_TOKEN:
-            packet_type = DataPacketType.OK
-        elif first_token == FAIL_START_TOKEN:
-            packet_type = DataPacketType.FAIL
-        """
         if first_token not in [COMMAND_START_TOKEN,
                                MESSAGE_START_TOKEN,
                                STREAM_START_TOKEN,

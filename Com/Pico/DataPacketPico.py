@@ -21,6 +21,12 @@ OK_START_TOKEN = 0x1FD
 FAIL_START_TOKEN = 0x1FE
 END_TOKEN = 0x1FF
 
+BUFFER_OFFSET_MESSAGE_TYPE = 0
+BUFFER_OFFSET_DEST_ADDRESS = 1
+BUFFER_OFFSET_SRC_ADDRESS = 2
+BUFFER_OFFSET_ID = 3
+BUFFER_OFFSET_PAYLOAD = 4
+
 Byte: TypeAlias = int
 
 
@@ -29,7 +35,7 @@ class DataPacketPico(RemoteDataPacket):
     # TODO why does this inherit from RemoteDataPacket without forwarding init
     def __init__(self):  # noqa
         self._token_counter = 0
-        self._data_buffer = ""
+        self._data_buffer = []
         pass
 
     def decode(self) -> RemoteData:
@@ -54,53 +60,28 @@ class DataPacketPico(RemoteDataPacket):
         return remote_data
 
     def do_decode(self, remote_data: RemoteData) -> None:
+        remote_data._destination_address = int(self._data_buffer[BUFFER_OFFSET_DEST_ADDRESS], 16)
+        remote_data._source_address = int(self._data_buffer[BUFFER_OFFSET_SRC_ADDRESS], 16)
+        remote_data._id = int(self._data_buffer[BUFFER_OFFSET_ID], 16)
 
-        index = 1
-
-        remote_data._destination_address = int(self._data_buffer[index:index + 2], 16)
-        index += 2
-
-        remote_data._source_address = int(self._data_buffer[index:index + 2], 16)
-        index += 2
-
-        remote_data._id = int(self._data_buffer[index:index + 2], 16)
-        index += 2
-
-        # get payload
-
-        data_size = len(self._data_buffer)
-        data_size -= index + 1
-        data_size /= 2
-        # data_size = int((len(self._data_buffer) - (index+1)) /2)
+        data_size = len(self._data_buffer) - (BUFFER_OFFSET_PAYLOAD + 1)
 
         payload = bytearray(int(data_size))
-        pindex = 0
-
-        while index < (len(self._data_buffer) - 1):
-            value = int(self._data_buffer[index:index + 2], 16)
-            index += 2
-            payload[pindex] = value
-            pindex += 1
+        index = 0
+        while (index + BUFFER_OFFSET_PAYLOAD) < (len(self._data_buffer) - 1):
+            value = int(self._data_buffer[index + BUFFER_OFFSET_PAYLOAD], 16)
+            payload[index] = value
+            index += 1
 
         remote_data.set_payload(payload)
 
-        # error - exception
-
-    # return remote_data
 
     # TODO camelcase
     def putToken(self, token):  # noqa
-
-        end_token = False
-
-        #  try:
-        self._data_buffer += str(token, 'utf-8')
+        self._data_buffer.append(token)
         self._token_counter += 1
 
-        if token == END_TOKEN:
-            end_token = True
-
-        return end_token
+        return token == END_TOKEN
 
     def code(self, data_packet: RemoteDataPacket):
         remote_data = data_packet.get_remote_data()
@@ -150,34 +131,9 @@ class DataPacketPico(RemoteDataPacket):
                 self._data_buffer[index] = get_char(byte & 0xf)
                 index += 1
 
-    def get_ascii_buffer(self):
+    def get_buffer(self):
         return self._data_buffer
 
-
-def get_char(data_byte):
-    if data_byte > 9:
-        value = data_byte + 0x37
-    else:
-        value = data_byte + 0x30
-    return value
-
-
-def hex_char_to_nibble(data_byte: Byte) -> Byte:
-    if (data_byte > 0x40) & (data_byte < 0x47):
-        data_byte -= 0x37
-    elif (data_byte > 0x60) & (data_byte < 0x67):
-        data_byte -= 0x57
-    elif (data_byte > 0x2f) & (data_byte < 0x3a):
-        data_byte -= 0x30
-    else:
-        raise ValueError(f"ConversionException(databyte) for {data_byte}")
-    return data_byte
-
-
-def get_byte(buffer: List[Byte], position: int) -> Byte:
-    hi = hex_char_to_nibble(buffer[position]) << 4
-    lo = hex_char_to_nibble(buffer[position + 1])
-    return hi + lo
 
 
 def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:

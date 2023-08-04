@@ -55,6 +55,10 @@ class PicoOutput(RemoteDataOutput):
             traceback.print_exception(e)
         return False
 
+
+    def stop(self):
+        self._state_machine_rx.active(0)
+
     @rp2.asm_pio(out_init=rp2.PIO.OUT_HIGH,
              out_shiftdir=rp2.PIO.SHIFT_RIGHT,
              sideset_init=rp2.PIO.OUT_HIGH)

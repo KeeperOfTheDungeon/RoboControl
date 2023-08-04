@@ -18,8 +18,8 @@ class PicoInput(RemoteDataInput):
         self._state_machine_rx.irq(lambda x: {print('error: usart did not recieve end bit')})
         self._state_machine_rx.active(1)
         self.running = True
-        x = threading.Thread(target=self.run)
-        x.start()
+        self.x = threading.Thread(target=self.run)
+        self.x.start()
 
     def run(self) -> None:
         print("x is running")
@@ -45,6 +45,11 @@ class PicoInput(RemoteDataInput):
 
             pass
 
+    def stop(self):
+        self.running = False
+        self._state_machine_rx.active(0)
+
+    
     @rp2.asm_pio(in_shiftdir=rp2.PIO.SHIFT_RIGHT)
     def rx():
         wrap_target()
@@ -84,3 +89,4 @@ class PicoInput(RemoteDataInput):
         label('end')
 
         wrap()
+

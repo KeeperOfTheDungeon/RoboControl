@@ -1,5 +1,6 @@
 from typing import List
 
+from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
@@ -8,7 +9,7 @@ from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPositi
 class Stream_servosDestinations(RemoteStream):
     _parameter_list: List[RemoteParameterServoPosition]
 
-    def __init__(self, id: int):
+    def __init__(self, id: int = LegControllerProtocol.STREAM_SERVOS_DESTINATIONS):
         super().__init__(id, "servoDestinations", "servo destinations")
 
     @staticmethod

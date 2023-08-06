@@ -1,3 +1,6 @@
+from typing import Union, List
+
+from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
@@ -8,8 +11,9 @@ SERVO_POSITION = 1
 
 
 class Msg_servoPosition(RemoteMessage):
+    _parameter_list: List[Union[RemoteParameterUint8, RemoteParameterServoPosition]]
 
-    def __init__(self, id):
+    def __init__(self, id: int = LegControllerProtocol.MSG_SERVO_POSITION):
         super().__init__(id, "msg_servoPosition", "actual servo position")
         self._servo_index = 0
         self._servo_position = 0

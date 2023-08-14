@@ -1,7 +1,7 @@
 from RoboControl.Com.Pico.PicoInput import PicoInput
 from RoboControl.Com.Pico.PicoOutput import PicoOutput
 from RoboControl.Com.Connection.Connection import Connection
-
+import rp2
 
 class PicoConnection(Connection):
     connected: bool = False
@@ -10,7 +10,7 @@ class PicoConnection(Connection):
 
     def __init__(self):
         super().__init__()
-
+        print("PicoConnection - init")
         # clear programs form pio for clean restart
         rp2.PIO(0).remove_program()
         rp2.PIO(1).remove_program()

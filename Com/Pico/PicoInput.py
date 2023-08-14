@@ -1,9 +1,9 @@
-import threading
+#import threading
 from time import sleep
 from machine import Pin
 import rp2
 
-from serial import Serial
+
 
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
@@ -12,14 +12,16 @@ from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
 class PicoInput(RemoteDataInput):
 
     def __init__(self):
+        print("init - PicoInput")
         Pin(1, Pin.IN, Pin.PULL_UP)
         self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(1), jmp_pin=Pin(1))
 
         self._state_machine_rx.irq(lambda x: {print('error: usart did not recieve end bit')})
         self._state_machine_rx.active(1)
         self.running = True
-        self.x = threading.Thread(target=self.run)
-        self.x.start()
+       # self.x = threading.Thread(target=self.run)
+       # self.x.start()
+        self.run()
 
     def run(self) -> None:
         print("x is running")
@@ -27,7 +29,7 @@ class PicoInput(RemoteDataInput):
         data_packet = DataPacketPico()
 
         while self.running:
-
+            print("alive")
             if self._state_machine_rx.rx_fifo() > 1:
                 token = self._state_machine_rx.get()
 

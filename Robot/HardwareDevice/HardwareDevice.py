@@ -25,7 +25,7 @@ class HardwareDevice(AbstractRobotDevice):
 
     def __init__(self, component_config):
         super().__init__(component_config)
-        self.build()
+       # self.build()
 
     # self.build_protocol()
 

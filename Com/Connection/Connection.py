@@ -1,6 +1,6 @@
-from typing import Callable, TypeAlias, Optional
+#from typing import Callable, TypeAlias, Optional
 
-from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
+#from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
@@ -10,13 +10,13 @@ REMOTE_CHANEL_ID = 1
 REMOTE_NODE_ID = 1
 
 # FIXME what exactly are listeners?
-Listener: TypeAlias = [Callable or any]
+#Listener: TypeAlias = [Callable or any]
 
 
 class Connection:
     _data_output = RemoteDataOutput()
     _data_input = RemoteDataInput()
-    _data_packet_logger: DataPacketLogger
+   # _data_packet_logger: DataPacketLogger
 
     def __init__(self, name: str = ""):
         self.device_id = REMOTE_CHANEL_ID

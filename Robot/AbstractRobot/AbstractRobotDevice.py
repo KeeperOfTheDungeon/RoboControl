@@ -1,4 +1,4 @@
-import copy
+#import copy
 
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteException import RemoteException
@@ -11,11 +11,11 @@ from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcerssorList
 
 
-# from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
+from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
 
 
 class AbstractRobotDevice:
-    _name: str = "AbstractRobotDevice"
+    _name = "AbstractRobotDevice"
 
     def __init__(self, component_config):
         self._name = component_config.get_name()

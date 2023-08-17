@@ -6,8 +6,6 @@ from RoboControl.Com.Connection.Connection import Connection
 class PicoConnection(Connection):
     connected: bool = False
 
-    open_streams: Dict[str, Optional[Serial]] = {}
-
     def __init__(self):
         super().__init__()
 
@@ -17,8 +15,8 @@ class PicoConnection(Connection):
 
     def connect(self, data_packet_receiver: Listener) -> None:
         if not self.connected:
-            self._data_output = PicoInput() # add data_output
-            self._data_input = PicoOutput # add data_input
+            self._data_output = PicoOutput() # add data_output
+            self._data_input = PicoInput() # add data_input
             super().connect(data_packet_receiver)
 
     def disconnect(self) -> None:

@@ -85,14 +85,13 @@ class DataPacketPico(RemoteDataPacket):
         frame_size = remote_data.get_payload_size()
         frame_size += BUFFER_OFFSET_PAYLOAD + 1 # one extra for the end byte
 
-        self._data_buffer = [0 for x in range(frame_size)]
+        self._data_buffer = [0x1FF for x in range(frame_size)]
 
         # command mark
         if isinstance(remote_data, RemoteCommand):
             self._data_buffer[BUFFER_OFFSET_MESSAGE_TYPE] = COMMAND_START_TOKEN
         elif isinstance(remote_data, RemoteMessage):
             self._data_buffer[BUFFER_OFFSET_MESSAGE_TYPE] = MESSAGE_START_TOKEN
-        print(type(remote_data))
 
         self._data_buffer[BUFFER_OFFSET_DEST_ADDRESS] = remote_data.get_destination_address()
         self._data_buffer[BUFFER_OFFSET_SRC_ADDRESS] = remote_data.get_source_address()

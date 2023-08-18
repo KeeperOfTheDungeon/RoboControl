@@ -1,5 +1,3 @@
-from typing import TypeAlias
-
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 
 Byte: TypeAlias = int

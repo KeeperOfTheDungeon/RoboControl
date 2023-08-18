@@ -1,5 +1,5 @@
 
-import copy
+#import copy
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteException import RemoteException
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage

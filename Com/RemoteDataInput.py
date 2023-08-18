@@ -1,9 +1,9 @@
-from typing import Callable, TypeAlias
+#from typing import Callable, TypeAlias
 
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 
 # FIXME what exactly are listeners?
-Listener: TypeAlias = [Callable or any]
+#Listener: TypeAlias = [Callable or any]
 
 
 class RemoteDataInput:

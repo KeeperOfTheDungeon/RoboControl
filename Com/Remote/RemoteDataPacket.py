@@ -1,11 +1,11 @@
-import datetime
-from enum import Enum
-from typing import Optional
+#import datetime
+#from enum import Enum
+#from typing import Optional
 
-from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
+#from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
 
 
-class DataPacketType(Enum):
+class DataPacketType:
     COMMAND = "COMMAND"
     MESSAGE = "MESSAGE"
     STREAM = "STREAM"

@@ -1,4 +1,4 @@
-from typing import TypeAlias
+#from typing import TypeAlias
 
 
 class DeviceConfig:
@@ -17,4 +17,4 @@ class DeviceConfig:
         return DeviceMetaData(self._id, self._name)
 
 
-DeviceMetaData: TypeAlias = DeviceConfig
+#DeviceMetaData: TypeAlias = DeviceConfig

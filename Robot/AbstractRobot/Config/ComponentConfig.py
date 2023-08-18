@@ -10,3 +10,6 @@ class ComponentConfig:
 
     def get_global_id(self):
          return(self._global_id)
+
+    def get_name(self):
+        return(self._name)

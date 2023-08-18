@@ -1,9 +1,9 @@
-import threading
+#import threading
 from time import sleep
 from machine import Pin
 import rp2
 
-from serial import Serial
+
 
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
@@ -12,14 +12,35 @@ from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
 class PicoInput(RemoteDataInput):
 
     def __init__(self):
+        print("init - PicoInput")
         Pin(1, Pin.IN, Pin.PULL_UP)
         self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(1), jmp_pin=Pin(1))
 
         self._state_machine_rx.irq(lambda x: {print('error: usart did not recieve end bit')})
         self._state_machine_rx.active(1)
         self.running = True
-        self.x = threading.Thread(target=self.run)
-        self.x.start()
+        self._data_packet = DataPacketPico()
+       # self.x = threading.Thread(target=self.run)
+       # self.x.start()
+#        self.run()
+
+
+    def process(self):
+
+        print("alive")
+        if self._state_machine_rx.rx_fifo() > 1:
+            token = self._state_machine_rx.get()
+
+            if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
+                print("dp")
+                remote_data = self._data_packet.decode()
+                print(str(remote_data))
+
+                self.deliver_packet(remote_data)
+
+                self._data_packet = DataPacketPico()
+
+
 
     def run(self) -> None:
         print("x is running")
@@ -27,7 +48,7 @@ class PicoInput(RemoteDataInput):
         data_packet = DataPacketPico()
 
         while self.running:
-
+            print("alive")
             if self._state_machine_rx.rx_fifo() > 1:
                 token = self._state_machine_rx.get()
 
@@ -41,7 +62,8 @@ class PicoInput(RemoteDataInput):
                     data_packet = DataPacketPico()
 
             else:
-                sleep(0.001)
+                #sleep(0.001)
+                sleep(1)
 
             pass
 

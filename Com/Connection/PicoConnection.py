@@ -1,6 +1,7 @@
 from RoboControl.Com.Pico.PicoInput import PicoInput
 from RoboControl.Com.Pico.PicoOutput import PicoOutput
 from RoboControl.Com.Connection.Connection import Connection
+from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 import rp2
 import utime
 import _thread
@@ -17,19 +18,16 @@ class PicoConnection(Connection):
 
     def connect(self) -> None:
         if not self.connected:
-            
             self._data_output = PicoOutput() # add data_output
             self._data_input = PicoInput() # add data_input
-            _thread.start_new_thread(self.connection_thread, ())
+            _thread.start_new_thread(self.connection_thread, self._data_input.process())
+            input("Hit enter to send ping")
+            self._data_output.transmit(RemoteDataPacket(11, 1, 3))
 
     def disconnect(self) -> None:
         self._data_input.stop()
         self._data_output.stop()
         super().disconnect()
 
-    def connection_thread(self):
-        while True:
-            #utime.sleep(1)
-            self._data_input.process()
             
 

@@ -20,25 +20,20 @@ class PicoInput(RemoteDataInput):
         self._state_machine_rx.active(1)
         self.running = True
         self._data_packet = DataPacketPico()
-       # self.x = threading.Thread(target=self.run)
-       # self.x.start()
-#        self.run()
 
 
     def process(self):
+        token = self._state_machine_rx.get()
+        print('Recieved token: ' + str(token))
 
-        print("alive")
-        if self._state_machine_rx.rx_fifo() > 1:
-            token = self._state_machine_rx.get()
+        if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
+            print("dp")
+            remote_data = self._data_packet.decode()
+            print(str(remote_data))
 
-            if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
-                print("dp")
-                remote_data = self._data_packet.decode()
-                print(str(remote_data))
+            self.deliver_packet(remote_data)
 
-                self.deliver_packet(remote_data)
-
-                self._data_packet = DataPacketPico()
+            self._data_packet = DataPacketPico()
 
 
 
@@ -111,4 +106,5 @@ class PicoInput(RemoteDataInput):
         label('end')
 
         wrap()
+
 

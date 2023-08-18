@@ -40,33 +40,33 @@ class DataPacketPico(RemoteDataPacket):
 
         if message_type == COMMAND_START_TOKEN:
             print("Message sync")
-            remote_data = RemoteCommand(0, "", "")
+            remote_data = RemoteCommand(0, 0, 0)
             self.do_decode(remote_data)
         elif message_type == MESSAGE_START_TOKEN:
             print("Message sync")
-            remote_data = RemoteMessage(0, "", "")
+            remote_data = RemoteMessage(0, 0, 0)
             self.do_decode(remote_data)
         elif message_type == STREAM_START_TOKEN:
             print("Stream sync")
-            remote_data = RemoteStream(0, "", "")
+            remote_data = RemoteStream(0, 0, 0)
             self.do_decode(remote_data)
         else:
             print("unsync")
-            remote_data = RemoteData(0, "", "")
+            remote_data = RemoteData(0, 0, 0)
 
         return remote_data
 
     def do_decode(self, remote_data: RemoteData) -> None:
-        remote_data._destination_address = int(self._data_buffer[BUFFER_OFFSET_DEST_ADDRESS], 16)
-        remote_data._source_address = int(self._data_buffer[BUFFER_OFFSET_SRC_ADDRESS], 16)
-        remote_data._id = int(self._data_buffer[BUFFER_OFFSET_ID], 16)
+        remote_data._destination_address = int(self._data_buffer[BUFFER_OFFSET_DEST_ADDRESS])
+        remote_data._source_address = int(self._data_buffer[BUFFER_OFFSET_SRC_ADDRESS])
+        remote_data._id = int(self._data_buffer[BUFFER_OFFSET_ID])
 
         data_size = len(self._data_buffer) - (BUFFER_OFFSET_PAYLOAD + 1)
 
         payload = bytearray(int(data_size)) # TODO make with RemoteData class compatible
         index = 0
         while (index + BUFFER_OFFSET_PAYLOAD) < (len(self._data_buffer) - 1):
-            value = int(self._data_buffer[index + BUFFER_OFFSET_PAYLOAD], 16)
+            value = int(self._data_buffer[index + BUFFER_OFFSET_PAYLOAD])
             payload[index] = value
             index += 1
 
@@ -85,7 +85,7 @@ class DataPacketPico(RemoteDataPacket):
         frame_size = remote_data.get_payload_size()
         frame_size += BUFFER_OFFSET_PAYLOAD + 1 # one extra for the end byte
 
-        self._data_buffer = bytearray(frame_size)
+        self._data_buffer = [0 for x in range(frame_size)]
 
         # command mark
         if isinstance(remote_data, RemoteCommand):
@@ -143,3 +143,4 @@ def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:
         traceback.print_exception(e)
         return None
     return data_packet
+

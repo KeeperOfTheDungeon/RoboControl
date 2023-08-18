@@ -15,13 +15,12 @@ class PicoConnection(Connection):
         rp2.PIO(0).remove_program()
         rp2.PIO(1).remove_program()
 
-    def connect(self, data_packet_receiver: Listener) -> None:
+    def connect(self) -> None:
         if not self.connected:
             
             self._data_output = PicoOutput() # add data_output
             self._data_input = PicoInput() # add data_input
             _thread.start_new_thread(self.connection_thread, ())
-            #super().connect(data_packet_receiver)
 
     def disconnect(self) -> None:
         self._data_input.stop()
@@ -30,7 +29,7 @@ class PicoConnection(Connection):
 
     def connection_thread(self):
         while True:
-          #  print("Hello, I'm here in the second thread writting every second")
-            utime.sleep(1)
+            #utime.sleep(1)
             self._data_input.process()
             
+

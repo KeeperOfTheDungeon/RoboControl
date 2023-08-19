@@ -22,7 +22,7 @@ class PicoOutput(RemoteDataOutput):
         self._state_machine_tx.active(1)
 
     def transmit(self, data_packet: RemoteData) -> None:
-        print("transmitt")
+        print("transmit")
         data_packet.set_source_address(1)
         pico_data = DataPacketPico()
         pico_data.code(data_packet)
@@ -30,13 +30,6 @@ class PicoOutput(RemoteDataOutput):
         
         for token in token_buffer:
             self._state_machine_tx.put(token)
-            
-    def ping(self):
-        input("Hit enter to send ping")
-        data_packet = RemoteDataPacket(11, 1, 3)
-        data_packet.set_remote_data(RemoteData(300, 'The coolest', 'The coolest data'))
-        self.transmit(data_packet)
-
 
     def stop(self):
         self._state_machine_tx.active(0)

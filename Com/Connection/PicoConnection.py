@@ -20,10 +20,7 @@ class PicoConnection(Connection):
         if not self.connected:
             self._data_output = PicoOutput() # add data_output
             self._data_input = PicoInput() # add data_input
-            print('starting first thread')
             self._data_input.run()
-            print('starting second thread')
-            self._data_output.ping()
 
     def disconnect(self) -> None:
         self._data_input.stop()

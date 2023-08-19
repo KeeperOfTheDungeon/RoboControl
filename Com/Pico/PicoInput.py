@@ -22,18 +22,15 @@ class PicoInput(RemoteDataInput):
         self._data_packet = DataPacketPico()
 
     def run(self) -> None:
-        print('In input file.')
         _thread.start_new_thread(self.process, ())
                 
     def process(self) -> None:
-        print('thread started')
         while self._running:
-            print('listening')
             token = self._state_machine_rx.get()
             print('Recieved token: ' + str(token))
 
             if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
-                print("dp")
+                print("data packet recieved")
                 remote_data = self._data_packet.decode()
                 print(str(remote_data))
 

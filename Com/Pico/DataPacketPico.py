@@ -85,7 +85,7 @@ class DataPacketPico(RemoteDataPacket):
         frame_size = remote_data.get_payload_size()
         frame_size += BUFFER_OFFSET_PAYLOAD + 1 # one extra for the end byte
 
-        self._data_buffer = [0x1FF for x in range(frame_size)]
+        self._data_buffer = [0 for x in range(frame_size)]
 
         # command mark
         if isinstance(remote_data, RemoteCommand):
@@ -142,5 +142,6 @@ def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:
         traceback.print_exception(e)
         return None
     return data_packet
+
 
 

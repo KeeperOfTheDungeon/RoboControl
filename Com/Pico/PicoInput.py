@@ -2,7 +2,7 @@
 from time import sleep
 from machine import Pin
 import rp2
-
+import _thread
 
 
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
@@ -18,11 +18,17 @@ class PicoInput(RemoteDataInput):
 
         self._state_machine_rx.irq(lambda x: {print('error: usart did not recieve end bit')})
         self._state_machine_rx.active(1)
-        self.running = True
+        self._running = True
         self._data_packet = DataPacketPico()
 
+    def run(self) -> None:
+        print('In input file.')
+        _thread.start_new_thread(self.process, ())
+                
     def process(self) -> None:
-        while self.running:
+        print('thread started')
+        while self._running:
+            print('listening')
             token = self._state_machine_rx.get()
             print('Recieved token: ' + str(token))
 
@@ -34,7 +40,7 @@ class PicoInput(RemoteDataInput):
                 self.deliver_packet(remote_data)
 
                 self._data_packet = DataPacketPico()
-
+            
 
     def stop(self):
         self.running = False
@@ -80,5 +86,6 @@ class PicoInput(RemoteDataInput):
         label('end')
 
         wrap()
+
 
 

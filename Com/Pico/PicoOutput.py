@@ -7,8 +7,9 @@ from machine import Pin
 import rp2
 
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
-from RoboControl.Com.Pico import DataPacketPico
+from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
 from RoboControl.Com.Remote.RemoteCommandDataPacket import RemoteCommandDataPacket
 from RoboControl.Com.Remote.RemoteMessageDataPacket import RemoteMessageDataPacket
 from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
@@ -20,15 +21,21 @@ class PicoOutput(RemoteDataOutput):
         self._state_machine_tx = rp2.StateMachine(0, self.tx, freq=1000000, out_base=Pin(0), sideset_base=Pin(0))
         self._state_machine_tx.active(1)
 
-    def transmit(self, data_packet: RemoteDataPacket) -> None:
+    def transmit(self, data_packet: RemoteData) -> None:
         print("transmitt")
-        data_packet.set_source_addres(1)
+        data_packet.set_source_address(1)
         pico_data = DataPacketPico()
         pico_data.code(data_packet)
         token_buffer = pico_data.get_buffer()
         
         for token in token_buffer:
             self._state_machine_tx.put(token)
+            
+    def ping(self):
+        input("Hit enter to send ping")
+        data_packet = RemoteDataPacket(11, 1, 3)
+        data_packet.set_remote_data(RemoteData(300, 'The coolest', 'The coolest data'))
+        self.transmit(data_packet)
 
 
     def stop(self):
@@ -64,4 +71,5 @@ class PicoOutput(RemoteDataOutput):
         wait(1, pins, 2)
 
         wrap()
+
 

@@ -107,3 +107,4 @@ class RemoteData:
 
     def get_parameter_list(self) -> List[RemoteParameter]:
         return self._parameter_list
+

@@ -143,3 +143,4 @@ def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:
         return None
     return data_packet
 
+

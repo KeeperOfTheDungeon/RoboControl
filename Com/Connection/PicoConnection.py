@@ -20,9 +20,10 @@ class PicoConnection(Connection):
         if not self.connected:
             self._data_output = PicoOutput() # add data_output
             self._data_input = PicoInput() # add data_input
-            _thread.start_new_thread(self.connection_thread, self._data_input.process())
-            input("Hit enter to send ping")
-            self._data_output.transmit(RemoteDataPacket(11, 1, 3))
+            print('starting first thread')
+            self._data_input.run()
+            print('starting second thread')
+            self._data_output.ping()
 
     def disconnect(self) -> None:
         self._data_input.stop()
@@ -30,4 +31,5 @@ class PicoConnection(Connection):
         super().disconnect()
 
             
+
 

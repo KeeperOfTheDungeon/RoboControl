@@ -2,7 +2,7 @@
 #from enum import Enum
 #from typing import Optional
 
-#from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
+from RoboControl.Com.Remote.RemoteData import RemoteData
 
 
 class DataPacketType:
@@ -31,11 +31,10 @@ class RemoteDataPacket:
         self._destination_address = destination_address
         self._source_address = source_address
         self._command = command
-        self._timestamp = datetime.datetime.now()
 
         self.data = None
 
-        self._remote_data: Optional["RemoteData"] = None
+        self._remote_data = None
 
     def set_source_address(self, source_address: int):
         self._source_address = source_address
@@ -52,10 +51,10 @@ class RemoteDataPacket:
     def alocate(self, size):
         self.data = bytearray(size)
 
-    def do_decode(self, remote_data: "RemoteData") -> None:  # data_buffer
+    def do_decode(self, remote_data: RemoteData) -> None:  # data_buffer
         pass
 
-    def decode(self) -> "RemoteData":
+    def decode(self) -> RemoteData:
         pass
 
     def code(self, data_packet):
@@ -133,16 +132,13 @@ class RemoteDataPacket:
     def get_command(self):
         return self._command
 
-    def get_timestamp(self) -> datetime.datetime:
-        return self._timestamp
-
     def get_parameters_as_string(self, description: bool) -> str:
         return self._remote_data.get_parameters_as_string(description)
 
-    def set_remote_data(self, remote_data: "RemoteData") -> None:
+    def set_remote_data(self, remote_data: RemoteData) -> None:
         self._remote_data = remote_data
 
-    def get_remote_data(self) -> "RemoteData":
+    def get_remote_data(self) -> RemoteData:
         return self._remote_data
 
     def get_data_size(self) -> int:
@@ -157,3 +153,4 @@ class RemoteDataPacket:
         res += f"\n\tdata: {render_data(self, DisplayDataWidth_e.WIDTH_8, True)}"
         res += f"\n\tremote_data: " + str(self._remote_data).split("\n")[0].strip()
         return res
+

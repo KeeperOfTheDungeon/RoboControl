@@ -28,7 +28,10 @@ Byte: TypeAlias = int
 
 
 class DataPacketPico(RemoteDataPacket):
-
+    
+    PACKET_RESYNC = 1
+    PACKET_READY = 2
+    
     # TODO why does this inherit from RemoteDataPacket without forwarding init
     def __init__(self):  # noqa
         self._token_counter = 0
@@ -39,7 +42,7 @@ class DataPacketPico(RemoteDataPacket):
         message_type = self._data_buffer[0]
 
         if message_type == COMMAND_START_TOKEN:
-            print("Message sync")
+            print("Comand sync")
             remote_data = RemoteCommand(0, 0, 0)
             self.do_decode(remote_data)
         elif message_type == MESSAGE_START_TOKEN:
@@ -75,10 +78,24 @@ class DataPacketPico(RemoteDataPacket):
 
     # TODO camelcase
     def putToken(self, token):  # noqa
+        return_code = 0
+        print("token ",token)
+        
+        if (token > 0xff ) and (token != END_TOKEN) :
+            print("resync")
+            self._data_buffer.clear()
+            return_code = DataPacketPico.PACKET_RESYNC
+
         self._data_buffer.append(token)
         self._token_counter += 1
+            
+        if token == END_TOKEN:
+            return_code = DataPacketPico.PACKET_READY
+                
+        return return_code
 
-        return token == END_TOKEN
+
+
 
     def code(self, data_packet: RemoteDataPacket):
         remote_data = data_packet.get_remote_data()

@@ -86,6 +86,7 @@ class RemoteData:
     def __str__(self) -> str:
         res = f"RemoteData({self._name}, id={self._id}): {self._description}"
         res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
+        res += f"\n\t(id) {self._id}"
         res += f"\n\tpayload: " + ",".join([str(b) for b in self._payload])
         res += f"\n\tparams: " + self.get_parameters_as_string(True)
         return res

@@ -2,7 +2,7 @@
 from time import sleep
 from machine import Pin
 import rp2
-import _thread
+
 
 
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
@@ -10,7 +10,7 @@ from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
 
 
 class PicoInput(RemoteDataInput):
-
+    
     def __init__(self):
         print("init - PicoInput")
         Pin(1, Pin.IN, Pin.PULL_UP)
@@ -18,26 +18,56 @@ class PicoInput(RemoteDataInput):
 
         self._state_machine_rx.irq(lambda x: {print('error: usart did not recieve end bit')})
         self._state_machine_rx.active(1)
-        self._running = True
+        self.running = True
         self._data_packet = DataPacketPico()
+        self.counter = 0
+       # self.x = threading.Thread(target=self.run)
+       # self.x.start()
+#        self.run()
 
-    def run(self) -> None:
-        _thread.start_new_thread(self.process, ())
-                
-    def process(self) -> None:
-        while self._running:
+
+    def process(self):
+
+        if self._state_machine_rx.rx_fifo() > 1:
             token = self._state_machine_rx.get()
-            print('Recieved token: ' + str(token))
 
             if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
-                print("data packet recieved")
+                print("dp")
                 remote_data = self._data_packet.decode()
                 print(str(remote_data))
 
                 self.deliver_packet(remote_data)
 
                 self._data_packet = DataPacketPico()
-            
+
+
+
+    def run(self) -> None:
+        print("x is running")
+
+        data_packet = DataPacketPico()
+
+        while self.running:
+          #  print("alive : ",self.counter)
+           # self.counter+=1
+            if self._state_machine_rx.rx_fifo() > 1:
+                
+                token = self._state_machine_rx.get()
+                                    
+                if data_packet.putToken(token) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
+                    print("dp")
+                    remote_data = data_packet.decode()
+                    #print(str(remote_data))
+                    print(remote_data)
+                    self.deliver_packet(remote_data)
+
+                    data_packet = DataPacketPico()
+
+            else:
+               # sleep(0.001)
+                #sleep(1)
+                pass
+            pass
 
     def stop(self):
         self.running = False
@@ -83,6 +113,4 @@ class PicoInput(RemoteDataInput):
         label('end')
 
         wrap()
-
-
 

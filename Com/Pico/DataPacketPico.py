@@ -3,6 +3,8 @@ from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from time import sleep
+from machine import Pin
 
 # TODO "make enum"
 COMMAND_START_TOKEN = 0x1FA
@@ -34,8 +36,15 @@ class DataPacketPico(RemoteDataPacket):
     
     # TODO why does this inherit from RemoteDataPacket without forwarding init
     def __init__(self):  # noqa
+
+
+# Initialisierung von GPIO25 als Ausgang
+        #self.led_onboard = Pin(25, Pin.OUT)
         self._token_counter = 0
-        self._data_buffer = []
+        self._data_pointer = 0
+        self._sync_type = 0
+        self._data_buffer = bytearray(20)
+        
         pass
 
     def decode(self) -> RemoteData:
@@ -78,20 +87,25 @@ class DataPacketPico(RemoteDataPacket):
 
     # TODO camelcase
     def putToken(self, token):  # noqa
+   #     self.led_onboard.on()
         return_code = 0
-        print("token ",token)
+       # print("token ",token)
         
         if (token > 0xff ) and (token != END_TOKEN) :
             print("resync")
-            self._data_buffer.clear()
+            self._data_pointer = 0
+            self._sync_type = 0
             return_code = DataPacketPico.PACKET_RESYNC
-
-        self._data_buffer.append(token)
-        self._token_counter += 1
+        else:
+            self._data_buffer[self._data_pointer] = token
+            self._data_pointer += 1
             
         if token == END_TOKEN:
             return_code = DataPacketPico.PACKET_READY
                 
+ #       self.led_onboard.off()
+  #      self.led_onboard.on()
+ #       self.led_onboard.off() 
         return return_code
 
 

@@ -9,14 +9,18 @@ from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
 
 
+
 class PicoInput(RemoteDataInput):
-    
+    clock_pin = 2
     def __init__(self):
+        clock_pin = 2
+        self.led_onboard = Pin(5, Pin.OUT)
         print("init - PicoInput")
         Pin(1, Pin.IN, Pin.PULL_UP)
         self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(1), jmp_pin=Pin(1))
 
         self._state_machine_rx.irq(lambda x: {print('error: usart did not recieve end bit')})
+        #self._state_machine_rx.irq(self.sync_error())
         self._state_machine_rx.active(1)
         self.running = True
         self._data_packet = DataPacketPico()
@@ -28,15 +32,15 @@ class PicoInput(RemoteDataInput):
 
     def process(self):
 
-        if self._state_machine_rx.rx_fifo() > 1:
+        while self._state_machine_rx.rx_fifo() > 1:
             token = self._state_machine_rx.get()
 
             if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
                 print("dp")
                 remote_data = self._data_packet.decode()
-                print(str(remote_data))
+                #print(str(remote_data))
 
-                self.deliver_packet(remote_data)
+                #self.deliver_packet(remote_data)
 
                 self._data_packet = DataPacketPico()
 
@@ -50,29 +54,37 @@ class PicoInput(RemoteDataInput):
         while self.running:
           #  print("alive : ",self.counter)
            # self.counter+=1
+            #self.led_onboard.on()
             if self._state_machine_rx.rx_fifo() > 1:
-                
+   
+                self.led_onboard.on()
                 token = self._state_machine_rx.get()
                                     
                 if data_packet.putToken(token) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
                     print("dp")
                     remote_data = data_packet.decode()
                     #print(str(remote_data))
-                    print(remote_data)
-                    self.deliver_packet(remote_data)
+                   # print(remote_data)
+                   # self.deliver_packet(remote_data)
 
                     data_packet = DataPacketPico()
-
+                self.led_onboard.off()
             else:
                # sleep(0.001)
                 #sleep(1)
                 pass
-            pass
+            #self.led_onboard.off()
+            
+#    with print & deliver 5 ms
+            
 
     def stop(self):
         self.running = False
         self._state_machine_rx.active(0)
 
+    def sync_error(self):
+        print('sync error: usart did not recieve end bit')
+        #ToDo abfangen und rücksetzen
     
     @rp2.asm_pio(in_shiftdir=rp2.PIO.SHIFT_RIGHT)
     def rx():

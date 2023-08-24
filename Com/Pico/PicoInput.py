@@ -25,9 +25,7 @@ class PicoInput(RemoteDataInput):
         self.running = True
         self._data_packet = DataPacketPico()
         self.counter = 0
-       # self.x = threading.Thread(target=self.run)
-       # self.x.start()
-#        self.run()
+
 
 
     def process(self):

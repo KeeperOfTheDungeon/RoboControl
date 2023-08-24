@@ -24,6 +24,7 @@ class Connection:
         self.connection_partner = ""
 
     def connect(self, data_packet_receiver: Listener) -> None:
+        print("listener added")
         self._data_input.add_listener(data_packet_receiver)
         pass
 

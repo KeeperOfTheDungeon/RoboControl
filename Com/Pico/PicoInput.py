@@ -32,17 +32,17 @@ class PicoInput(RemoteDataInput):
 
     def process(self):
 
-        while self._state_machine_rx.rx_fifo() > 1:
+       # if self._state_machine_rx.rx_fifo() > 1:
             token = self._state_machine_rx.get()
+            print("t : ",token)
+           # if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
+           #     print("dp")
+           #     remote_data = self._data_packet.decode()
+             
 
-            if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
-                print("dp")
-                remote_data = self._data_packet.decode()
-                #print(str(remote_data))
+           #     self.deliver_packet(remote_data)
 
-                #self.deliver_packet(remote_data)
-
-                self._data_packet = DataPacketPico()
+           #     self._data_packet = DataPacketPico()
 
 
 
@@ -55,20 +55,15 @@ class PicoInput(RemoteDataInput):
           #  print("alive : ",self.counter)
            # self.counter+=1
             #self.led_onboard.on()
-            if self._state_machine_rx.rx_fifo() > 1:
-   
-                self.led_onboard.on()
+            while self._state_machine_rx.rx_fifo() > 0:
+                
                 token = self._state_machine_rx.get()
-                                    
+                  
                 if data_packet.putToken(token) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
-                    print("dp")
                     remote_data = data_packet.decode()
-                    #print(str(remote_data))
-                   # print(remote_data)
-                   # self.deliver_packet(remote_data)
+                    self.deliver_packet(remote_data)
 
-                    data_packet = DataPacketPico()
-                self.led_onboard.off()
+                #    data_packet = DataPacketPico()
             else:
                # sleep(0.001)
                 #sleep(1)
@@ -92,36 +87,37 @@ class PicoInput(RemoteDataInput):
 
         # wait for start bit
         label('ready')
-        wait(0, pins, 2)
-        wait(1, pins, 2)
-        jmp(pin, 'ready')
+        wait(0, pins, 2)		# warte auf 0 bei clock
+        wait(1, pins, 2)		# warte auf 1 bei clock
+        jmp(pin, 'ready') 		# wenn pin High dann kein Startbit
 
         # accept message
-        set(x, 8)
-        wait(0, pins, 2)
+        set(x, 8)				# setze counter auf 8 bits
+        wait(0, pins, 2)		# warte auf 0 bei clock 
         
         label('loop')
         
-        wait(1, pins, 2)
-        in_(pins, 1)
-        wait(0, pins, 2)
+        wait(1, pins, 2)		# warte auf 1 bei clock
+        in_(pins, 1)			# holle aktuelles bit
+        wait(0, pins, 2)		# Warte auf 0 beiu clock
         
-        jmp(x_dec, 'loop')
+        jmp(x_dec, 'loop')		# nächsten bit hollen (solange n > 0)
 
         # wait for end bit
-        wait(1, pins, 2)
-        jmp(pin, 'end_bit')
+        wait(1, pins, 2)		# warte auf 1 bei Clock
+        jmp(pin, 'end_bit')		# springe zu ende 
 
         # exception thrown to main thread
         irq(block, rel(0))
         
-        jmp('end')
+        jmp('end')				# ende
 
         # normal execution
-        label('end_bit')
+        label('end_bit')	
         in_(null, 23)
-        push()
-        
+        #in_(null, 9)		
+        push()				# push data to RX FIFO
+      #  push()
         label('end')
 
         wrap()

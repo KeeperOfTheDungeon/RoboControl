@@ -20,11 +20,20 @@ OK_START_TOKEN = 0x1FD
 FAIL_START_TOKEN = 0x1FE
 END_TOKEN = 0x1FF
 
-BUFFER_OFFSET_MESSAGE_TYPE = 0
-BUFFER_OFFSET_DEST_ADDRESS = 1
-BUFFER_OFFSET_SRC_ADDRESS = 2
-BUFFER_OFFSET_ID = 3
-BUFFER_OFFSET_PAYLOAD = 4
+
+
+#BUFFER_OFFSET_MESSAGE_TYPE = 0
+BUFFER_OFFSET_DEST_ADDRESS = 0
+BUFFER_OFFSET_SRC_ADDRESS = 1
+BUFFER_OFFSET_ID = 2
+BUFFER_OFFSET_PAYLOAD = 3
+
+
+#BUFFER_OFFSET_MESSAGE_TYPE = 0
+#BUFFER_OFFSET_DEST_ADDRESS = 1
+#BUFFER_OFFSET_SRC_ADDRESS = 2
+#BUFFER_OFFSET_ID = 3
+#BUFFER_OFFSET_PAYLOAD = 4
 
 Byte: TypeAlias = int
 
@@ -48,7 +57,10 @@ class DataPacketPico(RemoteDataPacket):
         pass
 
     def decode(self) -> RemoteData:
-        message_type = self._data_buffer[0]
+        
+        message_type = self._sync_type | 0x100
+        
+        print(message_type)
 
         if message_type == COMMAND_START_TOKEN:
             print("Comand sync")
@@ -72,15 +84,19 @@ class DataPacketPico(RemoteDataPacket):
         remote_data._destination_address = int(self._data_buffer[BUFFER_OFFSET_DEST_ADDRESS])
         remote_data._source_address = int(self._data_buffer[BUFFER_OFFSET_SRC_ADDRESS])
         remote_data._id = int(self._data_buffer[BUFFER_OFFSET_ID])
+        print(self._data_buffer)
+        #data_size = len(self._data_buffer) - (BUFFER_OFFSET_PAYLOAD + 1)
 
-        data_size = len(self._data_buffer) - (BUFFER_OFFSET_PAYLOAD + 1)
-
-        payload = bytearray(int(data_size)) # TODO make with RemoteData class compatible
-        index = 0
-        while (index + BUFFER_OFFSET_PAYLOAD) < (len(self._data_buffer) - 1):
-            value = int(self._data_buffer[index + BUFFER_OFFSET_PAYLOAD])
-            payload[index] = value
-            index += 1
+        payload = bytearray(self._data_pointer-BUFFER_OFFSET_PAYLOAD) # TODO make with RemoteData class compatible
+        
+        from_index = BUFFER_OFFSET_PAYLOAD
+        to_index = 0
+        
+        while (from_index) < (self._data_pointer):
+            value = int(self._data_buffer[from_index])
+            payload[to_index] = value
+            from_index += 1
+            to_index += 1
 
         remote_data.set_payload(payload)
 
@@ -89,20 +105,20 @@ class DataPacketPico(RemoteDataPacket):
     def putToken(self, token):  # noqa
    #     self.led_onboard.on()
         return_code = 0
-       # print("token ",token)
-        
-        if (token > 0xff ) and (token != END_TOKEN) :
-            print("resync")
-            self._data_pointer = 0
-            self._sync_type = 0
-            return_code = DataPacketPico.PACKET_RESYNC
-        else:
-            self._data_buffer[self._data_pointer] = token
-            self._data_pointer += 1
-            
+  
         if token == END_TOKEN:
             return_code = DataPacketPico.PACKET_READY
-                
+      
+        elif (token > 0xff ) and (token != END_TOKEN):
+            print("resync")
+            self._data_pointer = 0
+            self._sync_type = token & 0xff
+            return_code = DataPacketPico.PACKET_RESYNC
+        else:
+            token &= 0xff
+            self._data_buffer[self._data_pointer] = token & 0xff
+            self._data_pointer += 1
+                  
  #       self.led_onboard.off()
   #      self.led_onboard.on()
  #       self.led_onboard.off() 

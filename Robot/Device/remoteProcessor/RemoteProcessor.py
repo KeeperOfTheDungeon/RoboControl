@@ -14,7 +14,11 @@ class RemoteProcessor:
 		if self._remote_data.get_id() == id:
 			return True
 
-		return False	
+	def get_remote_id(self):
+		return self._remote_data.get_id()
+
+
+
 
 	def get_remote_data(self):
 		return self._remote_data

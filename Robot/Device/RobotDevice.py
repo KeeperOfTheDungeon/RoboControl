@@ -4,16 +4,14 @@ from RoboControl.Robot.Device.Protocol.Cmd_clearAllDataStreams import Cmd_clearA
 from RoboControl.Robot.Device.Protocol.Cmd_clearComStatistics import Cmd_clearComStatistics
 from RoboControl.Robot.Device.Protocol.Cmd_clearCpuStatistics import Cmd_clearCpuStatistics
 from RoboControl.Robot.Device.Protocol.Cmd_continueAllDataStreams import Cmd_continueAllDataStreams
-from RoboControl.Robot.Device.Protocol.Cmd_getNodeId import Cmd_getNodeId
+
 from RoboControl.Robot.Device.Protocol.Cmd_loadDataStreams import Cmd_loadDataStreams
 from RoboControl.Robot.Device.Protocol.Cmd_pauseAllDataStreams import Cmd_pauseAllDataStreams
-from RoboControl.Robot.Device.Protocol.Cmd_ping import Cmd_ping
 from RoboControl.Robot.Device.Protocol.Cmd_saveDataStreams import Cmd_saveDataStreams
 from RoboControl.Robot.Device.Protocol.Cmd_startStreamData import Cmd_startStreamData
 from RoboControl.Robot.Device.Protocol.Cmd_stopStreamData import Cmd_stopStreamData
-from RoboControl.Robot.Device.Protocol.Msg_pingResponse import Msg_pingResponse
-from RoboControl.Robot.Device.Protocol.Stream_comStatistics import Stream_comStatistics
-from RoboControl.Robot.Device.Protocol.Stream_cpuStatistics import Stream_cpuStatistics
+
+
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 
 
@@ -33,27 +31,7 @@ class RobotDevice(AbstractRobotDevice):
         aquisators = ["cpu status", "com ststus"]
         return aquisators
 
-    def build_protocol(self):
-        self._remote_stream_processor_list.append(
-            RemoteProcessor(Stream_comStatistics(DeviceProtocol.STREAM_COM_STATISTICS),
-                            self._com_status.process_com_status_message))
-        self._remote_stream_processor_list.append(
-            RemoteProcessor(Stream_cpuStatistics(DeviceProtocol.STREAM_CPU_STATISTICS),
-                            self._cpu_status.process_cpu_status_message))
-
-        self._remote_command_processor_list.append(
-            RemoteProcessor(Cmd_ping(DeviceProtocol.CMD_PING), self.process_ping_command))
-        self._remote_command_processor_list.append(
-            RemoteProcessor(Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID), self.process_Node_id_command))
-
-        self._remote_message_processor_list.append(RemoteProcessor(Msg_pingResponse(), self.process_ping_response))
-
-    # remote commands
-
-    def remote_ping_device(self):
-        cmd = Cmd_ping.get_command(DeviceProtocol.CMD_PING)
-        self.send_data(cmd)
-
+ 
     def remote_continue_streams(self):
         cmd = Cmd_continueAllDataStreams.get_command()
         self.send_data(cmd)
@@ -90,16 +68,7 @@ class RobotDevice(AbstractRobotDevice):
         cmd = Cmd_clearComStatistics.get_command()
         self.send_data(cmd)
 
-    def process_ping_response(self, message_data):
-        print("******************got ping response************************")
 
-    def process_ping_command(self, command_data):
-        msg = Msg_pingResponse.get_command(DeviceProtocol.MSG_PING_RESPONSE)
-        self.send_data(msg)
-        print("******************got ping command************************")
-
-    def process_Node_id_command(self, command_data):
-        print("******************got node Id command************************")
 
 
 """ 

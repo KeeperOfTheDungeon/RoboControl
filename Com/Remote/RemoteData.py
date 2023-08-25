@@ -84,7 +84,9 @@ class RemoteData:
                 index += parameter.parse_from_buffer(payload, index)
 
     def __str__(self) -> str:
-        res = f"RemoteData({self._name}, id={self._id}): {self._description}"
+        res = f"RemoteData"
+        res += f"\n\tClass({self.__class__.__name__})"
+        res += f"\n\tName({self._name})"
         res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
         res += f"\n\t(id) {self._id}"
         res += f"\n\tpayload: " + ",".join([str(b) for b in self._payload])

@@ -101,7 +101,6 @@ class DataPacketPico(RemoteDataPacket):
 
     # TODO camelcase
     def putToken(self, token):  # noqa
-   #     self.led_onboard.on()
         return_code = 0
   
         if token == END_TOKEN:
@@ -116,10 +115,7 @@ class DataPacketPico(RemoteDataPacket):
             token &= 0xff
             self._data_buffer[self._data_pointer] = token & 0xff
             self._data_pointer += 1
-                  
- #       self.led_onboard.off()
-  #      self.led_onboard.on()
- #       self.led_onboard.off() 
+
         return return_code
 
 

@@ -148,7 +148,9 @@ class RemoteDataPacket:
         return self._type
 
     def __str__(self) -> str:
-        res = f"RemoteDataPacket({self._command})"
+        res = f"RemoteDataPacket)"
+        res = f"Type({self._type_name})"
+        res = f"Command ({self._command})"
         res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
         res += f"\n\tdata: {render_data(self, DisplayDataWidth_e.WIDTH_8, True)}"
         res += f"\n\tremote_data: " + str(self._remote_data).split("\n")[0].strip()

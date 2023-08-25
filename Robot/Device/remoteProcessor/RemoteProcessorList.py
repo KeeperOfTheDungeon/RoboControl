@@ -4,12 +4,14 @@ class RemoteProcerssorList(list):
 
 
 
-	def find_on_id(self, id):
-		for processor in self:
-			if processor.has_remote_id(id):
-				return processor
-		
-		return None
+    def find_on_id(self, id):
+        print("RPL : looking for id - ",id)
+        for processor in self:
+            print("RPL : ",processor, " id : ", processor.get_remote_id())
+            if processor.has_remote_id(id):
+                return processor
+
+        return None
 
 """package de.hska.lat.robot.device.device.remoteProcessor;
 

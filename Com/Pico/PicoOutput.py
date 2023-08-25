@@ -10,6 +10,7 @@ from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
+from RoboControl.Com.Pico.DataPacketPico import END_TOKEN
 from RoboControl.Com.Remote.RemoteCommandDataPacket import RemoteCommandDataPacket
 from RoboControl.Com.Remote.RemoteMessageDataPacket import RemoteMessageDataPacket
 from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
@@ -23,13 +24,19 @@ class PicoOutput(RemoteDataOutput):
 
     def transmitt(self, data_packet: RemoteDataPacket) -> None:
         print("PO : transmit ")
-        data_packet.set_source_address(1)
+        data_packet.set_source_address(11)
         pico_data = DataPacketPico()
         pico_data.code(data_packet)
         token_buffer = pico_data.get_buffer()
-        
+    
+        self._state_machine_tx.put(pico_data.get_sync_token()) # write sync
+    
         for token in token_buffer:
             self._state_machine_tx.put(token)
+       
+        self._state_machine_tx.put(pico_data.get_end_token())		# write end
+
+        print("PO : transmit done")
 
     def stop(self):
         self._state_machine_tx.active(0)

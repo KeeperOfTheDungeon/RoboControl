@@ -29,11 +29,11 @@ BUFFER_OFFSET_ID = 2
 BUFFER_OFFSET_PAYLOAD = 3
 
 
-#BUFFER_OFFSET_MESSAGE_TYPE = 0
-#BUFFER_OFFSET_DEST_ADDRESS = 1
-#BUFFER_OFFSET_SRC_ADDRESS = 2
-#BUFFER_OFFSET_ID = 3
-#BUFFER_OFFSET_PAYLOAD = 4
+#DATA_PACKET_OFFSET_MESSAGE_TYPE = 0
+#DATA_PACKET_OFFSET_DEST_ADDRESS = 1
+#DATA_PACKET_OFFSET_SRC_ADDRESS = 2
+#DATA_PACKET_OFFSET_ID = 3
+#DATA_PACKET_OFFSET_PAYLOAD = 4
 
 Byte: TypeAlias = int
 
@@ -55,6 +55,12 @@ class DataPacketPico(RemoteDataPacket):
         self._data_buffer = bytearray(20)
         
         pass
+
+    def get_sync_token(self):
+        return self._sync_type
+
+    def get_end_token(self):
+        return END_TOKEN
 
     def decode(self) -> RemoteData:
         
@@ -130,9 +136,9 @@ class DataPacketPico(RemoteDataPacket):
 
         # command mark
         if isinstance(remote_data, RemoteCommand):
-            self._data_buffer[BUFFER_OFFSET_MESSAGE_TYPE] = COMMAND_START_TOKEN
+            self._sync_type = COMMAND_START_TOKEN
         elif isinstance(remote_data, RemoteMessage):
-            self._data_buffer[BUFFER_OFFSET_MESSAGE_TYPE] = MESSAGE_START_TOKEN
+            self._sync_type = MESSAGE_START_TOKEN
 
         self._data_buffer[BUFFER_OFFSET_DEST_ADDRESS] = remote_data.get_destination_address()
         self._data_buffer[BUFFER_OFFSET_SRC_ADDRESS] = remote_data.get_source_address()

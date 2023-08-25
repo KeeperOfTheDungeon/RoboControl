@@ -9,27 +9,37 @@ import _thread
 class PicoConnection(Connection):
     connected: bool = False
 
-    def __init__(self):
+    def __init__(self, meta_data):
         super().__init__()
         print("PicoConnection - init")
-       
+        self._rxpin = meta_data["rx_pin"]		#extract receiver pin from settings
+        self._txpin = meta_data["tx_pin"]		#extract transmitter pin from settings
+        
         # clear programs form pio for clean restart
         rp2.PIO(0).remove_program()
         rp2.PIO(1).remove_program()
+
+
 
     def connect(self, listener) -> None:
         super().connect(listener)
         if not self.connected:
             self._data_output = PicoOutput() # add data_output
             self._data_input = PicoInput() # add data_input
-            self._data_input.run()
-
+        
+        _thread.start_new_thread(self.connection_thread, ())
             
     def disconnect(self) -> None:
         self._data_input.stop()
         self._data_output.stop()
         super().disconnect()
 
-            
+
+        
+    def connection_thread(self):
+        while True:
+            #utime.sleep(0.01)
+            self._data_input.process()
+            self._data_output.process()
 
 

@@ -33,6 +33,12 @@ class PicoOutput(RemoteDataOutput):
 
     def stop(self):
         self._state_machine_tx.active(0)
+        
+        
+    def process(self):
+        pass
+        
+        
 
     @rp2.asm_pio(out_init=rp2.PIO.OUT_HIGH,
              out_shiftdir=rp2.PIO.SHIFT_RIGHT,

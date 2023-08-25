@@ -84,9 +84,7 @@ class DataPacketPico(RemoteDataPacket):
         remote_data._destination_address = int(self._data_buffer[BUFFER_OFFSET_DEST_ADDRESS])
         remote_data._source_address = int(self._data_buffer[BUFFER_OFFSET_SRC_ADDRESS])
         remote_data._id = int(self._data_buffer[BUFFER_OFFSET_ID])
-        print(self._data_buffer)
-        #data_size = len(self._data_buffer) - (BUFFER_OFFSET_PAYLOAD + 1)
-
+        
         payload = bytearray(self._data_pointer-BUFFER_OFFSET_PAYLOAD) # TODO make with RemoteData class compatible
         
         from_index = BUFFER_OFFSET_PAYLOAD
@@ -155,40 +153,5 @@ class DataPacketPico(RemoteDataPacket):
 
     def get_buffer(self):
         return self._data_buffer
-
-
-
-def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:
-    if len(data_buffer) % 2 != 0:
-        return None
-    if data_buffer[-1] != END_TOKEN:
-        return None
-
-    try:
-        destination_address: Byte = get_byte(data_buffer, 1)
-        source_address: Byte = get_byte(data_buffer, 3)
-        command: Byte = get_byte(data_buffer, 5)
-        first_token = data_buffer[0]
-        if first_token not in [COMMAND_START_TOKEN,
-                               MESSAGE_START_TOKEN,
-                               STREAM_START_TOKEN,
-                               OK_START_TOKEN,
-                               FAIL_START_TOKEN]:
-            return None
-        data_packet = RemoteDataPacket(destination_address, source_address, command)
-        data_packet_size = (len(data_buffer) - 8) / 2
-        data_packet.alocate(data_packet_size)
-
-        data_index = 0
-        for index in range(7, len(data_buffer) - 1, 2):
-            value = get_byte(data_buffer, index)
-            data_packet.set_byte(data_index, value)
-            data_index += 1
-
-    except Exception as e:
-        traceback.print_exception(e)
-        return None
-    return data_packet
-
 
 

@@ -24,9 +24,7 @@ class Connection:
         self.connection_partner = ""
 
     def connect(self, data_packet_receiver: Listener) -> None:
-        print("listener added")
         self._data_input.add_listener(data_packet_receiver)
-        pass
 
     def disconnect(self) -> None:
         self._data_input.running = False
@@ -38,18 +36,26 @@ class Connection:
         if self._data_output is None:
             print("Can't transmit as _data_output isn't set.")
             return False
+        
         if self._data_output.get_remote():
             remote_data.set_source_address(self.device_id)
         else:
             remote_data.set_destination_address(self.device_id)
+            
         data_packet: Optional[RemoteDataPacket] = remote_data.get_data_packet()
+        
         if data_packet is None:
             raise ValueError(f"Incompatible remote_data type ({type(remote_data)}): {remote_data}")
         data_packet.set_remote_data(remote_data)
+        
         if self._data_packet_logger is not None:
             self._data_packet_logger.add_output_packet(data_packet)
+        
         self._data_output.transmitt(data_packet)
+        
         return True
+
+
 
     def set_data_packet_logger(self, data_packet_logger: DataPacketLogger):
         self._data_packet_logger = data_packet_logger

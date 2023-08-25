@@ -1,4 +1,3 @@
-
 from RoboControl.Robot.Component.Actor.Actor import Actor
 from RoboControl.Robot.Component.Actor.Led.protocol.Cmd_getLedBrightness import Cmd_getLedBrightness
 from RoboControl.Robot.Component.Actor.Led.protocol.Cmd_setLedBrightness import Cmd_setLedBrightness
@@ -18,6 +17,12 @@ class Led(Actor):
 		cmd = Cmd_setLedBrightness.get_command(self._cmd_set_led_brightness, self._local_id, brightness )
 		self.send_data(cmd)
 
+    """
+	def remote_send_msg_brightness(self, brightness):
+		cmd = Msg_setLedBrightness.get_command(self._cmd_set_led_brightness, self._local_id, brightness )
+		self.send_data(cmd)
+    """
+
 
 	def remote_get_value(self):
 		cmd = Cmd_getLedBrightness.get_command(self._componentProtocol.cmd_get_value_id,self._local_id)
@@ -25,39 +30,3 @@ class Led(Actor):
 		self.send_data(cmd)
 		
 		
-
-"""package de.hska.lat.robot.component.actor.led;
-
-
-public class Led extends Actor<ComponentChangeNotifier,ComponentSettingsChangeNotifier , LedProtocol, BrightnessValue>
-{
-
-
-public boolean remote_setBrightness(float brightness)
-{
-	if (this.componentProtocol==null)
-		return(false);
-	
-	
-	return(sendData(Cmd_setLedBrightness.getCommand(this.componentProtocol.cmdSetValueId,this.localId,brightness)));
-}
-
-
-@Override
-public boolean remote_getValue()
-{
-	if (this.componentProtocol==null)
-		return(false);
-
-	return(sendData(Cmd_getLedBrightness.getCommand(this.componentProtocol.cmdGetValueId,this.localId)));
-}
-
-
-
-
-
-
-
-
-}
-"""

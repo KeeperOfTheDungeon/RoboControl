@@ -1,5 +1,3 @@
-#import threading
-from time import sleep
 from machine import Pin
 import rp2
 
@@ -26,50 +24,15 @@ class PicoInput(RemoteDataInput):
         self._data_packet = DataPacketPico()
         self.counter = 0
 
-
-
     def process(self):
-
-       # if self._state_machine_rx.rx_fifo() > 1:
-            token = self._state_machine_rx.get()
-            print("t : ",token)
-           # if self._data_packet.putToken(token):  # put token  into datapacket - if endsync detected function will return True
-           #     print("dp")
-           #     remote_data = self._data_packet.decode()
-             
-
-           #     self.deliver_packet(remote_data)
-
-           #     self._data_packet = DataPacketPico()
-
-
-
-    def run(self) -> None:
-        print("x is running")
-
-        data_packet = DataPacketPico()
-
-        while self.running:
-          #  print("alive : ",self.counter)
-           # self.counter+=1
-            #self.led_onboard.on()
-            while self._state_machine_rx.rx_fifo() > 0:
+        while self._state_machine_rx.rx_fifo() > 0:
                 
-                token = self._state_machine_rx.get()
+            token = self._state_machine_rx.get()
                   
-                if data_packet.putToken(token) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
-                    remote_data = data_packet.decode()
-                    self.deliver_packet(remote_data)
-
-                #    data_packet = DataPacketPico()
-            else:
-               # sleep(0.001)
-                #sleep(1)
-                pass
-            #self.led_onboard.off()
-            
-#    with print & deliver 5 ms
-            
+            if self._data_packet.putToken(token) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
+                remote_data = self._data_packet.decode()
+                print("pi : deliver")
+                self.deliver_packet(remote_data)
 
     def stop(self):
         self.running = False

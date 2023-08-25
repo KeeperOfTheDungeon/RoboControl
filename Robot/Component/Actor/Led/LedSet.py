@@ -4,8 +4,8 @@ from RoboControl.Robot.Component.ComponentSet import ComponentSet
 #unused
 class LedSet(ComponentSet):
 	def __init__(self, components, protocol):
-	
-		actors = list()
+
+        actors = list()
 
 		for component in components:
 			actor = Led(component)

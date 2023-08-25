@@ -21,8 +21,8 @@ class PicoOutput(RemoteDataOutput):
         self._state_machine_tx = rp2.StateMachine(0, self.tx, freq=1000000, out_base=Pin(0), sideset_base=Pin(0))
         self._state_machine_tx.active(1)
 
-    def transmit(self, data_packet: RemoteDataPacket) -> None:
-        print("transmit")
+    def transmitt(self, data_packet: RemoteDataPacket) -> None:
+        print("PO : transmit ")
         data_packet.set_source_address(1)
         pico_data = DataPacketPico()
         pico_data.code(data_packet)

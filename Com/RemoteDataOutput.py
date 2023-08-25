@@ -31,6 +31,7 @@ class RemoteDataOutput:
         return self._is_remote
 
     def transmitt(self, data_packet: RemoteDataPacket):
+        print ("RDO : default Transmitter")
         return False
 
     def send_byte(self, token: Byte) -> bool:

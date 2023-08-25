@@ -122,6 +122,7 @@ class AbstractRobotDevice:
 
     def send_data(self, data_packet):
         print("ARD: send Data")
+        print(data_packet)
         data_packet.set_destination_address(self.get_id())
 
         self._transmitter.transmitt(data_packet)
@@ -131,9 +132,7 @@ class AbstractRobotDevice:
 
 
 
-    def remote_ping_device(self):
-        cmd = Cmd_ping.get_command(DeviceProtocol.CMD_PING)
-        self.send_data(cmd)
+
 
 
     def parse_data_packet(self, data_packet):
@@ -159,7 +158,6 @@ class AbstractRobotDevice:
             processor = self._remote_exception_processor_list.find_on_id(query_id)
 
         if processor is not None:
-            print ("ARD : No Processor")
             remote_data = processor.get_remote_data()
            # remote_stream = copy.copy(remote_data)
             #remote_stream.parse_payload(data_packet.get_payload())
@@ -167,15 +165,23 @@ class AbstractRobotDevice:
 
             processor.execute(remote_data)
             pass
+
+# device remote functions
         
+        
+    def remote_ping_device(self):
+        cmd = Cmd_ping.get_command(DeviceProtocol.CMD_PING)
+        self.send_data(cmd)
+
+
 # Remote Prozessors
 
     def process_ping_response(self, message_data):
         print("******************got ping response************************")
 
     def process_ping_command(self, command_data):
-       # msg = Msg_pingResponse.get_command(DeviceProtocol.MSG_PING_RESPONSE)
-       # self.send_data(msg)
+        msg = Msg_pingResponse.get_command(DeviceProtocol.MSG_PING_RESPONSE)
+        self.send_data(msg)
         print("******************got ping command************************")
 
     def process_Node_id_command(self, command_data):

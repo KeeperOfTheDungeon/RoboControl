@@ -18,8 +18,8 @@ from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
 
 class PicoOutput(RemoteDataOutput):
 
-    def __init__(self):
-        self._state_machine_tx = rp2.StateMachine(0, self.tx, freq=1000000, out_base=Pin(0), sideset_base=Pin(0))
+    def __init__(self, txpin):
+        self._state_machine_tx = rp2.StateMachine(0, self.tx, freq=1000000, out_base=Pin(txpin), sideset_base=Pin(txpin))
         self._state_machine_tx.active(1)
 
     def transmitt(self, data_packet: RemoteDataPacket) -> None:

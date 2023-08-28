@@ -24,8 +24,8 @@ class PicoConnection(Connection):
     def connect(self, listener) -> None:
         super().connect(listener)
         if not self.connected:
-            self._data_output = PicoOutput() # add data_output
-            self._data_input = PicoInput() # add data_input
+            self._data_output = PicoOutput(self._txpin) # add data_output
+            self._data_input = PicoInput(self._rxpin) # add data_input
         
         _thread.start_new_thread(self.connection_thread, ())
             

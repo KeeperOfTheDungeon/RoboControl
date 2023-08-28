@@ -10,12 +10,12 @@ from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
 
 class PicoInput(RemoteDataInput):
     clock_pin = 2
-    def __init__(self):
+    def __init__(self, rxpin):
         clock_pin = 2
         self.led_onboard = Pin(5, Pin.OUT)
         print("init - PicoInput")
-        Pin(1, Pin.IN, Pin.PULL_UP)
-        self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(1), jmp_pin=Pin(1))
+        Pin(rxpin, Pin.IN, Pin.PULL_UP)
+        self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(rxpin), jmp_pin=Pin(rxpin))
 
         self._state_machine_rx.irq(lambda x: {print('error: usart did not recieve end bit')})
         #self._state_machine_rx.irq(self.sync_error())

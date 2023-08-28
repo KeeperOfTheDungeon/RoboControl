@@ -5,13 +5,10 @@ import rp2
 
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
-
-
+from RoboControl.Com.Pico.PicoDecorators import clock_pin_decorator
 
 class PicoInput(RemoteDataInput):
-    clock_pin = 2
-    def __init__(self, rxpin):
-        clock_pin = 2
+    def __init__(self, rxpin, clockpin):
         self.led_onboard = Pin(5, Pin.OUT)
         print("init - PicoInput")
         Pin(rxpin, Pin.IN, Pin.PULL_UP)
@@ -43,29 +40,30 @@ class PicoInput(RemoteDataInput):
         #ToDo abfangen und rücksetzen
     
     @rp2.asm_pio(in_shiftdir=rp2.PIO.SHIFT_RIGHT)
-    def rx():
+    @clock_pin_decorator(2)
+    def rx(clock_pin):
         wrap_target()
 
         # wait for start bit
         label('ready')
-        wait(0, pins, 2)		# warte auf 0 bei clock
-        wait(1, pins, 2)		# warte auf 1 bei clock
+        wait(0, pins, clock_pin)		# warte auf 0 bei clock
+        wait(1, pins, clock_pin)		# warte auf 1 bei clock
         jmp(pin, 'ready') 		# wenn pin High dann kein Startbit
 
         # accept message
         set(x, 8)				# setze counter auf 8 bits
-        wait(0, pins, 2)		# warte auf 0 bei clock 
+        wait(0, pins, clock_pin)		# warte auf 0 bei clock 
         
         label('loop')
         
-        wait(1, pins, 2)		# warte auf 1 bei clock
+        wait(1, pins, clock_pin)		# warte auf 1 bei clock
         in_(pins, 1)			# holle aktuelles bit
-        wait(0, pins, 2)		# Warte auf 0 beiu clock
+        wait(0, pins, clock_pin)		# Warte auf 0 beiu clock
         
         jmp(x_dec, 'loop')		# nächsten bit hollen (solange n > 0)
 
         # wait for end bit
-        wait(1, pins, 2)		# warte auf 1 bei Clock
+        wait(1, pins,  clock_pin)		# warte auf 1 bei Clock
         jmp(pin, 'end_bit')		# springe zu ende 
 
         # exception thrown to main thread
@@ -76,9 +74,7 @@ class PicoInput(RemoteDataInput):
         # normal execution
         label('end_bit')	
         in_(null, 23)
-        #in_(null, 9)		
         push()				# push data to RX FIFO
-      #  push()
         label('end')
 
         wrap()

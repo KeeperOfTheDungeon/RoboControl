@@ -16,8 +16,6 @@ class PicoInput(RemoteDataInput):
         Pin(rxpin, Pin.IN, Pin.PULL_UP)
         self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(rxpin), jmp_pin=Pin(rxpin))
 
-        self._state_machine_rx.irq(lambda x: {print('error: usart did not recieve end bit')})
-        #self._state_machine_rx.irq(self.sync_error())
         self._state_machine_rx.active(1)
         self.running = True
         self._data_packet = DataPacketPico()
@@ -67,16 +65,18 @@ class PicoInput(RemoteDataInput):
         wait(1, pins,  CLOCK_PIN)		# warte auf 1 bei Clock
         jmp(pin, 'end_bit')		# springe zu ende 
 
-        # exception thrown to main thread
-        irq(block, rel(0))
+        # exception as 10. LSB in word to main thread
+        set(y, 1)
+        in_(y, 23)
         
         jmp('end')				# ende
 
         # normal execution
         label('end_bit')	
         in_(null, 23)
-        push()				# push data to RX FIFO
+        
         label('end')
+        push()				# push data to RX FIFO
 
         wrap()
 

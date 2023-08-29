@@ -111,6 +111,13 @@ class DataPacketPico(RemoteDataPacket):
   
         if token == END_TOKEN:
             return_code = DataPacketPico.PACKET_READY
+
+        elif (token & 0x200 == 0x200):
+            print("Connection error no end bit in usart connection")
+            print("resync")
+            self._data_pointer = 0
+            self._sync_type = token & 0xff
+            return_code = DataPacketPico.PACKET_RESYNC
       
         elif (token > 0xff ) and (token != END_TOKEN):
             print("resync")

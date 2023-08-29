@@ -14,12 +14,15 @@ from RoboControl.Com.Pico.DataPacketPico import END_TOKEN
 from RoboControl.Com.Remote.RemoteCommandDataPacket import RemoteCommandDataPacket
 from RoboControl.Com.Remote.RemoteMessageDataPacket import RemoteMessageDataPacket
 from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
-from RoboControl.Com.Pico.PicoDecorators import clock_pin_decorator
+from micropython import const
+
+CLOCK_PIN = const(2)
+
 
 
 class PicoOutput(RemoteDataOutput):
 
-    def __init__(self, txpin, clockpin):
+    def __init__(self, txpin):
         self._state_machine_tx = rp2.StateMachine(0, self.tx, freq=1000000, out_base=Pin(txpin), sideset_base=Pin(txpin))
         self._state_machine_tx.active(1)
 
@@ -51,32 +54,31 @@ class PicoOutput(RemoteDataOutput):
     @rp2.asm_pio(out_init=rp2.PIO.OUT_HIGH,
              out_shiftdir=rp2.PIO.SHIFT_RIGHT,
              sideset_init=rp2.PIO.OUT_HIGH)
-    @clock_pin_decorator(2)
-    def tx(clock_pin):
+    def tx():
         wrap_target()
 
         #start bit
         pull()
-        wait(0, pins, clock_pin)
+        wait(0, pins, CLOCK_PIN)
         set(x, 8)    .side(0)
-        wait(1, pins, clock_pin)
+        wait(1, pins, CLOCK_PIN)
 
         # message
         label('loop')
-        wait(0, pins, clock_pin)
+        wait(0, pins, CLOCK_PIN)
         out(pins, 1)
-        wait(1, pins, clock_pin)
+        wait(1, pins, CLOCK_PIN)
         jmp(x_dec, 'loop')
 
         #end bit
-        wait(0, pins, clock_pin)
+        wait(0, pins, CLOCK_PIN)
         mov(x,x)    .side(1)
-        wait(1, pins, clock_pin)
+        wait(1, pins, CLOCK_PIN)
         
         
-        wait(0, pins, clock_pin)
+        wait(0, pins, CLOCK_PIN)
         mov(x,x)    .side(1)
-        wait(1, pins, clock_pin)
+        wait(1, pins, CLOCK_PIN)
 
         wrap()
 

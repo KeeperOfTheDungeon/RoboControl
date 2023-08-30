@@ -37,9 +37,8 @@ class PicoConnection(Connection):
 
         
     def connection_thread(self):
+        self._data_input.process()
         while True:
-            #utime.sleep(0.01)
-            self._data_input.process()
             self._data_output.process()
 
 

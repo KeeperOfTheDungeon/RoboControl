@@ -1,4 +1,5 @@
 from machine import Pin
+from _thread import allocate_lock
 import rp2
 
 
@@ -15,13 +16,18 @@ class PicoInput(RemoteDataInput):
         print("init - PicoInput")
         Pin(rxpin, Pin.IN, Pin.PULL_UP)
         self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(rxpin), jmp_pin=Pin(rxpin))
-
+        
         self._state_machine_rx.active(1)
         self.running = True
         self._data_packet = DataPacketPico()
         self.counter = 0
 
     def process(self):
+        self.irq_lock = allocate_lock()
+        self._state_machine_rx.irq(self.interrupt_callback)
+
+    def interrupt_callback(self, x):
+        self.irq_lock.acquire()
         while self._state_machine_rx.rx_fifo() > 0:
                 
             token = self._state_machine_rx.get()
@@ -30,6 +36,7 @@ class PicoInput(RemoteDataInput):
                 remote_data = self._data_packet.decode()
                 print("pi : deliver")
                 self.deliver_packet(remote_data)
+        self.irq_lock.release()
 
     def stop(self):
         self.running = False
@@ -77,6 +84,7 @@ class PicoInput(RemoteDataInput):
         
         label('end')
         push()				# push data to RX FIFO
+        irq(rel(0))
 
         wrap()
 

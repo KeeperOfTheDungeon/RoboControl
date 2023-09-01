@@ -9,6 +9,7 @@ from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
 from micropython import const
 
 CLOCK_PIN = const(2)
+PACKET_LIST_LENGTH = const(2)
 
 class PicoInput(RemoteDataInput):
     def __init__(self, rxpin):
@@ -16,27 +17,33 @@ class PicoInput(RemoteDataInput):
         print("init - PicoInput")
         Pin(rxpin, Pin.IN, Pin.PULL_UP)
         self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(rxpin), jmp_pin=Pin(rxpin))
+
+        self._state_machine_rx.irq(self.interrupt_callback)
+        self._packet_list = DataPacketPico()[PACKET_LIST_LENGTH]
+        self._active_packet = 0
+        self._readable_packet = 0
+        self._read = False
         
         self._state_machine_rx.active(1)
         self.running = True
-        self._data_packet = DataPacketPico()
         self.counter = 0
 
     def process(self):
-        self.irq_lock = allocate_lock()
-        self._state_machine_rx.irq(self.interrupt_callback)
+        if(self._read):
+            self._read = False
+            remote_data = self._packet_list[self._readable_packet].decode()
+            self.deliver_packet(remote_data)
 
     def interrupt_callback(self, x):
-        self.irq_lock.acquire()
-        while self._state_machine_rx.rx_fifo() > 0:
+        if self._state_machine_rx.rx_fifo() > 0:
                 
             token = self._state_machine_rx.get()
                   
-            if self._data_packet.putToken(token) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
-                remote_data = self._data_packet.decode()
-                print("pi : deliver")
-                self.deliver_packet(remote_data)
-        self.irq_lock.release()
+            if self._packet_list[self._active_packet].putToken(token) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
+                self._readable_packet = self._active_packet
+                self._active_packet = (self._active_packet + 1) % PACKET_LIST_LENGTH
+                self._read = True
+                
 
     def stop(self):
         self.running = False

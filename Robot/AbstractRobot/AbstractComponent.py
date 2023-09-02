@@ -1,32 +1,46 @@
+from typing import List
+
+from RoboControl.Robot.Value.ComponentValue import ComponentValue
+
+
 class AbstractComponent:
+    def __init__(self, meta_data):
+        self._global_id = meta_data["global_id"]
+        self._name = meta_data["name"]
+        self._transmitter: "Connection" = None
 
-	def __init__(self, meta_data):
-		self._global_id = meta_data["global_id"]
-		self._name = meta_data["name"]
+    def get_name(self):
+        return self._name
+
+    get_component_name = get_name
+
+    def set_component_name(self, name: str) -> None:
+        self._name = name
+
+    def get_global_id(self) -> int:
+        """ "gets component global id this is the unique id for this component in a Robot" """
+        return self._global_id
+
+    def set_transmitter(self, transmitter: "Connection"):
+        """ set transmitter for this component. All data will be sent thru this transmitter """
+        self._transmitter = transmitter
+
+    def get_data_values(self) -> List[ComponentValue]:
+        return []  # TODO ??
+
+    def get_control_values(self) -> List[ComponentValue]:
+        return []  # TODO ??
+
+    def get_control_clients(self) -> List[ComponentValue]:
+        return []  # TODO ??
 
 
- 
 
 
-"""
-package de.hska.lat.robot.abstractRobot.component;
 
-import java.util.ArrayList;
+"""	
 
-import de.hska.lat.comm.remote.RemoteDataTransmitter;
-import de.hska.lat.robot.component.ComponentMetaData;
-import de.hska.lat.robot.control.client.ControlClient;
-import de.hska.lat.robot.value.ComponentValue;
-import de.hska.lat.settings.Settings;
-
-public abstract class AbstractRobotComponent
-{
-
-	
-
-	
 	protected RemoteDataTransmitter transmitter;
-	
 	
 	protected String instanceKey;
 	
@@ -48,38 +62,6 @@ public AbstractRobotComponent(ComponentMetaData metaData)
 }
 
 
-public void setComponentName(String name)
-{
-	this.name = name;
-}
-	
-public String getComponentName()
-{
-	return(this.name);
-}
-
-/**
- * gets component global id this is the unique id for this component in a Robot
- * @return global id
- */
-
-
-public int getGlobalId()
-{
-	return(this.globalId);
-}
-
-
-
-
-/**
- * set transmitter for this component. All data will be sent thru this transmitter
- * @param transmitter transmitter
- */
-public void setTransmitter(RemoteDataTransmitter transmitter)
-{
-	this.transmitter = transmitter;
-}
 
 
 
@@ -153,49 +135,6 @@ protected void saveBoolean(String key, boolean value)
 
 
 
-/**
- * get component all data values   
- * @return list with this component data values
- */
-public ArrayList<ComponentValue<?>> getDataValues()
-{
-	
-	ArrayList<ComponentValue<?>> values = new ArrayList<ComponentValue<?>>();
-
-			
-	return (values);
-}
-
-
-
-/**
- * get component all control values   
- * @return list with this component control values
- */
-public ArrayList<ComponentValue<?>> getControlValues()
-{
-	
-	ArrayList<ComponentValue<?>> values = new ArrayList<ComponentValue<?>>();
-
-			
-	return (values);
-}
-
-
-
-
-
-
-
-/**
- * get component all control clients   
- * @return list with this component control clients
- */
-public ArrayList<ControlClient>  getControlClients()
-{
-	ArrayList<ControlClient> clients = new ArrayList<ControlClient>();
-	return(clients);
-}
 
 
 
@@ -204,19 +143,7 @@ public ArrayList<ControlClient>  getControlClients()
 
 
 
-public void onLoadSettings()
-{
-
-	
-}
 
 
 
-public void onSaveSettings()
-{
-
-}
-
-
-}
 """

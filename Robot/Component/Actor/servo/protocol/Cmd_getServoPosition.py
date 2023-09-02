@@ -10,7 +10,7 @@ INDEX_SERVO = 0
 class Cmd_getServoPosition(RemoteCommand):
     _parameter_list: List[RemoteParameterUint8]
 
-    def __init__(self, id: int = LegControllerProtocol.CMD_SERVO_MOVE_TO):
+    def __init__(self, id: int = LegControllerProtocol.CMD_GET_SERVO_POSITION):
         super().__init__(id, "getServoPosition", "getPosition of a servo")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
 

@@ -1,50 +1,52 @@
 class ComponentValue:
-    def __init__(self, meta_data):
+    def __init__(self, meta_data: dict):
+        self._name: str = meta_data["name"]
+        self._type_name: str = meta_data["type_name"]
+        self._description: str = meta_data["description"]
 
-        self._name = meta_data["name"]
-        self._type_name = meta_data["type_name"]
-        self._description = meta_data["description"]
+        self._max_range: float = meta_data["max_range"]
+        self._min_range: float = meta_data["min_range"]
+        self._value: float = 0
 
-        self._max_range = meta_data["max_range"]
-        self._min_range = meta_data["min_range"]
-        self._value = 0
+        self._overflow: bool = False
+        self._underflow: bool = False
+        self._valid: bool = False
 
-        self._overflow = False
-        self._underflow = False
-        self._valid = False
-
-        self._notifyAllways = True
+        self._notifyAllways: bool = True
         self._value_chanege_listener_list = list()
 
-    def set_name(self, name):
+    def set_name(self, name: str):
         self._name = name
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
-    def has_name(self, name):
+    def has_name(self, name) -> bool:
         return self._name == name
 
-    def get_type_name(self):
+    def get_type_name(self) -> str:
         return self._type_name
 
-    def set_range(self, min_range, max_range):
+    def get_type_description(self) -> str:
+        return self._description
+
+    def set_range(self, min_range: float, max_range: float) -> None:
         self._max_range = max_range
         self._min_range = min_range
 
-    def get_min_range(self):
+    def get_min_range(self) -> float:
         return self._min_range
 
-    def get_max_range(self):
+    def get_max_range(self) -> float:
         return self._max_range
 
-    def set_overflow_value(self):
+    def set_overflow_value(self) -> None:
         self._value = self._max_range
         self._overflow = True
         self._underflow = False
         self._valid = True
 
-    def set_underflow_value(self):
+    def set_underflow_value(self) -> None:
         self._value = self._min_range
         self._overflow = False
         self._underflow = True
@@ -72,10 +74,10 @@ class ComponentValue:
             self.notify_value_changed()
         return self._value
 
-    def get_value(self):
+    def get_value(self) -> float:
         return self._value
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         return self._valid
 
     def add_listener(self, listener):
@@ -91,102 +93,14 @@ class ComponentValue:
     def actualize(self):
         return False
 
+    def __str__(self):
+        return self._name
 
-"""		
-package de.hska.lat.robot.value;
-
-import java.util.ArrayList;
-
-
-
-public abstract class ComponentValue<v>
-{
-
-
-    
-    public ComponentValue(String name)
-    {
-
-        this.name = name;
-    }
-
-    public ComponentValue(String name, float minRange, float maxRange)
-    {
-        this.name = name;
-        this.minRange = minRange;
-        this.maxRange = maxRange;
-
-    }
-
-
-    /**
-     * get type name of this value
-     * 
-     * @return type name of this value
-     */
-    public String getTypeName()
-    {
-        return (ComponentValue.TYPE_NAME);
-    }
-
-    
-    
-    /**
-     * get description of this type	
-     * @return description of this value
-     */
-    public String getTypeDescription()
-    {
-        return (ComponentValue.TYPE_DESCRIPTION);
-    }
-
-    
-    
-    
-    /**
-     * get name of this value
-     * 
-     * @return name of this value
-     */
-    public String getName()
-    {
-        return (this.name);
-    }
-
-
-    @Override
-    public String toString()
-    {
-        return (this.name);
-    }
-
-
-    
-    /**
-     * format given float value to a string with
-     * 
-     * @param value
-     * @param fraction
-     * @return
-     */
-
-    public static String toFormatedFractionString(float value, int fraction)
-    {
-        int fractionSize;
-        String valueAsString;
-
-        valueAsString = String.valueOf(value);
-        fractionSize = valueAsString.length() - valueAsString.indexOf('.');
-
-        if (fractionSize > fraction)
-            fractionSize = fraction + 1;
-
-        valueAsString = valueAsString.substring(0, valueAsString.indexOf('.')
-                + fractionSize);
-
-        return (valueAsString);
-    }
-
-
-}
-"""
+    @staticmethod
+    def to_formated_fraction_string(value: float, fraction: int) -> str:
+        value_as_string = str(value)
+        separator_index = value_as_string.index('.')
+        fraction_size = len(value_as_string) - separator_index
+        if fraction_size > fraction:
+            fraction_size = fraction + 1
+        return value_as_string[0:separator_index + fraction_size]

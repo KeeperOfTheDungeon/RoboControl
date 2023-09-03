@@ -25,9 +25,9 @@ class AsciiOutput(RemoteDataOutput):
         self.out_byte_pointer = 0
 
     def transmitt(self, data_packet: RemoteDataPacket) -> None:
-        print("transmit:")
-        print("\n".join(["|  " + line for line in str(data_packet).splitlines()]))
-        print("\n".join(["|  |  " + line for line in str(data_packet.get_remote_data()).splitlines()]))
+        #print("transmit:")
+        #print("\n".join(["|  " + line for line in str(data_packet).splitlines()]))
+        #print("\n".join(["|  |  " + line for line in str(data_packet.get_remote_data()).splitlines()]))
         # data_packet.set_source_address(1)
         self._packet_queue.append(data_packet)
 
@@ -38,6 +38,13 @@ class AsciiOutput(RemoteDataOutput):
         ascii_data = DataPacketAscii.DataPacketAscii()
         ascii_data.code(data_packet)
         self.send(ascii_data)
+        print(
+            data_packet.get_type(),
+            data_packet._remote_data.get_name(),
+            data_packet.get_source_address(), "->", data_packet.get_destination_address(),
+            data_packet.get_parameters_as_string(True),
+            ": " + str(ascii_data.get_ascii_buffer())
+        )
 
     def send(self, ascii_data):
         self._output_stream.write(ascii_data.get_ascii_buffer())
@@ -105,5 +112,6 @@ class AsciiOutput(RemoteDataOutput):
             self._output_stream.write(self._data_out_buffer)
             # self._output_stream.flush()
         except Exception as e:
+            print(traceback.format_exc())
             traceback.print_exception(e)
         return False

@@ -77,9 +77,9 @@ class RemoteData:
         if self.get_payload_size() != len(payload):
             print("wrong payload")
         else:
-            print("correct payload")
+            #print("correct payload")
             index = 0
-            print(payload)
+            #print(payload)
             for parameter in self._parameter_list:
                 index += parameter.parse_from_buffer(payload, index)
 

@@ -49,7 +49,7 @@ class DataPacketAscii(RemoteDataPacket):
             remote_data = RemoteMessage(0, "", "")
             return self.do_decode(remote_data)
         elif message_type == STREAM_START_TOKEN_STR:
-            print("Stream sync")
+            # print("Stream sync")
             remote_data = RemoteStream(0, "", "")
             return self.do_decode(remote_data)
         print("unsync")
@@ -113,7 +113,7 @@ class DataPacketAscii(RemoteDataPacket):
         elif isinstance(remote_data, RemoteMessage):
             self._data_buffer[index] = ord(MESSAGE_START_TOKEN)
 
-        print(type(remote_data))
+        #print(type(remote_data))
         index += 1
 
         destination = remote_data.get_destination_address()
@@ -224,6 +224,7 @@ def parse_ascii(data_buffer: bytearray) -> Optional[RemoteDataPacket]:
             data_index += 1
 
     except Exception as e:
+        print(traceback.format_exc())
         traceback.print_exception(e)
         return None
     return data_packet

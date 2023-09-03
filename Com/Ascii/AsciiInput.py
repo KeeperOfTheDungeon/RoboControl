@@ -27,10 +27,10 @@ class AsciiInput(RemoteDataInput):
                 token = self._serial_input.read(1)
 
                 if data_packet.putToken(token):
-                    print("dp")
+                    # print("dp")
                     # check
                     remote_data = data_packet.decode()
-                    print(str(remote_data))
+                    # print(str(remote_data))
 
                     self.deliver_packet(remote_data)
                     # deliver !

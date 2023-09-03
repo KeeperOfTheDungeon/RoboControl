@@ -94,3 +94,6 @@ class RobotComponent(AbstractComponent):
 
     def get_values(self):
         values = list()
+
+    def add_sensor_listener(self, listener):
+        self._sensor_listener.append(listener)

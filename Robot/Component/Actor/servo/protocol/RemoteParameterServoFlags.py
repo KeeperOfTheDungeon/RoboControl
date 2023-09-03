@@ -14,12 +14,12 @@ class RemoteParameterServoFlags(RemoteParameter):
     def __init__(self, name: str = "servo flags", description: str = "servo flags"):
         super().__init__(name, description, 1)
 
-        self._is_reverse: bool
-        self._is_on: bool
-        self._is_force_feedback_on: bool
-        self._is_position_feedback_on: bool
+        self._is_reverse: bool = None
+        self._is_on: bool = None
+        self._is_force_feedback_on: bool = None
+        self._is_position_feedback_on: bool = None
 
-        self._value: int
+        self._value: int = None
 
     def get_buffer_size(self) -> int:
         return self._byte_size

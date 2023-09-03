@@ -1,4 +1,3 @@
-
 from RoboControl.Robot.Component.Actor.Actor import Actor
 from RoboControl.Robot.Component.Actor.Led.protocol.Cmd_getLedBrightness import Cmd_getLedBrightness
 from RoboControl.Robot.Component.Actor.servo.protocol.Cmd_moveServoTo import Cmd_moveServoTo
@@ -9,71 +8,60 @@ from RoboControl.Robot.Value.servo.ServoPositionValue import ServoPositionValue
 from RoboControl.Robot.Value.servo.ServoVelocityValue import ServoVelocityValue
 
 
-
 class Servo(Actor):
-	
-	def __init__(self, meta_data):
-		super().__init__(meta_data)
-		self._velocity = ServoVelocityValue(meta_data)
-		self._velocity_control = ServoVelocityValue(meta_data)
-		self._position = ServoPositionValue(meta_data)
-		self._destination = ServoDestinationValue(meta_data)
-		self._destination_control = ServoDestinationValue(meta_data)
 
-		protocol = meta_data["protocol"]
-		self._cmd_servoOn  = protocol["cmd_servoOn"]
-		self._cmd_servoOff  = protocol["cmd_servoOff"]
-		self._cmd_moveServoTo  = protocol["cmd_moveServoTo"]
+    def __init__(self, meta_data):
+        super().__init__(meta_data)
+        self._velocity = ServoVelocityValue(meta_data)
+        self._velocity_control = ServoVelocityValue(meta_data)
+        self._position = ServoPositionValue(meta_data)
+        self._destination = ServoDestinationValue(meta_data)
+        self._destination_control = ServoDestinationValue(meta_data)
 
-		self._isOn = False
-		self._isActive = False
-		self._isInreverseMode = False
+        protocol = meta_data["protocol"]
+        self._cmd_servoOn = protocol["cmd_servoOn"]
+        self._cmd_servoOff = protocol["cmd_servoOff"]
+        self._cmd_moveServoTo = protocol["cmd_moveServoTo"]
 
+        self._isOn = False
+        self._isActive = False
+        self._isInreverseMode = False
 
+    def get_min_range(self):
+        self._servo_position.get_min_range()
 
-	def get_min_range(self):
-		self._servo_position.get_min_range()
+    def set_min_range(self, min_range):
+        pass
 
+    def get_max_range(self):
+        self._servo_position.get_max_range()
 
-	def set_min_range(self, min_range):
-		pass
+    def set_max_range(self, max_range):
+        pass
 
-	def get_max_range(self):
-		self._servo_position.get_max_range()
+    def set_position(self, position):
+        self._position.set_value(position)
 
-	def set_max_range(self, max_range):
-		pass
+    def set_destination(self, destination):
+        self._destination.set_value(destination)
 
+    def get_position_value(self):
+        return self._position
 
-	def set_position(self, position):
-		self._position.set_value(position)
+    def remote_servo_on(self):
+        cmd = Cmd_servoOn.get_command(self._cmd_servoOn, 1 << self._local_id)
+        self.send_data(cmd)
 
+    def remote_servo_off(self):
+        cmd = Cmd_servoOff.get_command(self._cmd_servoOff, 1 << self._local_id)
+        self.send_data(cmd)
 
+    def remote_move_servo_to(self, position):
+        cmd = Cmd_moveServoTo.get_command(self._cmd_moveServoTo, self._local_id, position)
+        self.send_data(cmd)
 
-	def set_destination(self, destination):
-		self._destination.set_value(destination)
+# move Servo
 
-
-	def get_position_value(self):
-		return self._position
-
-	def remote_servo_on(self):
-		cmd = Cmd_servoOn.get_command(self._cmd_servoOn, 1 << self._local_id)
-		self.send_data(cmd)
-
-	def remote_servo_off(self):
-		cmd = Cmd_servoOff.get_command(self._cmd_servoOff, 1 << self._local_id)
-		self.send_data(cmd)
-
-
-	def remote_move_servo_to(self, position):
-		cmd = Cmd_moveServoTo.get_command(self._cmd_moveServoTo,  self._local_id, position)
-		self.send_data(cmd)
-
-	# move Servo
-
-
-	
 
 """
 
@@ -83,7 +71,6 @@ class Servo(Actor):
 	protected ServoDestinationValue destinationControl;
 	protected ServoDestinationValue destination;
 """
-
 
 """
 	def remote_set_brightness(self,brightness):

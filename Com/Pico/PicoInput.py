@@ -19,7 +19,9 @@ class PicoInput(RemoteDataInput):
         self._state_machine_rx = rp2.StateMachine(1, self.rx, freq=10000000, in_base=Pin(rxpin), jmp_pin=Pin(rxpin))
 
         self._state_machine_rx.irq(self.interrupt_callback)
-        self._packet_list = DataPacketPico()[PACKET_LIST_LENGTH]
+        packet_one = DataPacketPico()
+        packet_two = DataPacketPico()
+        self._packet_list = [packet_one, packet_two]
         self._active_packet = 0
         self._readable_packet = 0
         self._read = False
@@ -30,12 +32,13 @@ class PicoInput(RemoteDataInput):
 
     def process(self):
         if(self._read):
-            self._read = False
+            print('Package recieved!')
             remote_data = self._packet_list[self._readable_packet].decode()
             self.deliver_packet(remote_data)
+            self._read = False
 
     def interrupt_callback(self, x):
-        if self._state_machine_rx.rx_fifo() > 0:
+        while self._state_machine_rx.rx_fifo() > 0:
                 
             token = self._state_machine_rx.get()
                   
@@ -53,7 +56,7 @@ class PicoInput(RemoteDataInput):
         print('sync error: usart did not recieve end bit')
         #ToDo abfangen und rücksetzen
     
-    @rp2.asm_pio(in_shiftdir=rp2.PIO.SHIFT_RIGHT)
+    @rp2.asm_pio(in_shiftdir=rp2.PIO.SHIFT_RIGHT, fifo_join=rp2.PIO.JOIN_RX)
     def rx():
         wrap_target()
 

@@ -42,6 +42,7 @@ class DataPacketPico(RemoteDataPacket):
     
     PACKET_RESYNC = 1
     PACKET_READY = 2
+    TOKEN_FAILURE = 3
     
     # TODO why does this inherit from RemoteDataPacket without forwarding init
     def __init__(self):  # noqa
@@ -53,6 +54,7 @@ class DataPacketPico(RemoteDataPacket):
         self._data_pointer = 0
         self._sync_type = 0
         self._data_buffer = bytearray(20)
+        self._read = False
         
         pass
 
@@ -110,27 +112,29 @@ class DataPacketPico(RemoteDataPacket):
         return_code = 0
   
         if token == END_TOKEN:
+            self._read = True
             return_code = DataPacketPico.PACKET_READY
 
         elif (token & 0x200 == 0x200):
-            print("Connection error no end bit in usart connection")
-            print("resync")
             self._data_pointer = 0
-            self._sync_type = token & 0xff
-            return_code = DataPacketPico.PACKET_RESYNC
+            return_code = DataPacketPico.TOKEN_FAILURE
       
         elif (token > 0xff ) and (token != END_TOKEN):
-            print("resync")
             self._data_pointer = 0
             self._sync_type = token & 0xff
             return_code = DataPacketPico.PACKET_RESYNC
         else:
             token &= 0xff
-            self._data_buffer[self._data_pointer] = token & 0xff
+            self._data_buffer[self._data_pointer] = token
             self._data_pointer += 1
 
         return return_code
 
+
+    def toggleRead(self):
+        result = self._read
+        self._read = False if result else self._read
+        return result
 
 
 

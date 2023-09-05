@@ -22,31 +22,25 @@ class PicoInput(RemoteDataInput):
         packet_one = DataPacketPico()
         packet_two = DataPacketPico()
         self._packet_list = [packet_one, packet_two]
-        self._active_packet = 0
-        self._readable_packet = 0
-        self._read = False
+        self._counter = 0
+        self._active_packet = self._packet_list[self._counter]
+        self._readable_packet = self._packet_list[self._counter]
         
         self._state_machine_rx.active(1)
         self.running = True
-        self.counter = 0
 
     def process(self):
-        if(self._read):
-            print('Package recieved!')
-            remote_data = self._packet_list[self._readable_packet].decode()
+        if(self._readable_packet.toggleRead()):
+            remote_data = self._readable_packet.decode()
             self.deliver_packet(remote_data)
-            self._read = False
 
     def interrupt_callback(self, x):
-        while self._state_machine_rx.rx_fifo() > 0:
-                
-            token = self._state_machine_rx.get()
+        token = self._state_machine_rx.get()
                   
-            if self._packet_list[self._active_packet].putToken(token) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
-                self._readable_packet = self._active_packet
-                self._active_packet = (self._active_packet + 1) % PACKET_LIST_LENGTH
-                self._read = True
-                
+        isReadable = self._active_packet.putToken(token) == DataPacketPico.PACKET_READY # put token  into datapacket - if endsync detected function will return True
+        self._readable_packet = self._active_packet if isReadable else self._readable_packet
+        self._counter = (self._counter + 1) % PACKET_LIST_LENGTH if isReadable else self._counter
+        self._active_packet = self._packet_list[self._counter] if isReadable else self._active_packet
 
     def stop(self):
         self.running = False
@@ -56,7 +50,8 @@ class PicoInput(RemoteDataInput):
         print('sync error: usart did not recieve end bit')
         #ToDo abfangen und rücksetzen
     
-    @rp2.asm_pio(in_shiftdir=rp2.PIO.SHIFT_RIGHT, fifo_join=rp2.PIO.JOIN_RX)
+    @rp2.asm_pio(in_shiftdir=rp2.PIO.SHIFT_RIGHT,
+                fifo_join=rp2.PIO.JOIN_RX)
     def rx():
         wrap_target()
 

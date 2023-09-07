@@ -14,6 +14,7 @@ class PicoConnection(Connection):
         print("PicoConnection - init")
         self._rxpin = meta_data["rx_pin"]		#extract receiver pin from settings
         self._txpin = meta_data["tx_pin"]		#extract transmitter pin from settings
+        self._clock_pin = meta_data["clock_pin"]#extract clock pin from settings
         
         # clear programs form pio for clean restart
         rp2.PIO(0).remove_program()
@@ -24,8 +25,8 @@ class PicoConnection(Connection):
     def connect(self, listener) -> None:
         super().connect(listener)
         if not self.connected:
-            self._data_output = PicoOutput(self._txpin) # add data_output
-            self._data_input = PicoInput(self._rxpin) # add data_input
+            self._data_output = PicoOutput(self._txpin, self._clock_pin) # add data_output
+            self._data_input = PicoInput(self._rxpin, self._clock_pin) # add data_input
         
         _thread.start_new_thread(self.connection_thread, ())
             

@@ -12,12 +12,12 @@ from micropython import const
 PACKET_LIST_LENGTH = const(2)
 
 class PicoInput(RemoteDataInput):
-    def __init__(self, rxpin, clock_pin):
+    def __init__(self, connection_counter, rxpin, clock_pin):
         self.led_onboard = Pin(5, Pin.OUT)
         print("init - PicoInput")
         Pin(rxpin, Pin.IN, Pin.PULL_UP)
         rx = rx_factory(clock_pin)
-        self._state_machine_rx = rp2.StateMachine(1, rx, freq=10000000, in_base=Pin(rxpin), jmp_pin=Pin(rxpin))
+        self._state_machine_rx = rp2.StateMachine(connection_counter, rx, freq=10000000, in_base=Pin(rxpin), jmp_pin=Pin(rxpin))
 
         self._state_machine_rx.irq(self.interrupt_callback)
         packet_one = DataPacketPico()

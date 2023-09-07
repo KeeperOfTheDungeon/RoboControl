@@ -6,6 +6,10 @@ import rp2
 import utime
 import _thread
 
+Connection_Counter = 0
+Thread_Active = False
+Subroutine_List = []
+
 class PicoConnection(Connection):
     connected: bool = False
 
@@ -23,12 +27,21 @@ class PicoConnection(Connection):
 
 
     def connect(self, listener) -> None:
+        global Subroutine_List
+        global Connection_Counter
+        global Thread_Active
         super().connect(listener)
         if not self.connected:
-            self._data_output = PicoOutput(self._txpin, self._clock_pin) # add data_output
-            self._data_input = PicoInput(self._rxpin, self._clock_pin) # add data_input
+            self._data_output = PicoOutput(Connection_Counter, self._txpin, self._clock_pin) # add data_output
+            self._data_input = PicoInput(Connection_Counter, self._rxpin, self._clock_pin) # add data_input
+            Subroutine_List.append(self._data_output.process)
+            Subroutine_List.append(self._data_input.process)
+            print('Connection counter: ' + str(Connection_Counter))
+            Connection_Counter += 2
         
-        _thread.start_new_thread(self.connection_thread, ())
+        if not Thread_Active:
+            _thread.start_new_thread(self.connection_thread, ())
+            Thread_Active = True
             
     def disconnect(self) -> None:
         self._data_input.stop()
@@ -39,7 +52,7 @@ class PicoConnection(Connection):
         
     def connection_thread(self):
         while True:
-            self._data_input.process()
-            self._data_output.process()
+            for subroutine in Subroutine_List:
+                subroutine()
 
 

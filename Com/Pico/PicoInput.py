@@ -5,11 +5,16 @@ import rp2
 
 
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
-from RoboControl.Com.Pico.DataPacketPico import DataPacketPico
+from RoboControl.Com.Pico.DataPacketPico import DataPacketPico, END_TOKEN
 from micropython import const
+from array import array
 
-
-PACKET_LIST_LENGTH = const(2)
+TOKEN_BUFFER_SIZE = const(128)
+token_buffer = array('h', [0 for i in range(TOKEN_BUFFER_SIZE)])
+token_buffer_index = 0
+token_buffer_read_index = 0
+token = 0x000
+isRead = False
 
 class PicoInput(RemoteDataInput):
     def __init__(self, connection_counter, rxpin, clock_pin):
@@ -20,28 +25,32 @@ class PicoInput(RemoteDataInput):
         self._state_machine_rx = rp2.StateMachine(connection_counter, rx, freq=10000000, in_base=Pin(rxpin), jmp_pin=Pin(rxpin))
 
         self._state_machine_rx.irq(self.interrupt_callback)
+
+        """
         packet_one = DataPacketPico()
         packet_two = DataPacketPico()
         self._packet_list = [packet_one, packet_two]
         self._counter = 0
         self._active_packet = self._packet_list[self._counter]
         self._readable_packet = self._packet_list[self._counter]
+        """
+        
+        self._data_packet = DataPacketPico()
         
         self._state_machine_rx.active(1)
         self.running = True
 
     def process(self):
-        if(self._readable_packet.toggleRead()):
-            remote_data = self._readable_packet.decode()
-            self.deliver_packet(remote_data)
-
-    def interrupt_callback(self, x):
-        token = self._state_machine_rx.get()
-                  
-        isReadable = self._active_packet.putToken(token) == DataPacketPico.PACKET_READY # put token  into datapacket - if endsync detected function will return True
-        self._readable_packet = self._active_packet if isReadable else self._readable_packet
-        self._counter = (self._counter + 1) % PACKET_LIST_LENGTH if isReadable else self._counter
-        self._active_packet = self._packet_list[self._counter] if isReadable else self._active_packet
+        global token, token_buffer, token_buffer_index, token_buffer_read_index, isRead
+        if isRead:
+            #print('isRead')
+            tz = token_buffer[token_buffer_read_index]
+            if self._data_packet.putToken(tz) == DataPacketPico.PACKET_READY:  # put token  into datapacket - if endsync detected function will return True
+                remote_data = self._data_packet.decode()
+                #print('delivering package')
+                self.deliver_packet(remote_data)
+            token_buffer_read_index = (token_buffer_read_index + 1) % TOKEN_BUFFER_SIZE
+            isRead = True if token_buffer_index > token_buffer_read_index else False
 
     def stop(self):
         self.running = False
@@ -50,6 +59,17 @@ class PicoInput(RemoteDataInput):
     def sync_error(self):
         print('sync error: usart did not recieve end bit')
         #ToDo abfangen und rücksetzen
+        
+
+    def interrupt_callback(self, x):
+        global token, token_buffer, token_buffer_index, isRead
+        #print('in interrupt')
+        while self._state_machine_rx.rx_fifo() > 0:
+            token = self._state_machine_rx.get()
+            #print(token)
+            token_buffer[token_buffer_index] = token
+            token_buffer_index = (token_buffer_index + 1) % TOKEN_BUFFER_SIZE
+        isRead = True
 
 def rx_factory(clock_pin):
     @rp2.asm_pio(in_shiftdir=rp2.PIO.SHIFT_RIGHT,

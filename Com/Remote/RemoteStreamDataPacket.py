@@ -1,18 +1,6 @@
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket, DataPacketType
 
 
 class RemoteStreamDataPacket(RemoteDataPacket):
-	def __init__(self):
-		super().__init__(self, "remote stream data")
-		pass
-	
-
-
-"""
-	
-public RemoteStreamDataPacket(int destination, int source, int command)
-{
-	super(destination, source, command );
-	this.type = DataPacketType.STREAM;
-}
-"""	
+	_type_name: str = "remote stream data"
+	_type: DataPacketType = DataPacketType.STREAM

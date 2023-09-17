@@ -1,54 +1,50 @@
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 
+
 class AbstractRobotDevice:
-	
 
-	#_transmitter = 
-	  #protected LinkedList <N> eventListener = new LinkedList <N>();
+    # _transmitter =
+    # protected LinkedList <N> eventListener = new LinkedList <N>();
 
-		#protected DataAquisator [] aquisators;  
-	def __init__(self, device_meta_data):
-		self._device_name = device_meta_data.get_name()
-		self._id = device_meta_data.get_id()
-		self._event_listener = list()
+    # protected DataAquisator [] aquisators;
+    def __init__(self, device_meta_data):
+        self._device_name = device_meta_data.get_name()
+        self._id = device_meta_data.get_id()
+        self._event_listener = list()
 
-	def set_transmitter(self, transmitter):
-		self._transmitter = transmitter
+    def set_transmitter(self, transmitter):
+        self._transmitter = transmitter
 
-	def add_event_listener(self, listener):
-		self._event_listener.append(listener)
+    def add_event_listener(self, listener):
+        self._event_listener.append(listener)
 
-	def get_device_name(self):
-		return self._device_name	
+    def get_device_name(self):
+        return self._device_name
 
-	def add_component_set(self, component_set):
-		self._set_list.append(component_set)
-		for component in component_set:
-			self._component_list.append(component)
+    def add_component_set(self, component_set):
+        self._set_list.append(component_set)
+        for component in component_set:
+            self._component_list.append(component)
 
+    def send_data(self, remote_data):
+        remote_data.set_destination(self._id)
+        self._transmitter.send_data(remote_data)
 
+    def remote_ping_device():
+        #		cmd_ping = CmdPing()
+        #		cmd_ping
+        #		self.send_data()
+        pass
 
-	def send_data(self, remote_data):
-		remote_data.set_destination(self._id)
-		self._transmitter.send_data(remote_data)
-
-
-
-
-	def remote_ping_device():
-#		cmd_ping = CmdPing()
-#		cmd_ping
-#		self.send_data()
-		pass
 
 """	
 
 @Override
 public boolean remote_pingDevice() 
 {
-	return(this.sendData(Cmd_ping.getCommand(DeviceProtocol.CMD_PING)));	
-	
+    return(this.sendData(Cmd_ping.getCommand(DeviceProtocol.CMD_PING)));	
+    
 }
 
 
@@ -66,21 +62,21 @@ public boolean remote_pingDevice()
  */
 
 public abstract class RobotDevice <N extends DeviceEventNotifier, P extends DeviceProtocol> extends AbstractRobotDevice<RobotComponent<?,?,?>,P> 
-		implements ControlInterface 
+        implements ControlInterface 
 {
 
 public RobotDevice(String name,int id)
 {
-	this.name=name;
-	this.id=id;
-	this.transmitter = null;
+    this.name=name;
+    this.id=id;
+    this.transmitter = null;
 }
 
 
 public RobotDevice(DeviceMetaData metaData)
 {
-	this.name=metaData.getDeviceName();
-	this.id=metaData.getDeviceId();
+    this.name=metaData.getDeviceName();
+    this.id=metaData.getDeviceId();
 
 }
 
@@ -94,7 +90,7 @@ public RobotDevice(DeviceMetaData metaData)
  */
 public void removeEventListener(N listener)
 {
-	this.eventListener.remove(listener);
+    this.eventListener.remove(listener);
 }
 
 
@@ -103,7 +99,7 @@ public void removeEventListener(N listener)
 
 public DataAquisator [] getAquisators()
 {
-	return(this.aquisators);
+    return(this.aquisators);
 }
 
 
@@ -114,11 +110,11 @@ public DataAquisator [] getAquisators()
  */
 public void loadSetup()
 {
-	for (RobotComponent<?,?,?> component : this.componentList)
-	{
-		component.remote_loadDefaults();
-		component.remote_getSettings();
-	}
+    for (RobotComponent<?,?,?> component : this.componentList)
+    {
+        component.remote_loadDefaults();
+        component.remote_getSettings();
+    }
 }
 
 
@@ -127,11 +123,11 @@ public void loadSetup()
  */
 public void onConnected()
 {
-	this.loadSetup();
-	for (RobotComponent<?,?,?> component: this.componentList)
-	{
-		component.onConnected();
-	}
+    this.loadSetup();
+    for (RobotComponent<?,?,?> component: this.componentList)
+    {
+        component.onConnected();
+    }
 }
 
 /**
@@ -140,10 +136,10 @@ public void onConnected()
 
 public void onDisconnected()
 {
-	for (RobotComponent<?,?,?> component: this.componentList)
-	{
-		component.onConnected();
-	}
+    for (RobotComponent<?,?,?> component: this.componentList)
+    {
+        component.onConnected();
+    }
 }
 
 /**
@@ -152,11 +148,11 @@ public void onDisconnected()
  */
 protected void processPingResponse(Msg_pingResponse remoteMessage)
 {
-	for (N listener : this.eventListener)
-	{
-		listener.pingReceived(this);
-	}
-	
+    for (N listener : this.eventListener)
+    {
+        listener.pingReceived(this);
+    }
+    
 }
 
 
@@ -164,29 +160,29 @@ protected void processPingResponse(Msg_pingResponse remoteMessage)
 @Override
 public boolean remote_startStreamData(int index, int period)
 {
-	
-	return(this.sendData(Cmd_startStreamData.getCommand(DeviceProtocol.CMD_START_STREAM_DATA,index, period)));
+    
+    return(this.sendData(Cmd_startStreamData.getCommand(DeviceProtocol.CMD_START_STREAM_DATA,index, period)));
 }
 
 
 @Override
 public boolean remote_stopStreamData(int index) 
 {
-	return(this.sendData(Cmd_stopStreamData.getCommand(DeviceProtocol.CMD_STOP_STREAM_DATA,index)));	
+    return(this.sendData(Cmd_stopStreamData.getCommand(DeviceProtocol.CMD_STOP_STREAM_DATA,index)));	
 }
 
 
 @Override
 public boolean remote_clearAllDataStreams() 
 {
-	return(this.sendData(Cmd_clearAllDataStreams.getCommand(DeviceProtocol.CMD_CLEAR_ALL_DATA_STREAMS)));	
+    return(this.sendData(Cmd_clearAllDataStreams.getCommand(DeviceProtocol.CMD_CLEAR_ALL_DATA_STREAMS)));	
 }
 
 
 @Override
 public boolean remote_pauseAllDataStreams() 
 {
-	return(this.sendData(Cmd_pauseAllDataStreams.getCommand(DeviceProtocol.CMD_PAUSE_ALL_DATA_STREAMS)));	
+    return(this.sendData(Cmd_pauseAllDataStreams.getCommand(DeviceProtocol.CMD_PAUSE_ALL_DATA_STREAMS)));	
 }
 
 
@@ -194,20 +190,20 @@ public boolean remote_pauseAllDataStreams()
 @Override
 public boolean remote_continueAllDataStreams() 
 {
-	return(this.sendData(Cmd_continueAllDataStreams.getCommand(DeviceProtocol.CMD_CONTINUE_ALL_DATA_STREAMS)));	
+    return(this.sendData(Cmd_continueAllDataStreams.getCommand(DeviceProtocol.CMD_CONTINUE_ALL_DATA_STREAMS)));	
 }
 
 
 @Override
 public boolean remote_saveStreams() 
 {
-	return(this.sendData(Cmd_saveDataStreams.getCommand(DeviceProtocol.CMD_SAVE_STREAMS)));	
+    return(this.sendData(Cmd_saveDataStreams.getCommand(DeviceProtocol.CMD_SAVE_STREAMS)));	
 }
 
 @Override
 public boolean remote_loadStreams() 
 {
-	return(this.sendData(Cmd_loadDataStreams.getCommand(DeviceProtocol.CMD_LOAD_STREAMS)));	
+    return(this.sendData(Cmd_loadDataStreams.getCommand(DeviceProtocol.CMD_LOAD_STREAMS)));	
 }
 
 
@@ -221,7 +217,7 @@ public boolean remote_loadStreams()
 @Override
 public boolean remote_getNextError() 
 {
-	return(this.sendData(Cmd_getNextError.getCommand(DeviceProtocol.CMD_GET_NEXT_ERROR)));	
+    return(this.sendData(Cmd_getNextError.getCommand(DeviceProtocol.CMD_GET_NEXT_ERROR)));	
 }
 
 
@@ -229,7 +225,7 @@ public boolean remote_getNextError()
 @Override
 public boolean remote_getErrorCount() 
 {
-	return(this.sendData(Cmd_getErrorCount.getCommand(DeviceProtocol.CMD_GET_ERROR_COUNT)));	
+    return(this.sendData(Cmd_getErrorCount.getCommand(DeviceProtocol.CMD_GET_ERROR_COUNT)));	
 }
 
 
@@ -238,7 +234,7 @@ public boolean remote_getErrorCount()
 @Override
 public boolean remote_clearComStatistics() 
 {
-	return(this.sendData(Cmd_clearComStatistics.getCommand(DeviceProtocol.CMD_CLEAR_COM_STATISTICS)));	
+    return(this.sendData(Cmd_clearComStatistics.getCommand(DeviceProtocol.CMD_CLEAR_COM_STATISTICS)));	
 }
 
 
@@ -246,7 +242,7 @@ public boolean remote_clearComStatistics()
 @Override
 public boolean remote_clearCpuStatistics() 
 {
-	return(this.sendData(Cmd_clearCpuStatistics.getCommand(DeviceProtocol.CMD_CLEAR_CPU_STATISTICS)));	
+    return(this.sendData(Cmd_clearCpuStatistics.getCommand(DeviceProtocol.CMD_CLEAR_CPU_STATISTICS)));	
 }
 
 
@@ -254,19 +250,19 @@ public boolean remote_clearCpuStatistics()
 @Override
 public boolean decodeStream(RemoteStream remoteStreamData)
 {
-	
-	if (remoteStreamData instanceof Stream_cpuStatistics)
-	{
-		this.cpuStatus.processCpuStatusMessage((Stream_cpuStatistics) remoteStreamData);
-		return(true);
-	}
-	else if (remoteStreamData instanceof Stream_comStatistics)
-	{
-		this.comStatus.processComStatusMessage((Stream_comStatistics) remoteStreamData);
-		return(true);
-	}
-	
-	return(false);
+    
+    if (remoteStreamData instanceof Stream_cpuStatistics)
+    {
+        this.cpuStatus.processCpuStatusMessage((Stream_cpuStatistics) remoteStreamData);
+        return(true);
+    }
+    else if (remoteStreamData instanceof Stream_comStatistics)
+    {
+        this.comStatus.processComStatusMessage((Stream_comStatistics) remoteStreamData);
+        return(true);
+    }
+    
+    return(false);
 }
 
 
@@ -274,15 +270,15 @@ public boolean decodeStream(RemoteStream remoteStreamData)
 @Override
 public boolean decodeMessage(RemoteMessage remoteMessage)
 {
-	
-	if (remoteMessage instanceof Msg_pingResponse)
-	{
-		this.processPingResponse((Msg_pingResponse) remoteMessage);
-		return(true);
-	}
+    
+    if (remoteMessage instanceof Msg_pingResponse)
+    {
+        this.processPingResponse((Msg_pingResponse) remoteMessage);
+        return(true);
+    }
 
-	
-	return(false);
+    
+    return(false);
 }
 
 

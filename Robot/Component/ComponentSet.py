@@ -2,48 +2,37 @@ from RoboControl.Robot.Component.RobotComponent import RobotComponent
 
 
 class ComponentSet(list):
-	def __init__(self, components):
-		#self._component_list = list(components)
-		self.extend(components)
+    def __init__(self, components):
+        # self._component_list = list(components)
+        self.extend(components)
 
-		pass
+        pass
 
-	def get_component_on_global_id(self, id):
-	#	for component in self._component_list:
-	#		if component.
-		pass
+    def get_component_on_global_id(self, id):
+        #	for component in self._component_list:
+        #		if component.
+        pass
 
-	def get_component_on_local_id(self, id):
-	#	for component in self._component_list:
-	#		if component.
-		pass
+    def get_component_on_local_id(self, id):
+        #	for component in self._component_list:
+        #		if component.
+        pass
 
-	#def get_all_id
+    # def get_all_id
 
+    def get_data_values(self):
+        data_values = list()
+        for component in self._component_list:
+            self._component_list += component.get_values()
 
-	def get_data_values(self):
-		data_values = list()
-		for component in self._component_list:
-			self._component_list += component.get_values()
+    def get_command_processors(self):
+        return list()
 
+    def get_message_processors(self):
+        return list()
 
-
-	def get_command_processors(self):
-		return list()
-
-	def get_message_processors(self):
-		return list()
-
-	def get_stream_processors(self):
-		return list()
-
-
-
-
-
-
-
-
+    def get_stream_processors(self):
+        return list()
 
 
 """package de.hska.lat.robot.component;
@@ -71,17 +60,17 @@ import de.hska.lat.robot.value.ComponentValue;
 
 
 public class ComponentSet<T extends RobotComponent<?,?,?>,P extends ComponentProtocol> extends ArrayList<T>
-		implements RemoteDecoder
+        implements RemoteDecoder
 {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4132550575974166030L;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4132550575974166030L;
 
-	
-	protected RemoteDataTransmitter transmitter;
-	
+    
+    protected RemoteDataTransmitter transmitter;
+    
 public  ComponentSet()
 {
 }
@@ -97,14 +86,14 @@ public  ComponentSet()
 public T getComponentOnGlobalId(int id)
 {
 
-	
-	for (T component : this)
-	{
-		if (component.getGlobalId()==id)
-			return(component);
-	}
+    
+    for (T component : this)
+    {
+        if (component.getGlobalId()==id)
+            return(component);
+    }
 
-	return(null);
+    return(null);
 }
 
 /**
@@ -116,14 +105,14 @@ public T getComponentOnGlobalId(int id)
 public T getComponentOnLocalId(int id)
 {
 
-	
-	for (T component : this)
-	{
-		if (component.getLocalId()==id)
-			return(component);
-	}
+    
+    for (T component : this)
+    {
+        if (component.getLocalId()==id)
+            return(component);
+    }
 
-	return(null);
+    return(null);
 }
 
 
@@ -134,17 +123,17 @@ public T getComponentOnLocalId(int id)
 
 public int[] getIds()
 {
-	
-	int ids [] = new int[this.size()];
-	int index;
-	
-	for(index=0;index<this.size();index++)
-	{
-		ids[index]=this.get(index).getGlobalId();
-	}
+    
+    int ids [] = new int[this.size()];
+    int index;
+    
+    for(index=0;index<this.size();index++)
+    {
+        ids[index]=this.get(index).getGlobalId();
+    }
 
-	
-	return (ids);
+    
+    return (ids);
 }
 
 
@@ -155,11 +144,11 @@ public int[] getIds()
 
 public void loadSettings()
 {
-	for (T sensor : this)
-	{
-		sensor.remote_loadDefaults();
-		sensor.remote_getSettings();
-	}
+    for (T sensor : this)
+    {
+        sensor.remote_loadDefaults();
+        sensor.remote_getSettings();
+    }
 }
 
 
@@ -170,27 +159,27 @@ public void loadSettings()
  */
 public ArrayList<T> getComponents()
 {
-	ArrayList<T> componentList = new ArrayList<T>();
-	
-	for(T component : this)
-	{
-		componentList.add(component);
-	}
-		
-	return(componentList);
+    ArrayList<T> componentList = new ArrayList<T>();
+    
+    for(T component : this)
+    {
+        componentList.add(component);
+    }
+        
+    return(componentList);
 }
 
 
 
 public void setTransmitter(RemoteDataTransmitter transmitter)
 {
-	this.transmitter = transmitter;
-	
-	for (T component : this)
-	{
-		component.setTransmitter(transmitter);
-	}
-	
+    this.transmitter = transmitter;
+    
+    for (T component : this)
+    {
+        component.setTransmitter(transmitter);
+    }
+    
 }
 
 

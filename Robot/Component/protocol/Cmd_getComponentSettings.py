@@ -3,25 +3,21 @@ from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParamete
 
 
 class Cmd_getComponentSettings(RemoteCommand):
-	
-	_index = 0
+    _index = 0
 
-	def __init__(self, id):
-		super().__init__(id, "getComponentSettings", "get components active settings")
-		self._parameter_list.append(RemoteParameterUint8("index","component index"))
+    def __init__(self, id):
+        super().__init__(id, "getComponentSettings", "get components active settings")
+        self._parameter_list.append(RemoteParameterUint8("index", "component index"))
 
-		pass
+        pass
 
-	def set_index(self, index):
-		self._parameter_list[self._index].set_value(index)
+    def set_index(self, index):
+        self._parameter_list[self._index].set_value(index)
 
-	def get_index(self):
-		return self._parameter_list[self._index].get_value()
+    def get_index(self):
+        return self._parameter_list[self._index].get_value()
 
-
-	def get_command(id, local_id):
-		cmd = Cmd_getComponentSettings(id)
-		cmd.set_index(local_id)
-
-		return (cmd)
-
+    def get_command(id, local_id):
+        cmd = Cmd_getComponentSettings(id)
+        cmd.set_index(local_id)
+        return (cmd)

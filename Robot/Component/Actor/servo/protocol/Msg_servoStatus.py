@@ -5,33 +5,28 @@ from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPositi
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus
 from RoboControl.Robot.Component.generic.luxSensor.protocol.RemoteParameterLuxValue import RemoteParameterLuxValue
 
-
 SENSOR_INDEX = 0
 INDEX_STATUS = 1
 
+
 class Msg_servoSpeed(RemoteMessage):
 
-	def __init__(self, id):
-		super().__init__(id, "msg_servoStatus", "actual servo status")
-		self._servo_index = 0
-		self._servo_position = 0
-		self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
-		self._parameter_list.append(RemoteParameterServoStatus("speed","servo status"))
+    def __init__(self, id):
+        super().__init__(id, "msg_servoStatus", "actual servo status")
+        self._servo_index = 0
+        self._servo_position = 0
+        self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
+        self._parameter_list.append(RemoteParameterServoStatus("speed", "servo status"))
 
+    def get_command(id):
+        cmd = Msg_servoSpeed(id)
+        return (cmd)
 
-	def get_command(id):
-		cmd = Msg_servoSpeed(id)
-		return (cmd)
+    def get_index(self):
+        return self._parameter_list[SENSOR_INDEX].get_value()
 
-
-	def get_index(self):
-		return self._parameter_list[SENSOR_INDEX].get_value()
-
-
-	def get_speed(self):
-		return self._parameter_list[INDEX_STATUS].get_value()
-
-
+    def get_speed(self):
+        return self._parameter_list[INDEX_STATUS].get_value()
 
 
 """package de.hska.lat.robot.component.actor.servo.protocol;
@@ -51,55 +46,55 @@ import de.hska.lat.comm.remote.parameter.RemoteParameterUint8;
 
 public class Msg_servoStatus extends RemoteMessage
 {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2638694167468005642L;
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2638694167468005642L;
 
 
 
-	protected static final String name = "servoSpeed";
-	protected static final String description = "actual servo speed";
+    protected static final String name = "servoSpeed";
+    protected static final String description = "actual servo speed";
 
 
-	private static final int INDEX_SERVO = 0;
-	private static final int INDEX_SPEED = 1;
-	
+    private static final int INDEX_SERVO = 0;
+    private static final int INDEX_SPEED = 1;
+    
 
 public Msg_servoStatus() 
 {
-	this.add(new RemoteParameterUint8("index","servo index"));
-	this.add(new RemoteParameterServoStatus());
+    this.add(new RemoteParameterUint8("index","servo index"));
+    this.add(new RemoteParameterServoStatus());
 }
-	
-	
+    
+    
 public Msg_servoStatus(int command) 
 {
-	this();
-	this.setId(command);
+    this();
+    this.setId(command);
 }
 
 
 @Override
 public String getName() 
 {
-	return(Msg_servoStatus.name);
+    return(Msg_servoStatus.name);
 }
 
 
 @Override
 public String getDescription() 
 {
-	return(Msg_servoStatus.description);
+    return(Msg_servoStatus.description);
 }
 
 
 
 public void setData(int index, boolean isActive, boolean isOn, boolean isReverse, boolean isAtMin, boolean isAtMax, boolean isStalling)
 {
-	(( RemoteParameterUint8) this.get(Msg_servoStatus.INDEX_SERVO)).setValue(index);
-	//(( RemoteParameterServoStatus) this.get(Msg_servoStatus.INDEX_SPEED)).setValue(position);
+    (( RemoteParameterUint8) this.get(Msg_servoStatus.INDEX_SERVO)).setValue(index);
+    //(( RemoteParameterServoStatus) this.get(Msg_servoStatus.INDEX_SPEED)).setValue(position);
 }
 
 
@@ -109,7 +104,7 @@ public void setData(int index, boolean isActive, boolean isOn, boolean isReverse
  */
 public int getIndex()
 {
-	return((( RemoteParameterUint8) this.get(Msg_servoStatus.INDEX_SERVO)).getValue());
+    return((( RemoteParameterUint8) this.get(Msg_servoStatus.INDEX_SERVO)).getValue());
 }
 
 
@@ -119,7 +114,7 @@ public int getIndex()
  */
 public int getSpeed()
 {
-	return((( RemoteParameterUint16) this.get(Msg_servoStatus.INDEX_SPEED)).getValue());
+    return((( RemoteParameterUint16) this.get(Msg_servoStatus.INDEX_SPEED)).getValue());
 }
 
 
@@ -128,23 +123,23 @@ public int getSpeed()
 
 public static Msg_servoStatus getCommand(int id)
 {
-	Msg_servoStatus cmd;
-	cmd = new Msg_servoStatus(id);
-	
-	return(cmd);
+    Msg_servoStatus cmd;
+    cmd = new Msg_servoStatus(id);
+    
+    return(cmd);
 }
 
 
 
 public static Msg_servoStatus getCommand(int command, int index,
-		boolean isActive, boolean isOn, boolean isReverse, boolean isAtMin, boolean isAtMax, boolean isStalling)
+        boolean isActive, boolean isOn, boolean isReverse, boolean isAtMin, boolean isAtMax, boolean isStalling)
 {
 
-	Msg_servoStatus cmd;
-	cmd = Msg_servoStatus.getCommand(command);
-	cmd.setData(index, isActive,  isOn,  isReverse,  isAtMin,  isAtMax, isStalling);
-	
-	return(cmd);
+    Msg_servoStatus cmd;
+    cmd = Msg_servoStatus.getCommand(command);
+    cmd.setData(index, isActive,  isOn,  isReverse,  isAtMin,  isAtMax, isStalling);
+    
+    return(cmd);
 }
 
 

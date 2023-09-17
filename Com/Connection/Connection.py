@@ -55,9 +55,9 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
         if data_packet is None:
             raise ValueError(f"Incompatible remote_data type ({type(remote_data)}): {remote_data}")
         data_packet.set_remote_data(remote_data)
-     #ToDo find a solution for Pico   
-   #     if self._data_packet_logger is not None:
-    #        self._data_packet_logger.add_output_packet(data_packet)
+        # TODO find a solution for Pico
+        if self._data_packet_logger is not None:
+            self._data_packet_logger.add_output_packet(data_packet)
         print("c : Transmitting")
         print(self._data_output)
         self._data_output.transmitt(data_packet)

@@ -1,6 +1,5 @@
-#import datetime
-#from enum import Enum
-#from typing import Optional
+import datetime
+from typing import Optional
 
 from RoboControl.Com.Remote.RemoteData import RemoteData
 
@@ -162,3 +161,6 @@ class RemoteDataPacket:
 
     def has_remote_data(self) -> bool:
         return self._remote_data is not None
+
+    def get_timestamp(self) -> datetime.datetime:
+        return self._timestamp

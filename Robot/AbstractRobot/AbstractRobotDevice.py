@@ -11,7 +11,7 @@ from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.statistic.ComStatus import ComStatus
 from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcerssorList
+from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcessorList
 
 from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
@@ -20,10 +20,6 @@ from RoboControl.Robot.Device.Protocol.Stream_cpuStatistics import Stream_cpuSta
 from RoboControl.Robot.Device.Protocol.Cmd_ping import Cmd_ping
 from RoboControl.Robot.Device.Protocol.Cmd_getNodeId import Cmd_getNodeId
 from RoboControl.Robot.Device.Protocol.Msg_pingResponse import Msg_pingResponse
-
-
-
-from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
 
 
 class AbstractRobotDevice:

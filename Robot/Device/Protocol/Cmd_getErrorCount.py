@@ -8,8 +8,8 @@ class Cmd_getErrorCount(RemoteCommand):
     def __init__(self):
         super().__init__("getErrorCounts", "get count of errors on device")
 
+    @staticmethod
     def get_command():
         cmd = Cmd_getErrorCount()
         cmd.set_id(DeviceProtocol.CMD_GET_ERROR_COUNT)
-
-        return (cmd)
+        return cmd

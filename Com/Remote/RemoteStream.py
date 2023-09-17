@@ -6,7 +6,7 @@ class RemoteStream(RemoteData):
     def __init__(self,id, name, description):
         super().__init__(id, name, description)
 
-    def set_data():
+    def set_data(self, *args, **kwargs):
         pass
 
   

@@ -30,13 +30,15 @@ class ServoSet(ComponentSet):
     def get_stream_processors(self):
         stream_list = super().get_stream_processors()
 
-        if (self._stream_positions != 0):
-            stream_list.append(RemoteProcessor(Stream_servosPositions.get_command(self._stream_positions, len(self)),
-                                               self.process_stream_positions))
+        if self._stream_positions != 0:
+            cmd = Stream_servosPositions.get_command(self._stream_positions, len(self))
+            processor = RemoteProcessor(cmd, self.process_stream_positions)
+            stream_list.append(processor)
 
-        if (self._stream_destinations != 0):
-            stream_list.append(RemoteProcessor(Stream_servosDestinations.get_command(self._stream_positions, len(self)),
-                                               self.process_stream_destinations))
+        if self._stream_destinations != 0:
+            cmd = Stream_servosDestinations.get_command(self._stream_positions, len(self))
+            processor = RemoteProcessor(cmd, self.process_stream_destinations)
+            stream_list.append(processor)
 
         return stream_list
 

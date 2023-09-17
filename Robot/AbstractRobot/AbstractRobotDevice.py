@@ -6,6 +6,7 @@ from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Robot.AbstractRobot.AbstractProtocol import AbstractProtocol
+from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.statistic.ComStatus import ComStatus
 from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
@@ -91,7 +92,7 @@ class AbstractRobotDevice:
         for component in components:
             self._component_list.append(component)
 
-    def get_component(self, index):
+    def get_component(self, index: int) -> RobotComponent:
         pass
 
     def find_copmonent_on_name(self, name):

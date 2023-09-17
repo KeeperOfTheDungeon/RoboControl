@@ -20,12 +20,12 @@ class Cmd_moveServoTo(RemoteCommand):
     def set_position(self, position):
         self._parameter_list[INDEX_POSITION].set_position(position)
 
+    @staticmethod
     def get_command(id, local_id, position):
         cmd = Cmd_moveServoTo(id)
         cmd.set_index(local_id)
         cmd.set_position(position)
-
-        return (cmd)
+        return cmd
 
 
 """		

@@ -31,11 +31,13 @@ class AbstractRobotDevice:
         remote_data.set_destination(self._id)
         self._transmitter.send_data(remote_data)
 
+    """
     def remote_ping_device():
         #		cmd_ping = CmdPing()
         #		cmd_ping
         #		self.send_data()
         pass
+    """
 
 
 """	

@@ -15,9 +15,9 @@ class Cmd_getActorValue(RemoteCommand):
     def get_index(self):
         return self._parameter_list[self._index].get_value()
 
-
-def get_command(id, index):
-    cmd = Cmd_getActorValue()
-    cmd.set_id(id)
-    cmd.set_index(index)
-    return (cmd)
+    @staticmethod
+    def get_command(id, index):
+        cmd = Cmd_getActorValue()
+        cmd.set_id(id)
+        cmd.set_index(index)
+        return cmd

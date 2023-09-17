@@ -14,7 +14,8 @@ class Cmd_getActualCurrentDrain(RemoteCommand):
     def set_index(self, index):
         self._parameter_list[INDEX_SENSOR].set_value(index)
 
+    @staticmethod
     def get_command(id, local_id):
         cmd = Cmd_getActualCurrentDrain(id)
         cmd.set_index(local_id)
-        return (cmd)
+        return cmd

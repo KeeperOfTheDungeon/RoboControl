@@ -17,7 +17,7 @@ class RemoteParameter:
     def get_as_buffer(self):
         raise ValueError("WIP RemoteParameter.get_as_buffer not yet implemented")
 
-    def put_data(self):
+    def put_data(self, data_buffer):
         raise ValueError("WIP RemoteParameter.put_data not yet implemented")
 
     def parse_from_buffer(self, data_buffer, index):

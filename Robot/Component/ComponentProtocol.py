@@ -1,6 +1,9 @@
+from typing import List
+
 from RoboControl.Robot.Component.protocol.Cmd_getComponentSettings import Cmd_getComponentSettings
 from RoboControl.Robot.Component.protocol.Cmd_loadComponentDefaults import Cmd_loadComponentDefaults
 from RoboControl.Robot.Component.protocol.Cmd_saveComponentDefaults import Cmd_saveComponentDefaults
+from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 
 
 class ComponentProtocol:
@@ -16,21 +19,20 @@ class ComponentProtocol:
 
     def get_command_processors(self, decoder):
         processors = list()
-
-        processors.append(Cmd_getComponentSettings(self._cmd_get_settings_id), decoder)
-        processors.append(Cmd_loadComponentDefaults(self._cmd_load_defaults_id), decoder)
-        processors.append(Cmd_saveComponentDefaults(self._cmd_save_defaults_id), decoder)
-
+        for cmd in [
+            Cmd_getComponentSettings(self._cmd_get_settings_id),
+            Cmd_loadComponentDefaults(self._cmd_load_defaults_id),
+            Cmd_saveComponentDefaults(self._cmd_save_defaults_id)
+        ]:
+            processor = RemoteProcessor(cmd, decoder)
+            processors.append(processor)
         return processors
 
-    def get_message_processors(self, decoder):
-        processors = list()
-        return processors
+    def get_message_processors(self, _decoder) -> List[RemoteProcessor]:
+        return []
 
-    def get_stream_processors(self, decoder):
-        processors = list()
-        return processors
+    def get_stream_processors(self, _decoder) -> List[RemoteProcessor]:
+        return []
 
-    def get_exception_processors(self, decoder):
-        processors = list()
-        return processors
+    def get_exception_processors(self, _decoder) -> List[RemoteProcessor]:
+        return []

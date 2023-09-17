@@ -10,11 +10,11 @@ class Cmd_stopStreamData(RemoteCommand):
         self._type_index = 0
         self._parameter_list.append(RemoteParameterUint8("index", "stream index"))
 
-    def set_type(self, type):
-        self._parameter_list[self._type_index].set_value(type)
+    def set_type(self, new_type):
+        self._parameter_list[self._type_index].set_value(new_type)
 
-    def get_command(type):
+    @staticmethod
+    def get_command(new_type):
         cmd = Cmd_stopStreamData()
-        cmd.set_type(type)
-
-        return (cmd)
+        cmd.set_type(new_type)
+        return cmd

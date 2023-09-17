@@ -3,10 +3,7 @@ from RoboControl.Robot.Component.RobotComponent import RobotComponent
 
 class ComponentSet(list):
     def __init__(self, components):
-        # self._component_list = list(components)
-        self.extend(components)
-
-        pass
+        super().__init__(components)
 
     def get_component_on_global_id(self, id):
         #	for component in self._component_list:

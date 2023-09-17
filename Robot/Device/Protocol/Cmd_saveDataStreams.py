@@ -5,9 +5,9 @@ from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
 class Cmd_saveDataStreams(RemoteCommand):
 
-    def __init__(self):
-        super().__init__(DeviceProtocol.CMD_SAVE_STREAMS, "clearAllStreams", "clear all data streams on device")
+    def __init__(self, id: int = DeviceProtocol.CMD_SAVE_STREAMS):
+        super().__init__(id, "clearAllStreams", "clear all data streams on device")
 
+    @staticmethod
     def get_command():
-        cmd = Cmd_saveDataStreams()
-        return (cmd)
+        return Cmd_saveDataStreams()

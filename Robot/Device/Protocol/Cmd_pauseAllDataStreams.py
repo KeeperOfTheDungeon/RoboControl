@@ -4,12 +4,9 @@ from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
 
 class Cmd_pauseAllDataStreams(RemoteCommand):
+    def __init__(self, id: int = DeviceProtocol.CMD_PAUSE_ALL_DATA_STREAMS):
+        super().__init__(id, "pauseAllStreams", "pause all active streams on device")
 
-    def __init__(self):
-        super().__init__(DeviceProtocol.CMD_PAUSE_ALL_DATA_STREAMS, "pauseAllStreams",
-                         "pause all active streams on device")
-
+    @staticmethod
     def get_command():
-        cmd = Cmd_pauseAllDataStreams()
-
-        return (cmd)
+        return Cmd_pauseAllDataStreams()

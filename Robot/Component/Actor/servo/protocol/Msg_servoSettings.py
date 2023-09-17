@@ -3,7 +3,7 @@ from RoboControl.Com.Remote.Parameter.RemoteParameterUint16 import RemoteParamet
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus
-from RoboControl.Robot.Component.generic.luxSensor.protocol.RemoteParameterLuxValue import RemoteParameterLuxValue
+# from RoboControl.Robot.Component.generic.luxSensor.protocol.RemoteParameterLuxValue import RemoteParameterLuxValue
 
 SENSOR_INDEX = 0
 INDEX_SPEED = 1
@@ -27,9 +27,9 @@ class Msg_servoSettings(RemoteMessage):
         self._parameter_list.append(RemoteParameterUint16("scale", "servo scale"))
         self._parameter_list.append(RemoteParameterServoStatus("scale", "servo scale"))
 
+    @staticmethod
     def get_command(id):
-        cmd = Msg_servoSettings(id)
-        return (cmd)
+        return Msg_servoSettings(id)
 
     def get_index(self):
         return self._parameter_list[SENSOR_INDEX].get_value()

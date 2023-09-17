@@ -16,24 +16,24 @@ class RemoteParameterServoStatus(RemoteParameter):
         self._reverse = False
         self._on = False
         self._active = False
-        self._isAtMin = False
-        self._isAtMax = False
+        self._is_at_min = False
+        self._is_at_max = False
         self._stalling = False
 
     def set_reverse(self, status):
-        self._reverse = status;
+        self._reverse = status
 
     def is_reverse(self):
         return self._reverse
 
     def set_on(self, status):
-        self._on = status;
+        self._on = status
 
     def is_on(self):
         return self._on
 
     def set_active(self, status):
-        self._active = status;
+        self._active = status
 
     def is_active(self):
         return self._active
@@ -60,32 +60,32 @@ class RemoteParameterServoStatus(RemoteParameter):
 
         flags = data_buffer[index]
 
-        if ((flags & (1 << FLAG_REVERSE)) > 0):
+        if (flags & (1 << FLAG_REVERSE)) > 0:
             self._reverse = True
         else:
-            self.reverse = False
+            self._reverse = False
 
-        if ((flags & (1 << FLAG_IS_ON)) > 0):
+        if (flags & (1 << FLAG_IS_ON)) > 0:
             self._on = True
         else:
             self._on = False
 
-        if ((flags & (1 << FLAG_IS_ACTIVE)) > 0):
+        if (flags & (1 << FLAG_IS_ACTIVE)) > 0:
             self._active = True
         else:
-            self.active = False
+            self._active = False
 
-        if ((flags & (1 << FLAG_IS_AT_MIN)) > 0):
-            self._isAtMin = True
+        if (flags & (1 << FLAG_IS_AT_MIN)) > 0:
+            self._is_at_min = True
         else:
-            self._isAtMin = False
+            self._is_at_min = False
 
-        if ((flags & (1 << FLAG_IS_AT_MAX)) > 0):
-            self._isAtMax = True
+        if (flags & (1 << FLAG_IS_AT_MAX)) > 0:
+            self._is_at_max = True
         else:
-            self._isAtMax = False
+            self._is_at_max = False
 
-        if ((flags & (1 << FLAG_IS_STALLING)) > 0):
+        if (flags & (1 << FLAG_IS_STALLING)) > 0:
             self._stalling = True
 
         else:
@@ -97,22 +97,22 @@ class RemoteParameterServoStatus(RemoteParameter):
 
         flags = 0
 
-        if (self._reverse):
+        if self._reverse:
             flags |= (1 << FLAG_REVERSE)
 
-        if (self._on):
+        if self._on:
             flags |= (1 << FLAG_IS_ON)
 
-        if (self._active):
+        if self._active:
             flags |= (1 << FLAG_IS_ACTIVE)
 
-        if (self.isAtMin):
+        if self._is_at_min:
             flags |= (1 << FLAG_IS_AT_MIN)
 
-        if (self._isAtMax):
+        if self._is_at_max:
             flags |= (1 << FLAG_IS_AT_MAX)
 
-        if (self.stalling):
+        if self._stalling:
             flags |= (1 << FLAG_IS_STALLING)
 
         buffer = bytearray(self._byte_size)

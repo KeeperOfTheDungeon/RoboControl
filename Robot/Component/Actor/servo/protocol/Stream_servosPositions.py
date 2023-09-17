@@ -7,6 +7,7 @@ class Stream_servosPositions(RemoteStream):
     def __init__(self, id):
         super().__init__(id, "Stream_servoPositions", "actual servo positions")
 
+    @staticmethod
     def get_command(id, size):
         cmd = Stream_servosPositions(id)
         for index in range(0, size):

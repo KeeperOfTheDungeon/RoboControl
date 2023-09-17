@@ -8,3 +8,4 @@ class ServoVelocityValue(ComponentValue):
 
         meta_data["max_range"] = 100
         meta_data["min_range"] = -100
+        super().__init__(meta_data)

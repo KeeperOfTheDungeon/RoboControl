@@ -3,8 +3,7 @@ from RoboControl.Robot.Component.ComponentProtocol import ComponentProtocol
 
 
 class Vcnl4000Protocol(ComponentProtocol):
-	def __init__(self, protocol):
-		super()._init__(protocol)
+	pass
 
 			
 	

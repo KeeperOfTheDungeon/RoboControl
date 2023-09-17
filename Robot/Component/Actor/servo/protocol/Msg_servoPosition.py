@@ -1,7 +1,7 @@
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
-from RoboControl.Robot.Component.generic.luxSensor.protocol.RemoteParameterLuxValue import RemoteParameterLuxValue
+# from RoboControl.Robot.Component.generic.luxSensor.protocol.RemoteParameterLuxValue import RemoteParameterLuxValue
 
 SENSOR_INDEX = 0
 SERVO_POSITION = 1
@@ -16,9 +16,9 @@ class Msg_servoPosition(RemoteMessage):
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("position", "servo position"))
 
+    @staticmethod
     def get_command(id):
-        cmd = Msg_servoPosition(id)
-        return (cmd)
+        return Msg_servoPosition(id)
 
     def get_index(self):
         return self._parameter_list[SENSOR_INDEX].get_value()

@@ -7,12 +7,13 @@ class Stream_servosDestinations(RemoteStream):
     def __init__(self, id):
         super().__init__(id, "Stream_servoDestinations", "actual servo destinations")
 
+    @staticmethod
     def get_command(id, size):
         cmd = Stream_servosDestinations(id)
         for index in range(0, size):
             cmd._parameter_list.append(
                 RemoteParameterServoPosition("destination ", "destination for servo " + str(index)))
-        return (cmd)
+        return cmd
 
     def get_destination(self, index):
         value = 0

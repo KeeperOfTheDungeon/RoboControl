@@ -8,6 +8,6 @@ class Cmd_continueAllDataStreams(RemoteCommand):
     def __init__(self):
         super().__init__(DeviceProtocol.CMD_CONTINUE_ALL_DATA_STREAMS, "continueAllStreams", "continue all active streams on device")
 
+    @staticmethod
     def get_command():
-        cmd = Cmd_continueAllDataStreams()
-        return (cmd)
+        return Cmd_continueAllDataStreams()

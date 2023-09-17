@@ -99,4 +99,4 @@ class RobotComponent(AbstractComponent):
         values = list()
 
     def get_name(self):
-        return (self._name)
+        return self._name

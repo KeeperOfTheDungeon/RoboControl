@@ -14,8 +14,8 @@ class Cmd_servoOff(RemoteCommand):
     def set_index(self, index):
         self._parameter_list[INDEX_SERVO].set_value(index)
 
+    @staticmethod
     def get_command(id, local_id):
         cmd = Cmd_servoOff(id)
         cmd.set_index(local_id)
-
-        return (cmd)
+        return cmd

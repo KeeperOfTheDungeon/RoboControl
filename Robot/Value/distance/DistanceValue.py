@@ -11,7 +11,7 @@ class DistanceValue(ComponentValue):
         self._granularity = meta_data["granularity"]
 
     def get_granularity(self):
-        return (self._granularity)
+        return self._granularity
 
     def set_granularity(self, granularity):
         self._granularity = granularity
@@ -28,7 +28,7 @@ class DistanceValue(ComponentValue):
         self._underflow = False
         self._valid = False
 
-    def get_distance_range(self, distance_range):
+    def set_distance_range(self, distance_range):
         self._max_range = distance_range
 
     def get_distance_range(self):

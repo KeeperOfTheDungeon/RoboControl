@@ -17,14 +17,15 @@ class Cmd_startStreamData(RemoteCommand):
     def set_type(self, type):
         self._parameter_list[self._type_index].set_value(type)
 
-    def set_period(self, type):
-        self._parameter_list[self._period_index].set_value(type)
+    def set_period(self, new_type):
+        self._parameter_list[self._period_index].set_value(new_type)
 
-    def get_command(type, period):
+    @staticmethod
+    def get_command(new_type, period):
         cmd = Cmd_startStreamData()
-        cmd.set_type(type)
+        cmd.set_type(new_type)
         cmd.set_period(period)
-        return (cmd)
+        return cmd
 
 
 """package de.hska.lat.robot.device.protocol;

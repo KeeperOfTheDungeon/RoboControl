@@ -28,9 +28,9 @@ class ComponentValue:
     def get_type_name(self):
         return self._type_name
 
-    def set_range(self, min, max):
-        self._max_range = max
-        self._min_range = min
+    def set_range(self, min_range, max_range):
+        self._max_range = max_range
+        self._min_range = min_range
 
     def get_min_range(self):
         return self._min_range
@@ -53,9 +53,9 @@ class ComponentValue:
     def set_value(self, value):
         value_changed = False
 
-        if self._notifyAllways == True:
+        if self._notifyAllways:
             value_changed = True
-        elif (value != self._value):
+        elif value != self._value:
             value_changed = True
 
         if value > self._max_range:
@@ -68,16 +68,15 @@ class ComponentValue:
             self._value = value
             self._valid = True
 
-        if (value_changed == True):
+        if value_changed:
             self.notify_value_changed()
-
-        return (self._value)
+        return self._value
 
     def get_value(self):
-        return (self._value)
+        return self._value
 
     def is_valid(self):
-        return (self._valid)
+        return self._valid
 
     def add_listener(self, listener):
         self._value_chanege_listener_list.append(listener)
@@ -90,7 +89,7 @@ class ComponentValue:
             listener()
 
     def actualize(self):
-        return (False)
+        return False
 
 
 """		

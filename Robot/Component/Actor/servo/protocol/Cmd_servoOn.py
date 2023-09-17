@@ -14,11 +14,11 @@ class Cmd_servoOn(RemoteCommand):
     def set_index(self, index):
         self._parameter_list[INDEX_SERVO].set_value(index)
 
+    @staticmethod
     def get_command(id, local_id):
         cmd = Cmd_servoOn(id)
         cmd.set_index(local_id)
-
-        return (cmd)
+        return cmd
 
 
 """package de.hska.lat.robot.component.actor.servo.protocol;

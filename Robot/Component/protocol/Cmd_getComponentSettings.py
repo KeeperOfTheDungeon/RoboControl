@@ -17,7 +17,8 @@ class Cmd_getComponentSettings(RemoteCommand):
     def get_index(self):
         return self._parameter_list[self._index].get_value()
 
+    @staticmethod
     def get_command(id, local_id):
         cmd = Cmd_getComponentSettings(id)
         cmd.set_index(local_id)
-        return (cmd)
+        return cmd

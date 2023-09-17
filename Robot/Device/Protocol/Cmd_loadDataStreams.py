@@ -4,11 +4,9 @@ from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
 
 class Cmd_loadDataStreams(RemoteCommand):
+    def __init__(self, id: int = DeviceProtocol.CMD_LOAD_STREAMS):
+        super().__init__(id, "loadDataStreams", "load saved device data Streams from nonvolatile memory")
 
-    def __init__(self):
-        super().__init__(DeviceProtocol.CMD_LOAD_STREAMS, "loadDataStreams", "load saved device data Streams from nonvolatile memory")
-
+    @staticmethod
     def get_command():
-        cmd = Cmd_loadDataStreams()
-
-        return (cmd)
+        return Cmd_loadDataStreams()

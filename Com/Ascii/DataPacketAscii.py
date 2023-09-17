@@ -215,7 +215,7 @@ def parse_ascii(data_buffer: bytearray) -> Optional[RemoteDataPacket]:
             return None
         data_packet = RemoteDataPacket(destination_address, source_address, command)
         data_packet_size = math.ceil((len(data_buffer) - 8) / 2)
-        data_packet.alocate(data_packet_size)
+        data_packet.allocate(data_packet_size)
 
         data_index = 0
         for index in range(7, len(data_buffer) - 1, 2):

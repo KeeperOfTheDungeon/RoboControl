@@ -48,7 +48,7 @@ class RemoteDataPacket:
     def get_destination_address(self):
         return self._destination_address
 
-    def alocate(self, size: int) -> None:
+    def allocate(self, size: int) -> None:
         self.data = bytearray(size)
 
     def do_decode(self, remote_data: RemoteData) -> None:  # data_buffer

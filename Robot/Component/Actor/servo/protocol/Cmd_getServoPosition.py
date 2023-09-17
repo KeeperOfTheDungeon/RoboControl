@@ -1,96 +1,28 @@
-package de.hska.lat.robot.component.actor.servo.protocol;
+from typing import List, Optional
 
-import de.hska.lat.comm.remote.RemoteCommand;
-import de.hska.lat.comm.remote.parameter.RemoteParameterUint8;
+from Devices.LegController import LegControllerProtocol
+from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
+from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
 
-
-
-
-
-
-/**
- * command that ping a device, device returns ping response message  
- * @author Oktavian Gniot
- *
- */
-public class Cmd_getServoPosition extends RemoteCommand
-{
-	
-
-	
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+INDEX_SERVO = 0
 
 
-	private static final int INDEX_SERVO = 0;
-	
+class Cmd_getServoPosition(RemoteCommand):
+    _parameter_list: List[RemoteParameterUint8]
 
-	protected static final String name = "getServoPosition";
-	protected static final String description = "getPosition of a servo";
-	
-	
-public Cmd_getServoPosition() 
-{
-	this.add(new RemoteParameterUint8("index","index of servo"));
-}
+    def __init__(self, id: int = LegControllerProtocol.CMD_SERVO_MOVE_TO):
+        super().__init__(id, "getServoPosition", "getPosition of a servo")
+        self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
 
+    def set_index(self, index: int) -> None:
+        self._parameter_list[INDEX_SERVO].set_value(index)
 
+    def get_index(self) -> int:
+        return self._parameter_list[INDEX_SERVO].get_value()
 
-public Cmd_getServoPosition(int command) 
-{
-	this();
-	this.setId(command);
-}
-
-
-public void setData(int index)
-{
-	(( RemoteParameterUint8) this.get(Cmd_getServoPosition.INDEX_SERVO)).setValue(index);
-}
-
-
-
-public int getIndex()
-{
-	return((( RemoteParameterUint8) this.get(Cmd_getServoPosition.INDEX_SERVO)).getValue());
-}
-
-
-
-@Override
-public String getName() 
-{
-	return(Cmd_getServoPosition.name);
-}
-
-
-@Override
-public String getDescription() 
-{
-	return(Cmd_getServoPosition.description);
-}
-
-
-
-public static Cmd_getServoPosition getCommand(int command)
-{
-	Cmd_getServoPosition cmd;
-	cmd = new Cmd_getServoPosition(command);
-	
-	return(cmd);
-}
-
-public static Cmd_getServoPosition getCommand(int command,int index)
-{
-	Cmd_getServoPosition cmd;
-	cmd = Cmd_getServoPosition.getCommand(command);
-	cmd.setData(index);
-	
-	return(cmd);
-}
-
-
-}
+    @staticmethod
+    def get_command(id: int, index: Optional[int] = None) -> "Cmd_getServoPosition":
+        cmd = Cmd_getServoPosition(id)
+        if index is not None:
+            cmd.set_index(index)
+        return cmd

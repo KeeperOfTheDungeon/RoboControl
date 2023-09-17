@@ -23,15 +23,16 @@ class RemoteProcessor:
         return self._remote_data.get_id()
 
     def execute(self, remote_data):
+        if self._remote_processor is None:
+            return
         # vorsortierung um sp#tzer ifs zu sparen
         if isinstance(remote_data, RemoteCommand):
-            # self._remote_processor.decode_command(remote_data)
-            self._remote_processor(remote_data)
+            self._remote_processor.decode_command(remote_data)
         elif isinstance(remote_data, RemoteMessage):
-            self._remote_processor(remote_data)
+            self._remote_processor.decode_message(remote_data)
         elif isinstance(remote_data, RemoteStream):
-            # self._remote_processor.decode_stream(remote_data)
-            self._remote_processor(remote_data)
+            self._remote_processor.decode_stream(remote_data)
         elif isinstance(remote_data, RemoteException):
-            self._remote_processor(remote_data)
-        pass
+            self._remote_processor.decode_exception(remote_data)
+        # elif isinstance(remote_data, RemoteAlert):
+        #     self._remote_processor.decode_exception(remote_data)

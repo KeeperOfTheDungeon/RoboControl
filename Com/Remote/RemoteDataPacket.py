@@ -19,22 +19,24 @@ class DataPacketType:
 
 
 class RemoteDataPacket:
-    _type_name: str = "generic"
+    _type_name: str = "generic remote command"
     _type: DataPacketType = DataPacketType.GENERIC
 
-    # _source_address = 0
-    # destination_address = 0
-    # command  = 0
-    # reply  = 0
+    def __init__(
+            self, destination_address: int, source_address: int, command: int,
+            data_size: int = None, override_type: DataPacketType = None
+    ):
+        self._destination_address = destination_address  # default =? 0
+        self._source_address = source_address  # default =? 0
+        self._command = command  # default =? 0
+        self._timestamp = datetime.datetime.now()
 
-    def __init__(self, destination_address: int, source_address: int, command: int):
-        self._destination_address = destination_address
-        self._source_address = source_address
-        self._command = command
+        self.data: bytearray = bytearray(data_size) if data_size else bytearray
 
-        self.data = None
-
-        self._remote_data = None
+        self._remote_data: Optional["RemoteData"] = None
+        # self._reply: int = reply  # default =? 0
+        # self._data_buffer: ByteBuffer
+        self._type = override_type or self._type
 
     def set_source_address(self, source_address: int):
         self._source_address = source_address
@@ -42,10 +44,10 @@ class RemoteDataPacket:
     def set_destination_address(self, destination_address: int):
         self._destination_address = destination_address
 
-    def get_source_address(self):
+    def get_source_address(self) -> int:
         return self._source_address
 
-    def get_destination_address(self):
+    def get_destination_address(self) -> int:
         return self._destination_address
 
     def allocate(self, size: int) -> None:
@@ -57,10 +59,10 @@ class RemoteDataPacket:
     def decode(self) -> RemoteData:
         pass
 
-    def code(self, data_packet):
+    def encode(self, data_packet):
         pass
 
-    def set_byte(self, position, value):
+    def set_byte(self, position: int, value: int) -> None:
         """ set a byte in payload array
         version :1.0
         date : 2022.02.01
@@ -74,7 +76,6 @@ class RemoteDataPacket:
         date : 2022.02.01
         author dungeon keeper
         """
-
         return self.data[position]
 
     def set_data(self, data):
@@ -83,39 +84,37 @@ class RemoteDataPacket:
     def get_data(self):
         return self.data
 
-    def set_int_16(self, position, value):
+    def set_int_16(self, position: int, value: int) -> None:
         self.data[position] = value >> 8
         self.data[position + 1] = value & 0xff
 
-    def get_int_16(self, position):
+    def get_int_16(self, position: int) -> int:
         if (position + 1) >= len(self.data):
-            # TODO does this make sense
             return 0
         value = (self.data[position] << 8) & 0xff00
         value |= self.data[position + 1] & 0xff
         return value
 
-    def set_int_24(self, position, value):
+    def set_int_24(self, position: int, value: int) -> None:
         self.data[position] = (value >> 16) & 0xff
         self.data[position + 1] = (value >> 8) & 0xff
         self.data[position + 2] = value & 0xff
 
-    def get_int_24(self, position):
+    def get_int_24(self, position: int) -> int:
         if (position + 2) >= len(self.data):
-            # TODO does this make sense
             return 0
         value = (self.data[position] << 16) & 0xff0000
         value |= (self.data[position + 1] << 8) & 0xff00
         value |= self.data[position + 2] & 0xff
         return value
 
-    def set_int_32(self, position, value):
+    def set_int_32(self, position: int, value: int) -> None:
         self.data[position] = (value >> 24) & 0xff
         self.data[position + 1] = (value >> 16) & 0xff
         self.data[position + 2] = (value >> 8) & 0xff
         self.data[position + 3] = value & 0xff
 
-    def get_int_32(self, position):
+    def get_int_32(self, position: int) -> int:
         if (position + 3) >= len(self.data):
             # TODO does this make sense
             return 0
@@ -126,14 +125,13 @@ class RemoteDataPacket:
         return value
 
     def get_type_name(self) -> str:
-        # TODO this should use the type enum
         return self._type_name
 
-    def get_command(self):
+    def get_command(self) -> int:
         return self._command
 
     def get_parameters_as_string(self, description: bool) -> str:
-        return self._remote_data.get_parameters_as_string(description)
+        return self._remote_data.get_parameters_as_string(description) if self.has_remote_data() else ""
 
     def set_remote_data(self, remote_data: RemoteData) -> None:
         self._remote_data = remote_data
@@ -148,11 +146,19 @@ class RemoteDataPacket:
         return self._type
 
     def __str__(self) -> str:
-        res = f"RemoteDataPacket)"
-        res = f"Type({self._type_name})"
-        res = f"Command ({self._command})"
+        # return "null" if self._type is None else str(self._type)
+        res = f"RemoteDataPacket({self._command})"
         res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
         res += f"\n\tdata: {render_data(self, DisplayDataWidth_e.WIDTH_8, True)}"
         res += f"\n\tremote_data: " + str(self._remote_data).split("\n")[0].strip()
         return res
 
+    def get_bit(self, position: int, bit: int) -> bool:
+        bit_mask = (1 << bit)
+        return (self.data[position] & bit_mask) > 0
+
+    # def get_data_buffer(self) -> bytebuffer:
+    #    return bytebuffer(self.data)
+
+    def has_remote_data(self) -> bool:
+        return self._remote_data is not None

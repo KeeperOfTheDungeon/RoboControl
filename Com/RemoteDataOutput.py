@@ -1,3 +1,6 @@
+from typing import TypeAlias
+
+from RoboControl.Com.ComStatistic import ComStatistic
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 
 Byte: TypeAlias = int
@@ -9,8 +12,8 @@ class RemoteDataOutput:
     _is_remote = False
     _is_running = False
 
-    # def __init__(self, statistic: ComStatistic):
-    #     self.statistic = statistic
+    def __init__(self, statistic: ComStatistic):
+        self.statistic = statistic
 
     def run(self):
         pass

@@ -1,34 +1,47 @@
-#from typing import Callable, TypeAlias
+from typing import Callable, TypeAlias
 
+from RoboControl.Com.ComStatistic import ComStatistic
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 
 # FIXME what exactly are listeners?
-#Listener: TypeAlias = [Callable or any]
+Listener: TypeAlias = [Callable or any]
+DataPacketReceiver: TypeAlias = Listener
 
 
 class RemoteDataInput:
-    running = False
+    _listener_list: list[DataPacketReceiver] = list()
 
-    _listener_list: list[Listener] = list()
+    def __init__(self, statistic: ComStatistic):
+        self.statistic = statistic
+        self.running = False
+        # self.set_daemon(True)
 
     def run(self) -> None:
         pass
 
-    def add_listener(self, listener: Listener) -> None:
-        print(" RDI : add_listener")
+    def add_listener(self, listener: DataPacketReceiver) -> None:
+        """
+        "ad a listener to the distribution list so this listener will become every incoming data packets received thru this input"
+        :param listener:
+        :return:
+        """
+        # print(" RDI : add_listener", self._listener_list)
         self._listener_list.append(listener)
-        print(self._listener_list)
-        pass
 
-    def remove_listener(self, listener: Listener) -> None:
-        pass
+    def remove_listener(self, listener: DataPacketReceiver) -> None:
+        """
+        remove a listener from the distribution list, so this listener will not become any mor packets
+        :param listener: to be removed from distribution list
+        :return:
+        """
+        self._listener_list.remove(listener)
 
-    def deliver_packet(self, remote_data: RemoteDataPacket) -> None:
-        print(self._listener_list)
-        for listener in self._listener_list:
-            print(listener)
-            listener.receive(remote_data)
+    def deliver_packet(self, data_packet: RemoteDataPacket) -> None:
+        """ "Deliver a new received data packet to all members of the distribution list (listeners)" """
+        # print(self._listener_list)
+        if data_packet is not None:
+            for listener in self._listener_list:
+                listener.receive(data_packet)
 
-    # FIXME typo
-    def is_runing(self) -> bool:
-        pass
+    def is_running(self) -> bool:
+        return self.running

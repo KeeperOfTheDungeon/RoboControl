@@ -1,9 +1,15 @@
+from typing import List
+
+from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.Remote.RemoteStream import RemoteStream
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
 from RoboControl.Robot.Device.Protocol import DeviceProtocol
 from RoboControl.Robot.Device.Protocol.Cmd_clearAllDataStreams import Cmd_clearAllDataStreams
 from RoboControl.Robot.Device.Protocol.Cmd_clearComStatistics import Cmd_clearComStatistics
 from RoboControl.Robot.Device.Protocol.Cmd_clearCpuStatistics import Cmd_clearCpuStatistics
 from RoboControl.Robot.Device.Protocol.Cmd_continueAllDataStreams import Cmd_continueAllDataStreams
+from RoboControl.Robot.Device.Protocol.Cmd_getErrorCount import Cmd_getErrorCount
+from RoboControl.Robot.Device.Protocol.Cmd_getNextError import Cmd_getNextError
 from RoboControl.Robot.Device.Protocol.Cmd_getNodeId import Cmd_getNodeId
 
 from RoboControl.Robot.Device.Protocol.Cmd_loadDataStreams import Cmd_loadDataStreams
@@ -27,13 +33,15 @@ class RobotDevice(AbstractRobotDevice):
 
     def __init__(self, component_config):
         super().__init__(component_config)
+        self.aquisators: List["DataAquisator"] = ["cpu status", "com ststus"]  # TODO is this correct?
+        self._event_listener = []
+        self._set_list = []
         self.build()
 
     # self.build_protocol()
 
     def get_data_aquisators(self):
-        aquisators = ["cpu status", "com ststus"]
-        return aquisators
+        return self.aquisators
 
 
     def build_protocol(self):
@@ -116,241 +124,39 @@ class RobotDevice(AbstractRobotDevice):
 
 
 
-
-""" 
-
-@Override
-public boolean decodeStream(RemoteStream remoteStreamData)
-{
-	
-	if (remoteStreamData instanceof Stream_cpuStatistics)
-	{
-		this.cpuStatus.processCpuStatusMessage((Stream_cpuStatistics) remoteStreamData);
-		return(true);
-	}
-	else if (remoteStreamData instanceof Stream_comStatistics)
-	{
-		this.comStatus.processComStatusMessage((Stream_comStatistics) remoteStreamData);
-		return(true);
-	}
-	
-	return(false);
-}
-
-"""
-
-"""
-
-
-"""
-
-"""
-package de.hska.lat.robot.device;
-
-
-
-
-import java.util.LinkedList;
-
-import de.hska.lat.robot.abstractRobot.device.AbstractRobotDevice;
-import de.hska.lat.robot.component.ComponentSet;
-import de.hska.lat.robot.component.RobotComponent;
-
-
-import de.hska.lat.robot.device.protocol.*;
-
-import de.hska.lat.robot.device.control.dataAquisation.DataAquisator;
-import de.hska.lat.comm.remote.RemoteData;
-import de.hska.lat.comm.remote.RemoteDataTransmitter;
-import de.hska.lat.comm.remote.RemoteMessage;
-import de.hska.lat.comm.remote.RemoteStream;
-
-
-/**
- * 
- * @author Tavin
- *
- * 
- *
- * @param <S> sensor listener interface  for this device
- * @param <P>
- */
-
-public abstract class RobotDevice <N extends DeviceEventNotifier, P extends DeviceProtocol> extends AbstractRobotDevice<RobotComponent<?,?,?>,P> 
-		implements ControlInterface 
-{
-
-		
-	protected LinkedList <N> eventListener = new LinkedList <N>();
-	
-	protected DataAquisator [] aquisators;
-
-
-
-	
-	
-
-public RobotDevice(String name,int id)
-{
-	this.name=name;
-	this.id=id;
-	this.transmitter = null;
-}
-
-
-
-
-public RobotDevice(DeviceMetaData metaData)
-{
-	this.name=metaData.getDeviceName();
-	this.id=metaData.getDeviceId();
-
-}
-
-
-
-
-/**
- * add an event listener
- * @param listener listener to be add to listener list
- */
-
-public void addEventListener(N listener)
-{
-	this.eventListener.add(listener);
-}
-
-
-/**
- * remove an event listener 
- * @param listener to be removed from listener list
- */
-public void removeEventListener(N listener)
-{
-	this.eventListener.remove(listener);
-}
-
-
-
-public String getDeviceName() 
-{
-	return (this.name);
-}
-
-
-
-public void addComponentSet(ComponentSet<?,?> set)
-{
-	this.setList.add(set);
-	
-	for (RobotComponent<?,?,?> component:  set)
-	{
-		this.componentList.add(component);
-	}
-	
-}
-
-
-public DataAquisator [] getAquisators()
-{
-	return(this.aquisators);
-}
-
-
-
-
-
-
-
-protected boolean sendData(RemoteData data)
-{
-	data.setDestination((byte)this.id);
-	
-	if (this.transmitter==null)
-		return(false);
-	
-	return (this.transmitter.transmitt(data));
-}
-
-/**
- * 
- */
-public void loadSetup()
-{
-	for (RobotComponent<?,?,?> component : this.componentList)
-	{
-		component.remote_loadDefaults();
-		component.remote_getSettings();
-	}
-}
-
-
-/**
- * called when connection to remote robot succeeded
- */
-public void onConnected()
-{
-	this.loadSetup();
-	for (RobotComponent<?,?,?> component: this.componentList)
-	{
-		component.onConnected();
-	}
-}
-
-/**
- * called when disconnecting form a remote robot
- */
-
-public void onDisconnected()
-{
-	for (RobotComponent<?,?,?> component: this.componentList)
-	{
-		component.onConnected();
-	}
-}
-
-
-
-
-
-
-
-@Override
-public boolean remote_getNextError() 
-{
-	return(this.sendData(Cmd_getNextError.getCommand(DeviceProtocol.CMD_GET_NEXT_ERROR)));	
-}
-
-
-
-@Override
-public boolean remote_getErrorCount() 
-{
-	return(this.sendData(Cmd_getErrorCount.getCommand(DeviceProtocol.CMD_GET_ERROR_COUNT)));	
-}
-
-
-
-
-
-
-
-@Override
-public boolean decodeMessage(RemoteMessage remoteMessage)
-{
-	
-	if (remoteMessage instanceof Msg_pingResponse)
-	{
-		this.processPingResponse((Msg_pingResponse) remoteMessage);
-		return(true);
-	}
-
-	
-	return(false);
-}
-
-
-
-
-}
-"""
+    def decode_stream(self, remote_stream_data: RemoteStream) -> bool:
+        if isinstance(remote_stream_data, Stream_cpuStatistics):
+            self._cpu_status.process_cpu_status_message(remote_stream_data)
+            return True
+        elif isinstance(remote_stream_data, Stream_comStatistics):
+            self._com_status.process_com_status_message(remote_stream_data)
+            return True
+        return False
+
+    def add_event_listener(self, listener) -> None:
+        self._event_listener.append(listener)
+
+    def remove_event_listener(self, listener) -> None:
+        self._event_listener.remove(listener)
+
+    def add_component_set(self, component_set: List) -> None:
+        self._set_list.append(component_set)
+        for component in component_set:
+            self._component_list.append(component)
+
+    def get_aquisators(self):
+        return self.aquisators
+
+    def remote_getNextError(self) -> bool:
+        cmd = Cmd_getNextError.get_command()
+        return self.send_data(cmd)
+
+    def remote_getErrorCount(self) -> bool:
+        cmd = Cmd_getErrorCount.get_command()
+        return self.send_data(cmd)
+
+    def decode_message(self, remote_message: RemoteMessage) -> bool:
+        if isinstance(remote_message, Msg_pingResponse):
+            self.process_ping_response(remote_message)
+            return True
+        return False

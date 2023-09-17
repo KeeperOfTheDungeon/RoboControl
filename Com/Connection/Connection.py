@@ -1,33 +1,41 @@
-#from typing import Callable, TypeAlias, Optional
+from typing import Callable, TypeAlias, Optional, Final, Union
 
-#from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
+from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
+from RoboControl.Com.ComStatistic import ComStatistic
 
-REMOTE_CHANEL_ID = 1
-REMOTE_NODE_ID = 1
+REMOTE_CHANEL_ID: Final[int] = 1
+REMOTE_NODE_ID: Final[int] = 1
 
 # FIXME what exactly are listeners?
-#Listener: TypeAlias = [Callable or any]
+Listener: TypeAlias = [Callable or any]
+DataPacketTransmitter: TypeAlias = Union[RemoteDataOutput]
+DataPacketReceiver: TypeAlias = Union[RemoteDataInput]
 
 
-class Connection:
-    _data_output = RemoteDataOutput()
-    _data_input = RemoteDataInput()
-    #_data_packet_logger: DataPacketLogger
+class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
+    _data_packet_logger: DataPacketLogger
 
     def __init__(self, name: str = ""):
         self.device_id = REMOTE_CHANEL_ID
-        self.connection_name = name
-        self.connection_partner = ""
+        self.connection_name: str = name
+        self.connection_partner: str = ""
 
-    def connect(self, data_packet_receiver: Listener) -> None:
+        self.statistic = ComStatistic()
+        self._data_output: DataPacketTransmitter = RemoteDataOutput(self.statistic)
+        self._data_input: RemoteDataInput = RemoteDataInput(self.statistic)
+
+    def connect(self, data_packet_receiver: DataPacketReceiver) -> bool:
         self._data_input.add_listener(data_packet_receiver)
 
     def disconnect(self) -> None:
         self._data_input.running = False
+
+    def is_remote(self) -> None:
+        return self._data_output.get_remote()
 
     def set_remote(self) -> None:
         self._data_output.set_remote()
@@ -37,8 +45,7 @@ class Connection:
         if self._data_output is None:
             print("Can't transmit as _data_output isn't set.")
             return False
-        
-        if self._data_output.get_remote():
+        if self.is_remote():
             remote_data.set_source_address(self.device_id)
         else:
             remote_data.set_destination_address(self.device_id)
@@ -57,9 +64,7 @@ class Connection:
         
         return True
 
-
-
-    def set_data_packet_logger(self, data_packet_logger: DataPacketLogger):
+    def set_data_packet_logger(self, data_packet_logger: DataPacketLogger) -> None:
         self._data_packet_logger = data_packet_logger
 
     def get_data_packet_logger(self) -> DataPacketLogger:
@@ -71,6 +76,5 @@ class Connection:
     def get_partner_name(self) -> str:
         return self.connection_partner
 
-    # TODO
-    # def get_statistics(self) -> ComStatistics:
-    #    return self.statistics
+    def get_statistic(self) -> ComStatistic:
+        return self.statistic

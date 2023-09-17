@@ -34,7 +34,6 @@ class DataPacketAscii(RemoteDataPacket):
     def __init__(self):  # noqa
         self._token_counter = 0
         self._data_buffer = ""
-        pass
 
     def decode(self) -> RemoteData:
         # print(self.data_buffer)
@@ -84,21 +83,11 @@ class DataPacketAscii(RemoteDataPacket):
         # error - exception
         return remote_data
 
-    # TODO camelcase
-    def putToken(self, token):  # noqa
-
-        end_token = False
-
-        #  try:
+    def put_token(self, token) -> None:
         self._data_buffer += str(token, 'utf-8')
         self._token_counter += 1
 
-        if token == END_TOKEN:
-            end_token = True
-
-        return end_token
-
-    def code(self, data_packet: RemoteDataPacket):
+    def encode(self, data_packet: RemoteDataPacket):
         remote_data = data_packet.get_remote_data()
         payload_size = remote_data.get_payload_size() * 2
         payload_size += 8
@@ -148,6 +137,19 @@ class DataPacketAscii(RemoteDataPacket):
 
     def get_ascii_buffer(self):
         return self._data_buffer
+
+    @staticmethod
+    def is_start_token(token) -> bool:
+        return token in [
+            COMMAND_START_TOKEN,
+            MESSAGE_START_TOKEN,
+            OK_START_TOKEN,
+            FAIL_START_TOKEN,
+        ]
+
+    @staticmethod
+    def is_end_token(token) -> bool:
+        return token == END_TOKEN
 
 
 def get_char(data_byte):

@@ -20,20 +20,3 @@ class RemoteParameterInt(RemoteParameter):
 
     def to_string(self):
         return self._name + str(self._value)
-
-
-"""
-@Override
-public String getAsString(boolean description)
-{
-    String returnString ="";
-    
-    if (description)
-    {
-        returnString+= this.name+"=";
-    }
-    returnString+= this.value;
-        
-    return(returnString);
-}
-"""

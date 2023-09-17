@@ -1,13 +1,18 @@
-from typing import List
+from typing import List, TypeAlias, Union
 
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
+from RoboView.Robot.Viewer.RobotSettings import RobotSettings
+
+RemoteDataTransmitter: TypeAlias = Union["Connection"]
 
 
 class AbstractComponent:
     def __init__(self, meta_data):
         self._global_id = meta_data["global_id"]
         self._name = meta_data["name"]
-        self._transmitter: "Connection" = None
+        self._transmitter: RemoteDataTransmitter = None
+        self._instance_key: str = f"{self.__class__.__name__}.{self._global_id}"
+        self._settings: RobotSettings = None
 
     def get_name(self):
         return self._name
@@ -21,7 +26,7 @@ class AbstractComponent:
         """ "gets component global id this is the unique id for this component in a Robot" """
         return self._global_id
 
-    def set_transmitter(self, transmitter: "Connection"):
+    def set_transmitter(self, transmitter: RemoteDataTransmitter):
         """ set transmitter for this component. All data will be sent thru this transmitter """
         self._transmitter = transmitter
 
@@ -34,116 +39,26 @@ class AbstractComponent:
     def get_control_clients(self) -> List[ComponentValue]:
         return []  # TODO ??
 
+    def recover_string(self, key: str, value: str) -> str:
+        """ "recover a String value from active settings. This property key will be generated from instance key + local key" """
+        return self._settings.recover_string(self._instance_key + key, value)
 
+    def recover_int(self, key: str, value: int) -> str:
+        """ "recover a integer value from active settings. This property key will be generated from instance key + local key" """
+        return self._settings.recover_int(self._instance_key + key, value)
 
+    def recover_boolean(self, key: str, value: bool) -> str:
+        """ "recover a boolean value from active settings. This property key will be generated from instance key + local key" """
+        return self._settings.recover_boolean(self._instance_key + key, value)
 
+    def save_string(self, key: str, value: str) -> str:
+        """ "save a string value in active settings. This property key will be generated from instance key + local key" """
+        return self._settings.save_string(self._instance_key + key, value)
 
-"""	
+    def save_int(self, key: str, value: int) -> str:
+        """ "save a integer value in active settings. This property key will be generated from instance key + local key" """
+        return self._settings.save_int(self._instance_key + key, value)
 
-	protected RemoteDataTransmitter transmitter;
-	
-	protected String instanceKey;
-	
-	protected Settings settings;
-	
-	/**
-	 * gets name of this component
-	 * @return component name
-	 */
-
-public AbstractRobotComponent(ComponentMetaData metaData)
-{
-	this.name=metaData.getName();
-
-	this.globalId=metaData.getGlobalId();
-	
-
-	this.instanceKey=this.getClass().getName()+"."+this.globalId;
-}
-
-
-
-
-
-/**
- * recover a String value from active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value
- * @return
- */
-protected String recoverString(String key, String value)
-{
-	return(this.settings.recoverString(this.instanceKey+key, value));
-}
-
-/**
- * recover a integer value from active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value value
- * @return
- */
-protected int recoverInt(String key, int value)
-{
-	return(this.settings.recoverInt(this.instanceKey+key, value));
-}
-
-
-/**
- * recover a boolean  value from active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value value
- * @return
- */
-protected boolean recoverBoolean(String key, boolean value)
-{
-	return(this.settings.recoverBoolean(this.instanceKey+key, value));
-}
-
-
-
-/**
- * save a string value in active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value string value to be saved
- */
-protected void saveString(String key, String value)
-{
-	this.settings.saveString(this.instanceKey+key, value);
-}
-
-
-/**
- * save a integer value in active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value integer value to be saved
- */
-protected void saveInt(String key, int value)
-{
-	this.settings.saveInt(this.instanceKey+key, value);
-}
-
-
-/**
- * save a boolean value in active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value boolean value to be saved
- */
-protected void saveBoolean(String key, boolean value)
-{
-	this.settings.saveBoolean(this.instanceKey+key, value);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""
+    def save_boolean(self, key: str, value: int) -> str:
+        """ "save a boolean value in active settings. This property key will be generated from instance key + local key" """
+        return self._settings.save_boolean(self._instance_key + key, value)

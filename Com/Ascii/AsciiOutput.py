@@ -1,8 +1,9 @@
 import traceback
-from typing import TypeAlias
+from typing import TypeAlias, Union
 
 from serial import Serial
 
+from RoboControl.Com.ComStatistic import ComStatistic
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Com.Ascii import DataPacketAscii
@@ -11,32 +12,33 @@ from RoboControl.Com.Remote.RemoteMessageDataPacket import RemoteMessageDataPack
 from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
 
 Byte: TypeAlias = int
+OutputStream: TypeAlias = Union[Serial]
 
 
 class AsciiOutput(RemoteDataOutput):
-
-    def __init__(self, serial_output: Serial,
-                 # ComStatistic statistic
-                 ):
-        # super().__init__(statistic)
-        self._output_stream = serial_output
+    def __init__(self, serial_output: Serial, statistic: ComStatistic):
+        super().__init__(statistic)
+        self._output_stream: OutputStream = serial_output
 
         self._data_out_buffer = bytearray(256)
         self.out_byte_pointer = 0
 
-    def transmitt(self, data_packet: RemoteDataPacket) -> None:
-        #print("transmit:")
-        #print("\n".join(["|  " + line for line in str(data_packet).splitlines()]))
-        #print("\n".join(["|  |  " + line for line in str(data_packet.get_remote_data()).splitlines()]))
+    def transmitt(self, data_packet: RemoteDataPacket) -> bool:
+        if not self._output_stream or not self._output_stream.is_open:
+            print("Can't transmit as _output_stream isn't open.")
+            return False
+        # print("transmit:")
+        # print("\n".join(["|  " + line for line in str(data_packet).splitlines()]))
+        # print("\n".join(["|  |  " + line for line in str(data_packet.get_remote_data()).splitlines()]))
         # data_packet.set_source_address(1)
         self._packet_queue.append(data_packet)
 
         self.transmitt_packet(data_packet)
-        pass
+        return True
 
     def transmitt_packet(self, data_packet: RemoteDataPacket):
         ascii_data = DataPacketAscii.DataPacketAscii()
-        ascii_data.code(data_packet)
+        ascii_data.encode(data_packet)
         self.send(ascii_data)
         print(
             data_packet.get_type(),
@@ -71,7 +73,7 @@ class AsciiOutput(RemoteDataOutput):
         if self._output_stream is not None:
             self._data_out_buffer[self.out_byte_pointer] = token
             self.out_byte_pointer += 1
-            # self.statistic.count_up_send_chars()
+            self.statistic.count_up_sent_chars()
         return True
 
     def transmit(self, data_packet: RemoteDataPacket) -> bool:
@@ -106,7 +108,7 @@ class AsciiOutput(RemoteDataOutput):
         for index in range(0, len(data_packet.get_data())):
             self.send_byte(data_packet.get_byte(index))
         self.send_token(DataPacketAscii.END_TOKEN)
-        # self.statistic.count_up_send_packets()
+        self.statistic.count_up_sent_packet_chars()
 
         try:
             self._output_stream.write(self._data_out_buffer)

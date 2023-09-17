@@ -3,15 +3,18 @@ from time import sleep
 
 from serial import Serial
 
+from RoboControl.Com.ComStatistic import ComStatistic
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii
 
 
 class AsciiInput(RemoteDataInput):
 
-    def __init__(self, serial_input: Serial):
+    def __init__(self, serial_input: Serial, statistic: ComStatistic):
+        super().__init__(statistic)
         self._serial_input = serial_input
 
+    def run_threaded(self):
         self.running = True
         x = threading.Thread(target=self.run)
         x.start()
@@ -19,27 +22,48 @@ class AsciiInput(RemoteDataInput):
     def run(self) -> None:
         print("x is running")
 
+        receiving_packet = False
         data_packet = DataPacketAscii()
 
         while self.running:
-
-            if self._serial_input.in_waiting > 1:
-                token = self._serial_input.read(1)
-
-                if data_packet.putToken(token):
-                    # print("dp")
-                    # check
-                    remote_data = data_packet.decode()
-                    # print(str(remote_data))
-
-                    self.deliver_packet(remote_data)
-                    # deliver !
-                    # super().deliver_packet(data_packet)
-                    # clear packet
-
-                    data_packet = DataPacketAscii()
-
-            else:
+            # try
+            while (
+                    self.running and self._serial_input
+                    and self._serial_input.is_open
+                    and self._serial_input.in_waiting < 1
+            ):
                 sleep(0.001)
+            if not self.running:
+                break
 
-            pass
+            self.statistic.count_up_recived_chars()
+
+            token = self._serial_input.read(1)
+
+            if DataPacketAscii.is_start_token(token):
+                if receiving_packet:
+                    self.statistic.count_up_error_packets()
+                receiving_packet = True
+                data_packet = DataPacketAscii()
+
+            data_packet.put_token(token)
+
+            if DataPacketAscii.is_end_token(token):
+                if not receiving_packet:
+                    self.statistic.count_up_error_packets()
+                    continue
+
+                remote_data = data_packet.decode()
+                # data_packet_buffer = copy(data_packet._data_buffer)
+                # data_packet = DataPacketAscii.parse_ascii(data_packet_buffer)
+
+                self.deliver_packet(remote_data)
+                # self.deliver_packet(data_packet)
+
+                self.statistic.count_up_recived_packets()
+                receiving_packet = False
+                data_packet = DataPacketAscii()
+
+            # } catch (IOException e) { e.printStackTrace();
+            # } catch (InterruptedException e) { e.printStackTrace();
+            # } catch(Exception e) { System.out.println("kill that bloody BUG !!! :"); e.printStackTrace();}

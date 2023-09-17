@@ -2,9 +2,7 @@ from RoboControl.Robot.Component.statistic.DeviceStatus import DeviceStatus
 
 
 class CpuStatus(DeviceStatus):
-    _SYSTEM_STATE_NAMES = {"init", "running", "stopped", "selftest", "standby"}
-
-    #	private SystemState_e systemState=SystemState_e.RUNNING;
+    _SYSTEM_STATE_NAMES = ["init", "running", "stopped", "selftest", "standby"]
 
     def __init__(self):
         super().__init__()
@@ -12,6 +10,7 @@ class CpuStatus(DeviceStatus):
         self._max_load = 0
         self._last_load = 0
         self._status_listener = list()
+        self._system_state = CpuStatus._SYSTEM_STATE_NAMES.index("running")
 
     def get_min_load(self):
         return self._min_load
@@ -36,25 +35,8 @@ class CpuStatus(DeviceStatus):
         for listener in self._status_listener:
             listener.cpu_status_changed(self)
 
+    def get_system_state(self):
+        return self._system_state
 
-"""
-
-public SystemState_e getSystemState()
-{
-	return(this.systemState);
-}
-
-
-/**
- * gets name of actual system state
- * @return system state
- */
-
-public String getSystemStateAsString()
-{
-	return(SYSTEM_STATE_NAMES[this.systemState.ordinal()]);
-}
-
-	
-}
-"""
+    def get_system_state_as_string(self):
+        return CpuStatus._SYSTEM_STATE_NAMES[self._system_state]

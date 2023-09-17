@@ -7,6 +7,8 @@ class RemoteStream(RemoteData):
     _type_name: str = "stream"
 
     def set_data(self, *args, **kwargs):
-        pass
+        raise ValueError("WIP")
 
-  
+    def get_data_packet(self) -> RemoteStreamDataPacket:
+        packet = RemoteStreamDataPacket(self._destination_address, self._source_address, self._id)
+        return self.make_data_packet(packet)

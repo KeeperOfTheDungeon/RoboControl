@@ -56,21 +56,21 @@ def rx_factory(clock_pin):
 
         # accept message
         set(x, 8)				# setze counter auf 8 bits
-        wait(0, gpio, clock_pin)		# warte auf 0 bei clock 
+        wait(0, gpio, clock_pin)
             
         label('loop')
             
-        wait(1, gpio, clock_pin)		# warte auf 1 bei clock
-        in_(pins, 1)			# holle aktuelles bit
-        wait(0, gpio, clock_pin)		# Warte auf 0 beiu clock
+        wait(1, gpio, clock_pin)
+        in_(pins, 1)			# hole aktuelles bit
+        wait(0, gpio, clock_pin)
             
-        jmp(x_dec, 'loop')		# nächsten bit hollen (solange n > 0)
+        jmp(x_dec, 'loop')		# get next bit(as long as n > 0)
 
         # wait for end bit
-        wait(1, gpio, clock_pin)		# warte auf 1 bei Clock
-        jmp(pin, 'end_bit')		# springe zu ende 
+        wait(1, gpio, clock_pin)
+        jmp(pin, 'end_bit')
 
-        # exception as 10. LSB in word to main thread
+        # error as 10. LSB in word to main thread
         set(y, 1)
         in_(y, 23)
             

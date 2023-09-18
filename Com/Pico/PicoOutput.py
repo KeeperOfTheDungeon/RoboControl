@@ -55,26 +55,26 @@ def tx_factory(clock_pin):
 
         #start bit
         pull()
-        wait(0, pins, clock_pin)
+        wait(0, gpio, clock_pin)
         set(x, 8)    .side(0)
-        wait(1, pins, clock_pin)
+        wait(1, gpio, clock_pin)
 
         # message
         label('loop')
-        wait(0, pins, clock_pin)
+        wait(0, gpio, clock_pin)
         out(pins, 1)
-        wait(1, pins, clock_pin)
+        wait(1, gpio, clock_pin)
         jmp(x_dec, 'loop')
 
         #end bit
-        wait(0, pins, clock_pin)
+        wait(0, gpio, clock_pin)
         mov(x,x)    .side(1)
-        wait(1, pins, clock_pin)
+        wait(1, gpio, clock_pin)
         
         
-        wait(0, pins, clock_pin)
+        wait(0, gpio, clock_pin)
         mov(x,x)    .side(1)
-        wait(1, pins, clock_pin)
+        wait(1, gpio, clock_pin)
 
         wrap()
     return tx

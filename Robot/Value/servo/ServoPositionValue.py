@@ -9,14 +9,26 @@ class ServoPositionValue(RadiantValue):
 		meta_data["description"] = "servo position"
 		super().__init__(meta_data)
 
+	def is_at_min(self) -> bool:
+		raise ValueError("WIP")
 
+	def is_at_max(self) -> bool:
+		raise ValueError("WIP")
 
+	def is_active(self) -> bool:
+		raise ValueError("WIP")
 
-"""
+	def set_stalling(self, *args) -> None:
+		raise ValueError("WIP")
 
-	protected boolean isAtMax;
-	protected boolean isAtMin;
-	protected boolean isActive;
-	
+	def set_on(self, *args) -> None:
+		raise ValueError("WIP")
 
-"""
+	def set_at_min(self, *args) -> None:
+		raise ValueError("WIP")
+
+	def set_at_max(self, *args) -> None:
+		raise ValueError("WIP")
+
+	def set_inverse(self, *args) -> None:
+		raise ValueError("WIP")

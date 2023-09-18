@@ -1,222 +1,64 @@
+from typing import List, TypeAlias, Union
+
+from RoboControl.Robot.Value.ComponentValue import ComponentValue
+from RoboView.Robot.Viewer.RobotSettings import RobotSettings
+
+RemoteDataTransmitter: TypeAlias = Union["Connection"]
+
+
 class AbstractComponent:
+    def __init__(self, meta_data):
+        self._global_id = meta_data["global_id"]
+        self._name = meta_data["name"]
+        self._transmitter: RemoteDataTransmitter = None
+        self._instance_key: str = f"{self.__class__.__name__}.{self._global_id}"
+        self._settings: RobotSettings = None
 
-	def __init__(self, meta_data):
-		self._global_id = meta_data["global_id"]
-		self._name = meta_data["name"]
+    def get_name(self):
+        return self._name
 
+    get_component_name = get_name
 
- 
+    def set_component_name(self, name: str) -> None:
+        self._name = name
 
+    def get_global_id(self) -> int:
+        """ "gets component global id this is the unique id for this component in a Robot" """
+        return self._global_id
 
-"""
-package de.hska.lat.robot.abstractRobot.component;
+    def set_transmitter(self, transmitter: RemoteDataTransmitter):
+        """ set transmitter for this component. All data will be sent thru this transmitter """
+        self._transmitter = transmitter
 
-import java.util.ArrayList;
+    def get_data_values(self) -> List[ComponentValue]:
+        return []  # TODO ??
 
-import de.hska.lat.comm.remote.RemoteDataTransmitter;
-import de.hska.lat.robot.component.ComponentMetaData;
-import de.hska.lat.robot.control.client.ControlClient;
-import de.hska.lat.robot.value.ComponentValue;
-import de.hska.lat.settings.Settings;
+    def get_control_values(self) -> List[ComponentValue]:
+        return []  # TODO ??
 
-public abstract class AbstractRobotComponent
-{
+    def get_control_clients(self) -> List[ComponentValue]:
+        return []  # TODO ??
 
-	
+    def recover_string(self, key: str, value: str) -> str:
+        """ "recover a String value from active settings. This property key will be generated from instance key + local key" """
+        return self._settings.recover_string(self._instance_key + key, value)
 
-	
-	protected RemoteDataTransmitter transmitter;
-	
-	
-	protected String instanceKey;
-	
-	protected Settings settings;
-	
-	/**
-	 * gets name of this component
-	 * @return component name
-	 */
+    def recover_int(self, key: str, value: int) -> str:
+        """ "recover a integer value from active settings. This property key will be generated from instance key + local key" """
+        return self._settings.recover_int(self._instance_key + key, value)
 
-public AbstractRobotComponent(ComponentMetaData metaData)
-{
-	this.name=metaData.getName();
+    def recover_boolean(self, key: str, value: bool) -> str:
+        """ "recover a boolean value from active settings. This property key will be generated from instance key + local key" """
+        return self._settings.recover_boolean(self._instance_key + key, value)
 
-	this.globalId=metaData.getGlobalId();
-	
+    def save_string(self, key: str, value: str) -> str:
+        """ "save a string value in active settings. This property key will be generated from instance key + local key" """
+        return self._settings.save_string(self._instance_key + key, value)
 
-	this.instanceKey=this.getClass().getName()+"."+this.globalId;
-}
+    def save_int(self, key: str, value: int) -> str:
+        """ "save a integer value in active settings. This property key will be generated from instance key + local key" """
+        return self._settings.save_int(self._instance_key + key, value)
 
-
-public void setComponentName(String name)
-{
-	this.name = name;
-}
-	
-public String getComponentName()
-{
-	return(this.name);
-}
-
-/**
- * gets component global id this is the unique id for this component in a Robot
- * @return global id
- */
-
-
-public int getGlobalId()
-{
-	return(this.globalId);
-}
-
-
-
-
-/**
- * set transmitter for this component. All data will be sent thru this transmitter
- * @param transmitter transmitter
- */
-public void setTransmitter(RemoteDataTransmitter transmitter)
-{
-	this.transmitter = transmitter;
-}
-
-
-
-/**
- * recover a String value from active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value
- * @return
- */
-protected String recoverString(String key, String value)
-{
-	return(this.settings.recoverString(this.instanceKey+key, value));
-}
-
-/**
- * recover a integer value from active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value value
- * @return
- */
-protected int recoverInt(String key, int value)
-{
-	return(this.settings.recoverInt(this.instanceKey+key, value));
-}
-
-
-/**
- * recover a boolean  value from active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value value
- * @return
- */
-protected boolean recoverBoolean(String key, boolean value)
-{
-	return(this.settings.recoverBoolean(this.instanceKey+key, value));
-}
-
-
-
-/**
- * save a string value in active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value string value to be saved
- */
-protected void saveString(String key, String value)
-{
-	this.settings.saveString(this.instanceKey+key, value);
-}
-
-
-/**
- * save a integer value in active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value integer value to be saved
- */
-protected void saveInt(String key, int value)
-{
-	this.settings.saveInt(this.instanceKey+key, value);
-}
-
-
-/**
- * save a boolean value in active settings. This property key will be generated from instance key + local key 
- * @param key local key
- * @param value boolean value to be saved
- */
-protected void saveBoolean(String key, boolean value)
-{
-	this.settings.saveBoolean(this.instanceKey+key, value);
-}
-
-
-
-/**
- * get component all data values   
- * @return list with this component data values
- */
-public ArrayList<ComponentValue<?>> getDataValues()
-{
-	
-	ArrayList<ComponentValue<?>> values = new ArrayList<ComponentValue<?>>();
-
-			
-	return (values);
-}
-
-
-
-/**
- * get component all control values   
- * @return list with this component control values
- */
-public ArrayList<ComponentValue<?>> getControlValues()
-{
-	
-	ArrayList<ComponentValue<?>> values = new ArrayList<ComponentValue<?>>();
-
-			
-	return (values);
-}
-
-
-
-
-
-
-
-/**
- * get component all control clients   
- * @return list with this component control clients
- */
-public ArrayList<ControlClient>  getControlClients()
-{
-	ArrayList<ControlClient> clients = new ArrayList<ControlClient>();
-	return(clients);
-}
-
-
-
-
-
-
-
-
-public void onLoadSettings()
-{
-
-	
-}
-
-
-
-public void onSaveSettings()
-{
-
-}
-
-
-}
-"""
+    def save_boolean(self, key: str, value: int) -> str:
+        """ "save a boolean value in active settings. This property key will be generated from instance key + local key" """
+        return self._settings.save_boolean(self._instance_key + key, value)

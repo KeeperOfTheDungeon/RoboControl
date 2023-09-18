@@ -1,15 +1,17 @@
 #import copy
 
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
+from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.Remote.RemoteException import RemoteException
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Robot.AbstractRobot.AbstractProtocol import AbstractProtocol
+from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.statistic.ComStatus import ComStatus
 from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcerssorList
+from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcessorList
 
 from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
@@ -20,10 +22,6 @@ from RoboControl.Robot.Device.Protocol.Cmd_getNodeId import Cmd_getNodeId
 from RoboControl.Robot.Device.Protocol.Msg_pingResponse import Msg_pingResponse
 
 
-
-from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
-
-
 class AbstractRobotDevice:
     _name = "AbstractRobotDevice"
 
@@ -31,17 +29,17 @@ class AbstractRobotDevice:
         self._name = component_config.get_name()
         self._id = component_config.get_id()
 
-        self._remote_command_processor_list = RemoteProcerssorList()
-        self._remote_message_processor_list = RemoteProcerssorList()
-        self._remote_stream_processor_list = RemoteProcerssorList()
-        self._remote_exception_processor_list = RemoteProcerssorList()
+        self._remote_command_processor_list = RemoteProcessorList()
+        self._remote_message_processor_list = RemoteProcessorList()
+        self._remote_stream_processor_list = RemoteProcessorList()
+        self._remote_exception_processor_list = RemoteProcessorList()
 
         self._component_list = list()
         self._cpu_status_listener = list()
         self._com_status_listener = list()
         self._protocol = AbstractProtocol()
 
-        self._transmitter = RemoteDataOutput()
+        self._transmitter: RemoteDataOutput
 
         self._com_status = ComStatus()
         self._cpu_status = CpuStatus()
@@ -68,8 +66,6 @@ class AbstractRobotDevice:
             RemoteProcessor(Cmd_ping(DeviceProtocol.CMD_PING), self.process_ping_command))
 
         self._remote_message_processor_list.append(RemoteProcessor(Msg_pingResponse(), self.process_ping_response))
-        
-        
 
     def set_transmitter(self, transmitter):
         self._transmitter = transmitter
@@ -91,8 +87,8 @@ class AbstractRobotDevice:
         for component in components:
             self._component_list.append(component)
 
-    def get_component(self, index):
-        pass
+    def get_component(self, index: int) -> RobotComponent:
+        return self._component_list[index]
 
     def find_copmonent_on_name(self, name):
         pass
@@ -120,20 +116,32 @@ class AbstractRobotDevice:
     def receive(self, data_packet):
         self.parse_data_packet(data_packet)
 
-    def send_data(self, data_packet):
-        print("ARD: send Data")
-        print(data_packet)
+    def send_data(self, data_packet: RemoteData) -> bool:
+        # print("ARD: send Data", data_packet)
         data_packet.set_destination_address(self.get_id())
+        if self._transmitter is None:
+            return False
+        return self._transmitter.transmitt(data_packet)
 
-        self._transmitter.transmitt(data_packet)
+    def load_setup(self) -> None:
+        for component in self._component_list:
+            component.remote_loadDefaults()
+            component.remote_getSettings()
 
     def on_connected(self):
-        pass
+        """ "called when connection to remote robot succeeded" """
+        # self.load_setup()
+        for component in self._component_list:
+            component.on_connected()
 
+    def on_disconnected(self):
+        """ "called when disconnecting grom remote robot" """
+        # self.load_setup()
+        for component in self._component_list:
+            component.on_disconnected()
 
-
-
-
+    def get_device_name(self) -> str:
+        return self._name
 
     def parse_data_packet(self, data_packet):
 

@@ -103,8 +103,8 @@ class LoggedDataPacket:
         raise ValueError("WIP: get_data_as_hex_string_string24 not implemented")
 
 
-def render_data(data_packet, data_width: DisplayDataWidth_e = None, as_hexadecimal: bool = False) -> str:
-    if not data_packet.data:
+def render_data(data_packet: "RemoteDataPacket", data_width: DisplayDataWidth_e = None, as_hexadecimal: bool = False) -> str:
+    if data_packet.get_data() is None:
         return ""
     if not data_width:
         return ",".join(data_packet.data)

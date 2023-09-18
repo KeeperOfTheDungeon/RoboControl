@@ -1,4 +1,3 @@
-
 from RoboControl.Robot.Component.Actor.servo.Servo import Servo
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosDestinations import Stream_servosDestinations
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosPositions import Stream_servosPositions
@@ -7,79 +6,62 @@ from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProce
 
 
 class ServoSet(ComponentSet):
-	def __init__(self, components, protocol):
-		#self._msg_distance = protocol['msg_distance']
-		self._stream_positions = protocol['stream_servoPositions']
-		self._stream_destinations = protocol['stream_servoDestinations']
+    def __init__(self, components, protocol):
+        # self._msg_distance = protocol['msg_distance']
+        self._stream_positions = protocol['stream_servoPositions']
+        self._stream_destinations = protocol['stream_servoDestinations']
 
-		actors = list()
- 
+        actors = list()
 
+        for component in components:
+            actor = Servo(component)
+            actors.append(actor)
 
-		for component in components:
-			actor = Servo(component)
-			actors.append(actor)
+        super().__init__(actors)
 
+    def get_command_processors(self):
+        command_list = super().get_command_processors()
+        return command_list
 
+    def get_message_processors(self):
+        msg_list = super().get_message_processors()
+        return msg_list
 
-		super().__init__(actors)
+    def get_stream_processors(self):
+        stream_list = super().get_stream_processors()
 
+        if self._stream_positions != 0:
+            cmd = Stream_servosPositions.get_command(self._stream_positions, len(self))
+            processor = RemoteProcessor(cmd, self.process_stream_positions)
+            stream_list.append(processor)
 
+        if self._stream_destinations != 0:
+            cmd = Stream_servosDestinations.get_command(self._stream_positions, len(self))
+            processor = RemoteProcessor(cmd, self.process_stream_destinations)
+            stream_list.append(processor)
 
-	def get_command_processors(self):
-		command_list = super().get_command_processors()
-		return command_list
+        return stream_list
 
-		
-	def get_message_processors(self):
-		msg_list = super().get_message_processors()
-		return msg_list
+    """def decode_stream(self, remote_data):
+        if isinstance(remote_data,Stream_servosPositions):
+            self.process_stream_positions(remote_data)
+        if isinstance(remote_data,Stream_servosDestinations):
+            self.process_stream_destinations(remote_data)
+    """
 
+    def process_stream_positions(self, stream_positions):
 
+        for sensor in self:
+            index = sensor.get_local_id()
+            value = stream_positions.get_position(index)
+            sensor.set_position(value)
 
-	def get_stream_processors(self):
-		stream_list = super().get_stream_processors()
-		
-		if (self._stream_positions != 0):
-			stream_list.append(RemoteProcessor(Stream_servosPositions.get_command(self._stream_positions, len(self)), self.process_stream_positions))
+    def process_stream_destinations(self, stream_destitions):
 
-
-		if (self._stream_destinations != 0):
-			stream_list.append(RemoteProcessor(Stream_servosDestinations.get_command(self._stream_positions, len(self)), self.process_stream_destinations))
-
-
-
-		return stream_list
-
-
-	"""def decode_stream(self, remote_data):
-		if isinstance(remote_data,Stream_servosPositions):
-			self.process_stream_positions(remote_data)
-		if isinstance(remote_data,Stream_servosDestinations):
-			self.process_stream_destinations(remote_data)
-	"""
-
-
-
-	def process_stream_positions(self, stream_positions):
-		
-		for sensor in self:
-			index = sensor.get_local_id()
-			value = stream_positions.get_position(index)
-			sensor.set_position(value)
-
-
-
-
-	def process_stream_destinations(self, stream_destitions):
-		
-		for sensor in self:
-			index = sensor.get_local_id()
-			value = stream_destitions.get_destination(index)
-			sensor.set_destination(value)
-
-
-
+        for sensor in self:
+            index = sensor.get_local_id()
+            value = stream_destitions.get_destination(index)
+            sensor.set_destination(value)
 
 
 """package de.hska.lat.robot.component.actor.servo;
@@ -110,47 +92,47 @@ import de.hska.lat.robot.component.actor.servo.protocol.*;
  */
 
 public class ServoSet extends ComponentSet<Servo, ServoProtocol> 
-		
+        
 {
 
 
-	
-	
+    
+    
 
 
 
 /**
-	 * 
-	 */
-	private static final long serialVersionUID = -6296184626671050693L;
+     * 
+     */
+    private static final long serialVersionUID = -6296184626671050693L;
 
 
 
 protected ServoSet()
 {
-	
+    
 }
 
 
 
 public void  processServoSettings(Msg_servoSettings remoteData)
 {
-	Servo servo;
+    Servo servo;
 
-	
-	servo=this.getComponentOnLocalId(remoteData.getIndex());
-	if (servo!=null)
-	{
-		servo.setServoSetup(remoteData.getMinRange(), remoteData.getMaxRange(), 
-				remoteData.getOffset(), remoteData.getScale(),
-				remoteData.isReverse());
-		servo.setOn(remoteData.isOn());
-		servo.setForceFeedbackOn(remoteData.forceFeedbackisOn());
-		servo.setpositionFeedbackisOn(remoteData.positionFeedbackisOn());
-	}
+    
+    servo=this.getComponentOnLocalId(remoteData.getIndex());
+    if (servo!=null)
+    {
+        servo.setServoSetup(remoteData.getMinRange(), remoteData.getMaxRange(), 
+                remoteData.getOffset(), remoteData.getScale(),
+                remoteData.isReverse());
+        servo.setOn(remoteData.isOn());
+        servo.setForceFeedbackOn(remoteData.forceFeedbackisOn());
+        servo.setpositionFeedbackisOn(remoteData.positionFeedbackisOn());
+    }
 
 }
-	
+    
 
 
 
@@ -162,14 +144,14 @@ public void  processServoSettings(Msg_servoSettings remoteData)
 
 public void  processServoSpeed(Msg_servoSpeed remoteData)
 {
-	Servo servo;
+    Servo servo;
 
-	servo=this.getComponentOnLocalId(remoteData.getIndex());
-	if (servo!=null)
-	{
-		servo.setSpeed(remoteData.getSpeed());
-	}
-	
+    servo=this.getComponentOnLocalId(remoteData.getIndex());
+    if (servo!=null)
+    {
+        servo.setSpeed(remoteData.getSpeed());
+    }
+    
 }
 
 
@@ -181,14 +163,14 @@ public void  processServoSpeed(Msg_servoSpeed remoteData)
 
 public void  processServoForceThreshold(Msg_servoForceThreshold remoteData)
 {
-	Servo servo;
+    Servo servo;
 
-	servo=this.getComponentOnLocalId(remoteData.getIndex());
-	if (servo!=null)
-	{
-		servo.setForceThreshold(remoteData.getForceThreshold());
-	}
-	
+    servo=this.getComponentOnLocalId(remoteData.getIndex());
+    if (servo!=null)
+    {
+        servo.setForceThreshold(remoteData.getForceThreshold());
+    }
+    
 }
 
 /**
@@ -198,19 +180,19 @@ public void  processServoForceThreshold(Msg_servoForceThreshold remoteData)
  */
 public void processServosPositions(Stream_servosPositions servoPositions)
 {
-	Servo servo;
+    Servo servo;
 
-	int index;
+    int index;
 
 
-	for (index=0;index<servoPositions.getParameterCount(); index++)
-	{
-		servo=this.getComponentOnLocalId(index);
-		if (servo!=null)
-		{
-			servo.setPosition(servoPositions.getPosition(index));
-		}
-	}
+    for (index=0;index<servoPositions.getParameterCount(); index++)
+    {
+        servo=this.getComponentOnLocalId(index);
+        if (servo!=null)
+        {
+            servo.setPosition(servoPositions.getPosition(index));
+        }
+    }
 
 }
 
@@ -218,43 +200,43 @@ public void processServosPositions(Stream_servosPositions servoPositions)
 
 public void  processServosDestinations(Stream_servosDestinations servoPosition)
 {
-	Servo servo;
+    Servo servo;
 
-	int index;
+    int index;
 
 
-	for (index=0;index<servoPosition.getParameterCount(); index++)
-	{
-		servo=this.getComponentOnLocalId(index);
-		if (servo!=null)
-		{
-			servo.setDestination(servoPosition.getDestination(index));
-			
-		}
-	}
+    for (index=0;index<servoPosition.getParameterCount(); index++)
+    {
+        servo=this.getComponentOnLocalId(index);
+        if (servo!=null)
+        {
+            servo.setDestination(servoPosition.getDestination(index));
+            
+        }
+    }
 }
 
 
 public void  processServosStatus(Stream_servosStatus servosStatus)
 {
-	Servo servo;
-	int index;
+    Servo servo;
+    int index;
 
-	for (index=0;index<servosStatus.getParameterCount(); index++)
-	{
-		servo=this.getComponentOnLocalId(index);
-		
-		if (servo!=null)
-		{
-		servo.setActive(servosStatus.isActive(index));
-		servo.setAtMax(servosStatus.isAtMax(index));
-		servo.setAtMin(servosStatus.isAtMin(index));
-		servo.setStalling(servosStatus.isStalling(index));
-		servo.setOn(servosStatus.isOn(index));
-		servo.setReverse(servosStatus.isReverse(index));
-		}
-		
-	}
+    for (index=0;index<servosStatus.getParameterCount(); index++)
+    {
+        servo=this.getComponentOnLocalId(index);
+        
+        if (servo!=null)
+        {
+        servo.setActive(servosStatus.isActive(index));
+        servo.setAtMax(servosStatus.isAtMax(index));
+        servo.setAtMin(servosStatus.isAtMin(index));
+        servo.setStalling(servosStatus.isStalling(index));
+        servo.setOn(servosStatus.isOn(index));
+        servo.setReverse(servosStatus.isReverse(index));
+        }
+        
+    }
 }
 /**
  * decode servo position from DataPacket
@@ -264,30 +246,30 @@ public void  processServosStatus(Stream_servosStatus servosStatus)
 
 public void  processServoPosition(Msg_servoPosition servoPosition)
 {
-	Servo servo;
+    Servo servo;
 
 
-	servo=this.getComponentOnLocalId(servoPosition.getIndex());
-	if (servo!=null)
-	{
-		servo.setPosition(servoPosition.getPosition());
-	}
-	
+    servo=this.getComponentOnLocalId(servoPosition.getIndex());
+    if (servo!=null)
+    {
+        servo.setPosition(servoPosition.getPosition());
+    }
+    
 }
 
 
 private void processServosRawAnalogValues(
-		Stream_servoRawAnalogPosition rawAnalogValues)
+        Stream_servoRawAnalogPosition rawAnalogValues)
 {
 
-	int index;
+    int index;
 
-	for (index=0;index<rawAnalogValues.getParameterCount(); index++)
-	{
-		System.out.println ("Servo : "+index+"  Value : "+rawAnalogValues.getPosition(index));
-		
-	}
-	
+    for (index=0;index<rawAnalogValues.getParameterCount(); index++)
+    {
+        System.out.println ("Servo : "+index+"  Value : "+rawAnalogValues.getPosition(index));
+        
+    }
+    
 }
 
 
@@ -295,24 +277,24 @@ private void processServosRawAnalogValues(
 @Override
 public boolean decodeStream(RemoteStream remoteData)
 {
-	if (remoteData instanceof Stream_servosPositions)
-	{
-		processServosPositions((Stream_servosPositions)remoteData);
-	}
-	else if (remoteData instanceof Stream_servosDestinations)
-	{
-		processServosDestinations((Stream_servosDestinations)remoteData);
-	}
-	else if (remoteData instanceof Stream_servosStatus)
-	{
-		processServosStatus((Stream_servosStatus)remoteData);
-	}
-	else if (remoteData instanceof Stream_servoRawAnalogPosition)
-	{
-		processServosRawAnalogValues((Stream_servoRawAnalogPosition)remoteData);
-	}
-	
-	return false;
+    if (remoteData instanceof Stream_servosPositions)
+    {
+        processServosPositions((Stream_servosPositions)remoteData);
+    }
+    else if (remoteData instanceof Stream_servosDestinations)
+    {
+        processServosDestinations((Stream_servosDestinations)remoteData);
+    }
+    else if (remoteData instanceof Stream_servosStatus)
+    {
+        processServosStatus((Stream_servosStatus)remoteData);
+    }
+    else if (remoteData instanceof Stream_servoRawAnalogPosition)
+    {
+        processServosRawAnalogValues((Stream_servoRawAnalogPosition)remoteData);
+    }
+    
+    return false;
 }
 
 
@@ -322,24 +304,24 @@ public boolean decodeStream(RemoteStream remoteData)
 @Override
 public boolean decodeMessage(RemoteMessage remoteData)
 {
-	if (remoteData instanceof Msg_servoSpeed)
-	{
-		 this.processServoSpeed((Msg_servoSpeed) remoteData);
-	}
-	else if (remoteData instanceof Msg_servoSpeed)
-	{
-	//	processServosPositions((Stream_servosPositions)remoteData);
-	} 
+    if (remoteData instanceof Msg_servoSpeed)
+    {
+         this.processServoSpeed((Msg_servoSpeed) remoteData);
+    }
+    else if (remoteData instanceof Msg_servoSpeed)
+    {
+    //	processServosPositions((Stream_servosPositions)remoteData);
+    } 
 
-	
-	else if (remoteData instanceof Msg_servoPosition)
-	{
-		this.processServoPosition((Msg_servoPosition) remoteData);
+    
+    else if (remoteData instanceof Msg_servoPosition)
+    {
+        this.processServoPosition((Msg_servoPosition) remoteData);
 
-	} 
+    } 
 
-	else if (remoteData instanceof Msg_servoSettings)
-	{
+    else if (remoteData instanceof Msg_servoSettings)
+    {
 		this.processServoSettings((Msg_servoSettings) remoteData);
 	} 
 	

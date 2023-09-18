@@ -14,22 +14,19 @@ class RobotComponent(AbstractComponent):
         self._local_id = meta_data["local_id"]
         self._device_address = meta_data["protocol"]["device_id"]
 
-        protocol = meta_data["protocol"]
+        self.component_protocol = meta_data["protocol"]
 
-        self._cmd_get_settings = protocol["cmd_getSettings"]
-        self._cmd_save_defaults = protocol["cmd_saveDefaults"]
-        self._cmd_load_defaults = protocol["cmd_loadDefaults"]
-        self._cmd_get_value = protocol["cmd_getValue"]
-        self._transmitter = None
+        self._cmd_get_settings = self.component_protocol["cmd_getSettings"]
+        self._cmd_save_defaults = self.component_protocol["cmd_saveDefaults"]
+        self._cmd_load_defaults = self.component_protocol["cmd_loadDefaults"]
+        self._cmd_get_value = self.component_protocol["cmd_getValue"]
+
         self._setup_listener = list()
         self._value_listener = list()
 
-    def set_transmitter(self, transmitter):
-        self._transmitter = transmitter
-
     def send_data(self, remote_data):
         remote_data.set_destination_address(self._device_address)
-        if (self._transmitter is not None):
+        if self._transmitter is not None:
             self._transmitter.transmitt(remote_data)
         return None
 
@@ -98,5 +95,5 @@ class RobotComponent(AbstractComponent):
     def get_values(self):
         values = list()
 
-    def get_name(self):
-        return (self._name)
+    def add_sensor_listener(self, listener):
+        self._sensor_listener.append(listener)

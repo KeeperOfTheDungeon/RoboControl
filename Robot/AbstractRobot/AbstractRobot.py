@@ -22,6 +22,7 @@ class AbstractRobot:
         # connection listener
 
         self._data_packet_logger = DataPacketLogger()
+        self._data_packet_logger.set_device_list(self.get_device_list())
 
         # FIXME is this really optional?
         self._connection: Optional[Connection] = None
@@ -63,13 +64,15 @@ class AbstractRobot:
         pass
 
     def get_device_on_name(self, device_name: str) -> AbstractDevice:
-        pass
+        for device in self._device_list:
+            if device.get_name() == device_name:
+                return device
+        return None
 
     def get_device_on_id(self, device_id: int) -> AbstractDevice:
         for device in self._device_list:
             if device.has_id(device_id):
                 return device
-
         return None
 
     def get_component_on_global_id(self, device_id: int) -> AbstractComponent:

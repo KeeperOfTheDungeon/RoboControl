@@ -1,26 +1,23 @@
-
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.Sensor.luxSensor.protocol.Cmd_getLux import Cmd_getLux
 from RoboControl.Robot.Value.lux.LuxValue import LuxValue
 
 
 class LuxSensor(Sensor):
-	
-	def __init__(self, meta_data):
-		super().__init__(meta_data)
-		self._lux_value = LuxValue(meta_data)
 
+    def __init__(self, meta_data):
+        super().__init__(meta_data)
+        self._lux_value = LuxValue(meta_data)
 
-	def get_lux_value(self):
-		return self._lux_value
+    def get_lux_value(self):
+        return self._lux_value
 
+    def set_lux(self, lux):
+        self._lux_value.set_value(lux)
 
-	def set_lux(self, lux):
-		self._lux_value.set_value(lux)
-
-	def remote_get_value(self):
-		cmd = Cmd_getLux.get_command(self._cmd_get_value , self._local_id)
-		self.send_data(cmd)
+    def remote_get_value(self):
+        cmd = Cmd_getLux.get_command(self._cmd_get_value, self._local_id)
+        self.send_data(cmd)
 
 
 """

@@ -1,3 +1,4 @@
+import math
 import traceback
 from typing import List, Optional, TypeAlias
 
@@ -33,48 +34,36 @@ class DataPacketAscii(RemoteDataPacket):
     def __init__(self):  # noqa
         self._token_counter = 0
         self._data_buffer = ""
-        pass
 
     def decode(self) -> RemoteData:
-
         # print(self.data_buffer)
         index = 0
-
         message_type = self._data_buffer[index]
-
         if message_type == COMMAND_START_TOKEN_STR:
             print("Message sync")
             remote_data = RemoteCommand(0, "", "")
-            self.do_decode(remote_data)
+            return self.do_decode(remote_data)
         elif message_type == MESSAGE_START_TOKEN_STR:
             print("Message sync")
             remote_data = RemoteMessage(0, "", "")
-            self.do_decode(remote_data)
+            return self.do_decode(remote_data)
         elif message_type == STREAM_START_TOKEN_STR:
-            print("Stream sync")
+            # print("Stream sync")
             remote_data = RemoteStream(0, "", "")
-            self.do_decode(remote_data)
-        else:
-            print("unsync")
-            remote_data = RemoteData(0, "", "")
+            return self.do_decode(remote_data)
+        print("unsync")
+        return RemoteData(0, "", "")
 
-        return remote_data
-
-    def do_decode(self, remote_data: RemoteData) -> None:
+    def do_decode(self, remote_data: RemoteData) -> RemoteData:
 
         index = 1
-
-        remote_data._destination_address = int(self._data_buffer[index:index + 2], 16)
+        remote_data.set_destination_address(int(self._data_buffer[index:index + 2], 16))
         index += 2
-
-        remote_data._source_address = int(self._data_buffer[index:index + 2], 16)
+        remote_data.set_source_address(int(self._data_buffer[index:index + 2], 16))
         index += 2
+        remote_data.set_id(int(self._data_buffer[index:index + 2], 16))
 
-        remote_data._id = int(self._data_buffer[index:index + 2], 16)
-        index += 2
-
-        # get payload
-
+        index += 2  # get payload
         data_size = len(self._data_buffer)
         data_size -= index + 1
         data_size /= 2
@@ -92,24 +81,13 @@ class DataPacketAscii(RemoteDataPacket):
         remote_data.set_payload(payload)
 
         # error - exception
+        return remote_data
 
-    # return remote_data
-
-    # TODO camelcase
-    def putToken(self, token):  # noqa
-
-        end_token = False
-
-        #  try:
+    def put_token(self, token) -> None:
         self._data_buffer += str(token, 'utf-8')
         self._token_counter += 1
 
-        if token == END_TOKEN:
-            end_token = True
-
-        return end_token
-
-    def code(self, data_packet: RemoteDataPacket):
+    def encode(self, data_packet: RemoteDataPacket):
         remote_data = data_packet.get_remote_data()
         payload_size = remote_data.get_payload_size() * 2
         payload_size += 8
@@ -124,7 +102,7 @@ class DataPacketAscii(RemoteDataPacket):
         elif isinstance(remote_data, RemoteMessage):
             self._data_buffer[index] = ord(MESSAGE_START_TOKEN)
 
-        print(type(remote_data))
+        #print(type(remote_data))
         index += 1
 
         destination = remote_data.get_destination_address()
@@ -160,6 +138,19 @@ class DataPacketAscii(RemoteDataPacket):
     def get_ascii_buffer(self):
         return self._data_buffer
 
+    @staticmethod
+    def is_start_token(token) -> bool:
+        return token in [
+            COMMAND_START_TOKEN,
+            MESSAGE_START_TOKEN,
+            OK_START_TOKEN,
+            FAIL_START_TOKEN,
+        ]
+
+    @staticmethod
+    def is_end_token(token) -> bool:
+        return token == END_TOKEN
+
 
 def get_char(data_byte):
     if data_byte > 9:
@@ -181,16 +172,21 @@ def hex_char_to_nibble(data_byte: Byte) -> Byte:
     return data_byte
 
 
-def get_byte(buffer: List[Byte], position: int) -> Byte:
+def get_byte(buffer: bytearray, position: int) -> Byte:
     hi = hex_char_to_nibble(buffer[position]) << 4
     lo = hex_char_to_nibble(buffer[position + 1])
     return hi + lo
 
 
-def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:
+def parse_ascii(data_buffer: bytearray) -> Optional[RemoteDataPacket]:
+    if isinstance(data_buffer, str):
+        _b = bytearray()
+        _b.extend(data_buffer.encode("utf-8"))
+        data_buffer = _b
     if len(data_buffer) % 2 != 0:
         return None
-    if data_buffer[-1] != END_TOKEN:
+    if data_buffer[-1] != ord(END_TOKEN):
+        print("END_TOKEN not available")
         return None
 
     try:
@@ -210,15 +206,18 @@ def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:
         elif first_token == FAIL_START_TOKEN:
             packet_type = DataPacketType.FAIL
         """
-        if first_token not in [COMMAND_START_TOKEN,
-                               MESSAGE_START_TOKEN,
-                               STREAM_START_TOKEN,
-                               OK_START_TOKEN,
-                               FAIL_START_TOKEN]:
+        if first_token not in [ord(t) for t in [
+            COMMAND_START_TOKEN,
+            MESSAGE_START_TOKEN,
+            STREAM_START_TOKEN,
+            OK_START_TOKEN,
+            FAIL_START_TOKEN
+        ]]:
+            print("first_token", first_token)
             return None
         data_packet = RemoteDataPacket(destination_address, source_address, command)
-        data_packet_size = (len(data_buffer) - 8) / 2
-        data_packet.alocate(data_packet_size)
+        data_packet_size = math.ceil((len(data_buffer) - 8) / 2)
+        data_packet.allocate(data_packet_size)
 
         data_index = 0
         for index in range(7, len(data_buffer) - 1, 2):
@@ -227,6 +226,8 @@ def parse_ascii(data_buffer: List[Byte]) -> Optional[RemoteDataPacket]:
             data_index += 1
 
     except Exception as e:
+        print(traceback.format_exc())
         traceback.print_exception(e)
         return None
     return data_packet
+

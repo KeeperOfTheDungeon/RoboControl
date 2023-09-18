@@ -1,9 +1,6 @@
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket, DataPacketType
 
 
 class RemoteExceptionDataPacket(RemoteDataPacket):
-	def __init__(self):
-		super().__init__(self, "remote exception")
-		pass
-
-
+    _type_name: str = "remote exception"
+    _type: DataPacketType = DataPacketType.EXCEPTION

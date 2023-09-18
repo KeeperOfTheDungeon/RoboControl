@@ -4,7 +4,7 @@ from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteException import RemoteException
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcerssorList
+from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcessorList
 
 
 class AbstractProtocol:

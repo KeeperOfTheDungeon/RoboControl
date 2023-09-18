@@ -50,24 +50,24 @@ def rx_factory(clock_pin):
 
         # wait for start bit
         label('ready')
-        wait(0, pins, clock_pin)		# warte auf 0 bei clock
-        wait(1, pins, clock_pin)		# warte auf 1 bei clock
+        wait(0, gpio, clock_pin)		# warte auf 0 bei clock
+        wait(1, gpio, clock_pin)		# warte auf 1 bei clock
         jmp(pin, 'ready') 		# wenn pin High dann kein Startbit
 
         # accept message
         set(x, 8)				# setze counter auf 8 bits
-        wait(0, pins, clock_pin)		# warte auf 0 bei clock 
+        wait(0, gpio, clock_pin)		# warte auf 0 bei clock 
             
         label('loop')
             
-        wait(1, pins, clock_pin)		# warte auf 1 bei clock
+        wait(1, gpio, clock_pin)		# warte auf 1 bei clock
         in_(pins, 1)			# holle aktuelles bit
-        wait(0, pins, clock_pin)		# Warte auf 0 beiu clock
+        wait(0, gpio, clock_pin)		# Warte auf 0 beiu clock
             
         jmp(x_dec, 'loop')		# nächsten bit hollen (solange n > 0)
 
         # wait for end bit
-        wait(1, pins, clock_pin)		# warte auf 1 bei Clock
+        wait(1, gpio, clock_pin)		# warte auf 1 bei Clock
         jmp(pin, 'end_bit')		# springe zu ende 
 
         # exception as 10. LSB in word to main thread

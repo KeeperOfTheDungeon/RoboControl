@@ -68,12 +68,12 @@ def tx_factory(clock_pin):
 
         #end bit
         wait(0, gpio, clock_pin)
-        mov(x,x)    .side(1)
+        nop()    .side(1)
         wait(1, gpio, clock_pin)
         
         
         wait(0, gpio, clock_pin)
-        mov(x,x)    .side(1)
+        nop()    .side(1)
         wait(1, gpio, clock_pin)
 
         wrap()

@@ -61,7 +61,7 @@ def rx_factory(clock_pin):
         label('loop')
             
         wait(1, gpio, clock_pin)
-        in_(pins, 1)			# hole aktuelles bit
+        in_(pins, 1)			# get current bit
         wait(0, gpio, clock_pin)
             
         jmp(x_dec, 'loop')		# get next bit(as long as n > 0)

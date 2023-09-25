@@ -25,6 +25,8 @@ class RemoteProcessor:
     def execute(self, remote_data):
         if self._remote_processor is None:
             return
+        if callable(self._remote_processor):
+            return self._remote_processor(remote_data)
         # vorsortierung um sp#tzer ifs zu sparen
         if isinstance(remote_data, RemoteCommand):
             self._remote_processor.decode_command(remote_data)

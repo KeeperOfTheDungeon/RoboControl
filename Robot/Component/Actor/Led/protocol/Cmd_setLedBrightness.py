@@ -27,7 +27,7 @@ class Cmd_setLedBrightness(RemoteCommand):
         self._parameter_list[BRIGHTNESS_INDEX].set_value(brightness)
 
     def get_brightness(self) -> float:
-        value = self.get(self._led_brightness).get_value()
+        value = self._parameter_list[BRIGHTNESS_INDEX].get_value()
         return value / 255
 
     @staticmethod

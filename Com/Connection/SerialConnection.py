@@ -44,12 +44,13 @@ class SerialConnection(Connection):
         # if ( ! commPort instanceof SerialPort ) return False
 
         self._data_input = AsciiInput(self._serial_stream, self.statistic)  # getInputStream
-        self._data_input.add_listener(data_packet_receiver)
         self._data_input.run_threaded()
 
         self._data_output = AsciiOutput(self._serial_stream, self.statistic)  # getOutputStream
 
         self.connection_partner = self.port
+
+        super().connect(data_packet_receiver)
 
         # } catch (Exception e)//catch (NoSuchPortException e) { e.printStackTrace(); }
 

@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.Connection.Connection import Connection
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
@@ -25,7 +25,7 @@ class Robot(AbstractRobot):
 
         self._morphologic_model: "MorphologicModel" = None
         self._appearance_model: "AppearanceModel" = None
-        self._field_of_views: List["FieldOfView"] = []
+        self._field_of_views: "List['FieldOfView']" = []
         # self._perception_spheres: Vector[PerceptionSphere] = Vector()
 
         self._navigator: "Navigator" = None
@@ -72,7 +72,7 @@ class Robot(AbstractRobot):
             else:
                 self._data_packet_logger.add_input_packet(data_packet)
 
-    def get_panaromas(self) -> List["Panorama"]:
+    def get_panaromas(self) -> "List['Panorama']":
         raise ValueError("WIP: Panoramas not yet implemented")
         return self._panoramas
 
@@ -84,7 +84,7 @@ class Robot(AbstractRobot):
         # TODO why not just reuse get_name()
         return self._name
 
-    def get_controls(self) -> List["BehaviorControl"]:
+    def get_controls(self) -> "List['BehaviorControl']":
         raise ValueError("WIP: Behavior not yet implemented")
         return self.behavior.get_controls()
 
@@ -110,7 +110,7 @@ class Robot(AbstractRobot):
 
     def add_main_hub(self, name_meta_data: "ComponentMetaData") -> None:
         raise ValueError("WIP: ComponentMetaData not yet implemented")
-        meta_data: List["ComponentMetaData"] = [name_meta_data]
+        meta_data: "List['ComponentMetaData']" = [name_meta_data]
         self._device_list.add(DataHub(meta_data))
 
     def add_field_of_view(self, field_of_view: "FieldOfView") -> None:

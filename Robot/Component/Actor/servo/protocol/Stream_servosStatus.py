@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
@@ -7,7 +7,7 @@ from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus
 
 
 class Stream_servosStatus(RemoteStream):
-    _parameter_list: List[RemoteParameterServoStatus]
+    _parameter_list: "List[RemoteParameterServoStatus]"
 
     def __init__(self, id: int = LegControllerProtocol.STREAM_SERVOS_STATUS):
         super().__init__(id, "servosStatus", "status from servos")

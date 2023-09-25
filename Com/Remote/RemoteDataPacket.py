@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+# disabled for micropython  # from typing import Optional
 
 from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
@@ -33,7 +33,7 @@ class RemoteDataPacket:
 
         self.data: bytearray = bytearray(data_size) if data_size else bytearray
 
-        self._remote_data: Optional["RemoteData"] = None
+        self._remote_data: "Optional['RemoteData']" = None
         # self._reply: int = reply  # default =? 0
         # self._data_buffer: ByteBuffer
         self._type = override_type or self._type

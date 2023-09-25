@@ -1,4 +1,4 @@
-from typing import List, Union
+# disabled for micropython  # from typing import List, Union
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint16 import RemoteParameterUint16
@@ -8,12 +8,12 @@ from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPositi
 
 
 class Stream_servoRawAnalogPosition(RemoteStream):
-    _parameter_list: List[Union[RemoteParameterUint16, RemoteParameterServoPosition]]
+    _parameter_list: "List[Union[RemoteParameterUint16, RemoteParameterServoPosition]]"
 
     def __init__(self, id: int = LegControllerProtocol.STREAM_SERVO_RAW_ANALOG_VALUES):
         super().__init__(id, "servoAnalogRawPositions", "actual analog positions")
 
-    def set_data(self, destinations: List[float]) -> None:
+    def set_data(self, destinations: "List[float]") -> None:
         for index, position in enumerate(destinations):
             parameter = RemoteParameterUint16(
                 f"position {index}",
@@ -44,7 +44,7 @@ class Stream_servoRawAnalogPosition(RemoteStream):
         return 0
 
     @staticmethod
-    def get_command(id: int, positions: List[float]):
+    def get_command(id: int, positions: "List[float]"):
         cmd = Stream_servoRawAnalogPosition(id)
         cmd.set_data(positions)
         return cmd

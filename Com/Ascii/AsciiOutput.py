@@ -1,5 +1,5 @@
 import traceback
-from typing import TypeAlias, Union
+# disabled for micropython  # from typing import TypeAlias, Union
 
 from serial import Serial
 
@@ -11,14 +11,14 @@ from RoboControl.Com.Remote.RemoteCommandDataPacket import RemoteCommandDataPack
 from RoboControl.Com.Remote.RemoteMessageDataPacket import RemoteMessageDataPacket
 from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
 
-Byte: TypeAlias = int
-OutputStream: TypeAlias = Union[Serial]
+# Byte: TypeAlias = int
+# OutputStream: TypeAlias = Union[Serial]
 
 
 class AsciiOutput(RemoteDataOutput):
     def __init__(self, serial_output: Serial, statistic: ComStatistic):
         super().__init__(statistic)
-        self._output_stream: OutputStream = serial_output
+        self._output_stream: "OutputStream" = serial_output
 
         self._data_out_buffer = bytearray(256)
         self.out_byte_pointer = 0
@@ -52,11 +52,11 @@ class AsciiOutput(RemoteDataOutput):
         self._output_stream.write(ascii_data.get_ascii_buffer())
 
     @staticmethod
-    def get_hex_hi_value(data_byte: Byte) -> Byte:
+    def get_hex_hi_value(data_byte: "Byte") -> "Byte":
         return AsciiOutput.get_hex_lo_value(data_byte >> 4)
 
     @staticmethod
-    def get_hex_lo_value(data_byte: Byte) -> Byte:
+    def get_hex_lo_value(data_byte: "Byte") -> "Byte":
         value = data_byte & 0x0f
         if value > 9:
             value += 0x37
@@ -64,12 +64,12 @@ class AsciiOutput(RemoteDataOutput):
             value += 0x30
         return value
 
-    def send_byte(self, token: Byte) -> bool:
+    def send_byte(self, token: "Byte") -> bool:
         self.send_token(self.get_hex_hi_value(token))
         self.send_token(self.get_hex_lo_value(token))
         return True
 
-    def send_token(self, token: Byte) -> bool:
+    def send_token(self, token: "Byte") -> bool:
         if self._output_stream is not None:
             self._data_out_buffer[self.out_byte_pointer] = token
             self.out_byte_pointer += 1

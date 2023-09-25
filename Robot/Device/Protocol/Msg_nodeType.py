@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
@@ -8,7 +8,7 @@ NODE_TYPE = 0
 
 
 class Msg_nodeType(RemoteMessage):
-    _parameter_list: List[RemoteParameterUint8]
+    _parameter_list: "List[RemoteParameterUint8]"
 
     def __init__(self, id: int = DeviceProtocol.MSG_PING_RESPONSE):
         super().__init__(id, "nodeType", "type of a node")

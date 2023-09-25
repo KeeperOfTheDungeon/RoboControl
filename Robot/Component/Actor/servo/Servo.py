@@ -1,4 +1,4 @@
-from typing import Type, List
+# disabled for micropython  # from typing import Type, List
 
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Robot.Component.Actor.Actor import Actor
@@ -216,7 +216,7 @@ class Servo(Actor):
     def is_stalling(self) -> bool:
         return self._is_stalling
 
-    def _get_command(self, protocol_class: Type[RemoteCommand], protocol_key: str, *args) -> RemoteCommand:
+    def _get_command(self, protocol_class: "Type[RemoteCommand]", protocol_key: str, *args) -> RemoteCommand:
         if self.component_protocol is None:
             return None
         cmd_id = self.component_protocol[protocol_key]
@@ -332,7 +332,7 @@ class Servo(Actor):
             for listener in self._sensor_listener:
                 listener.servo_position_changed(self)
 
-    def get_data_values(self) -> List[ComponentValue]:
+    def get_data_values(self) -> "List[ComponentValue]":
         val = super().get_data_values()
         # val.add(self._position)
         return val

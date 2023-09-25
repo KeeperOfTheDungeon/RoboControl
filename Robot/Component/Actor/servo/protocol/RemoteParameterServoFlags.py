@@ -1,4 +1,4 @@
-from typing import Union
+# disabled for micropython  # from typing import Union
 
 from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
 
@@ -7,7 +7,7 @@ FLAG_ON = 1
 FLAG_FORCEFEEDBACK_ON = 2
 FLAG_POSITIONFEEDBACK_ON = 3
 
-FLAGS = Union[FLAG_REVERSE, FLAG_ON, FLAG_FORCEFEEDBACK_ON, FLAG_POSITIONFEEDBACK_ON]
+# FLAGS = Union[FLAG_REVERSE, FLAG_ON, FLAG_FORCEFEEDBACK_ON, FLAG_POSITIONFEEDBACK_ON]
 
 
 class RemoteParameterServoFlags(RemoteParameter):
@@ -55,7 +55,7 @@ class RemoteParameterServoFlags(RemoteParameter):
         data_buffer.append(flags)
 
     @staticmethod
-    def _has_flag(flags: int, flag: FLAGS):
+    def _has_flag(flags: int, flag: "FLAGS"):
         res = flags & (1 << flag)
         return res > 0
 

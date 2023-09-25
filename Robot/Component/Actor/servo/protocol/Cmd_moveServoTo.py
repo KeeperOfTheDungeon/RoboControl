@@ -1,4 +1,4 @@
-from typing import List, Union
+# disabled for micropython  # from typing import List, Union
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
@@ -10,7 +10,7 @@ INDEX_POSITION = 1
 
 
 class Cmd_moveServoTo(RemoteCommand):
-    _parameter_list: List[Union[RemoteParameterUint8, RemoteParameterServoPosition]]
+    _parameter_list: "List[Union[RemoteParameterUint8, RemoteParameterServoPosition]]"
 
     def __init__(self, id: int = LegControllerProtocol.CMD_SERVO_MOVE_TO):
         super().__init__(id, "cmd_moveServoTo", "move servo to given position")

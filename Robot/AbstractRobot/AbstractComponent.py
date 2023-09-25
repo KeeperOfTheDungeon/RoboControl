@@ -1,16 +1,16 @@
-from typing import List, TypeAlias, Union
+# disabled for micropython  # from typing import List, TypeAlias, Union
 
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboView.Robot.Viewer.RobotSettings import RobotSettings
 
-RemoteDataTransmitter: TypeAlias = Union["Connection"]
+# RemoteDataTransmitter: TypeAlias = Union["Connection"]
 
 
 class AbstractComponent:
     def __init__(self, meta_data):
         self._global_id = meta_data["global_id"]
         self._name = meta_data["name"]
-        self._transmitter: RemoteDataTransmitter = None
+        self._transmitter: "RemoteDataTransmitter" = None
         self._instance_key: str = f"{self.__class__.__name__}.{self._global_id}"
         self._settings: RobotSettings = None
 
@@ -26,17 +26,17 @@ class AbstractComponent:
         """ "gets component global id this is the unique id for this component in a Robot" """
         return self._global_id
 
-    def set_transmitter(self, transmitter: RemoteDataTransmitter):
+    def set_transmitter(self, transmitter: "RemoteDataTransmitter"):
         """ set transmitter for this component. All data will be sent thru this transmitter """
         self._transmitter = transmitter
 
-    def get_data_values(self) -> List[ComponentValue]:
+    def get_data_values(self) -> "List[ComponentValue]":
         return []  # TODO ??
 
-    def get_control_values(self) -> List[ComponentValue]:
+    def get_control_values(self) -> "List[ComponentValue]":
         return []  # TODO ??
 
-    def get_control_clients(self) -> List[ComponentValue]:
+    def get_control_clients(self) -> "List[ComponentValue]":
         return []  # TODO ??
 
     def recover_string(self, key: str, value: str) -> str:

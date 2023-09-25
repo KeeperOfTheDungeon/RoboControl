@@ -1,4 +1,4 @@
-from typing import Callable, TypeAlias, Optional, Final, Union
+# disabled for micropython  # from typing import Callable, TypeAlias, Optional, Final, Union
 
 from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.Remote.RemoteData import RemoteData
@@ -7,13 +7,13 @@ from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Com.ComStatistic import ComStatistic
 
-REMOTE_CHANEL_ID: Final[int] = 1
-REMOTE_NODE_ID: Final[int] = 1
+REMOTE_CHANEL_ID = 1
+REMOTE_NODE_ID = 1
 
 # FIXME what exactly are listeners?
-Listener: TypeAlias = [Callable or any]
-DataPacketTransmitter: TypeAlias = Union[RemoteDataOutput]
-DataPacketReceiver: TypeAlias = Union[RemoteDataInput]
+# Listener: TypeAlias = [Callable or any]
+# DataPacketTransmitter: TypeAlias = Union[RemoteDataOutput]
+# DataPacketReceiver: TypeAlias = Union[RemoteDataInput]
 
 
 class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
@@ -25,10 +25,10 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
         self.connection_partner: str = ""
 
         self.statistic = ComStatistic()
-        self._data_output: DataPacketTransmitter = RemoteDataOutput(self.statistic)
+        self._data_output: "DataPacketTransmitter" = RemoteDataOutput(self.statistic)
         self._data_input: RemoteDataInput = RemoteDataInput(self.statistic)
 
-    def connect(self, data_packet_receiver: DataPacketReceiver) -> bool:
+    def connect(self, data_packet_receiver: "DataPacketReceiver") -> bool:
         self._data_input.add_listener(data_packet_receiver)
 
     def disconnect(self) -> None:
@@ -50,7 +50,7 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
         else:
             remote_data.set_destination_address(self.device_id)
   
-        data_packet: Optional[RemoteDataPacket] = remote_data.get_data_packet()
+        data_packet: "Optional[RemoteDataPacket]" = remote_data.get_data_packet()
         
         if data_packet is None:
             raise ValueError(f"Incompatible remote_data type ({type(remote_data)}): {remote_data}")

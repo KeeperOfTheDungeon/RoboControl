@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint16 import RemoteParameterUint16
@@ -19,8 +19,7 @@ class Cmd_setServoSettings(RemoteCommand):
     """
     "command containing new settings (gradient, offset, maximal measurable distance) for a GP2 sensor"
     """
-    _parameter_list: List[
-        RemoteParameterUint8 | RemoteParameterServoPosition | RemoteParameterUint16 | RemoteParameterServoFlags]
+    _parameter_list: "List[RemoteParameterUint8 | RemoteParameterServoPosition | RemoteParameterUint16 | RemoteParameterServoFlags]"
 
     def __init__(self, id: int = LegControllerProtocol.CMD_SERVO_ON):
         super().__init__(id, "cmd_setServoSettings", "set settings for a servo")

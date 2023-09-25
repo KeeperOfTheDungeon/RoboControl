@@ -1,4 +1,4 @@
-from typing import List, Union
+# disabled for micropython  # from typing import List, Union
 
 from Devices.LegSensors import LegSensorsProtocol
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
@@ -9,7 +9,7 @@ INDEX_COLOR = 1
 
 
 class Cmd_setLedColor(RemoteCommand):
-    _parameter_list: List[Union[RemoteParameterHsvColor, RemoteParameterUint8]]
+    _parameter_list: "List[Union[RemoteParameterHsvColor, RemoteParameterUint8]]"
 
     def __init__(self, id: int = LegSensorsProtocol.CMD_LED_SET_COLOR):
         super().__init__(id, "setLedColor", "set color of an RGB LED")

@@ -1,7 +1,7 @@
 import datetime
 import os
 from collections import OrderedDict
-from typing import Optional, Callable, List
+# disabled for micropython  # from typing import Optional, Callable, List
 import csv
 
 from tkinter import ttk
@@ -11,7 +11,7 @@ import tkinter.filedialog
 from RoboControl.Com.PacketLogger.LoggedDataPacket import DisplayDataWidth_e, DisplayFormat_e, LoggedDataPacket
 from RoboView.Robot.Ui.utils.colors import Color
 
-Renderer = Callable[[object], str]
+# Renderer = Callable[[object], str]
 
 
 class Column:
@@ -78,7 +78,7 @@ class PacketColumn(Column):
 
 
 class Row:
-    def __init__(self, columns: List[Column], values: List[object], tags=None):
+    def __init__(self, columns: "List[Column]", values: "List[object]", tags=None):
         if len(values) != len(columns):
             raise ValueError(f"Column size {len(columns)} doesn't match values size {len(values)}")
         self.cells = OrderedDict()
@@ -88,7 +88,7 @@ class Row:
         self._columns = None
         self.tags = tags
 
-    def get_cell(self, index: int = None, column_name: str = None) -> Optional["Cell"]:
+    def get_cell(self, index: int = None, column_name: str = None) -> "Optional['Cell']":
         if index is None and column_name is None:
             return None
         if index is not None:
@@ -119,14 +119,14 @@ class TableModel:
     _max_size = None
 
     def __init__(self):
-        self._columns: List[Column] = []
-        self._rows: List[Row] = []
+        self._columns: "List[Column]" = []
+        self._rows: "List[Row]" = []
 
         self.is_recording = False
         self._listeners = []
 
     @property
-    def column_names(self) -> List[str]:
+    def column_names(self) -> "List[str]":
         return [c.name for c in self._columns]
 
     @property
@@ -155,7 +155,7 @@ class TableModel:
         self._columns.append(column.with_index(new_index))
         return self
 
-    def get_column(self, index: int = None, name: str = None) -> Optional[Column]:
+    def get_column(self, index: int = None, name: str = None) -> "Optional[Column]":
         if index is not None:
             return self._columns[index]
         elif name is not None:
@@ -164,20 +164,20 @@ class TableModel:
                     return column
         return None
 
-    def get_row(self, index: int) -> Optional[Row]:
+    def get_row(self, index: int) -> "Optional[Row]":
         if index is None:
             return None
         if index < self.rows_size:
             return self._rows[index]
         return None
 
-    def get_cell(self, row_index: int = None, column_index: int = None) -> Optional[Cell]:
+    def get_cell(self, row_index: int = None, column_index: int = None) -> "Optional[Cell]":
         row = self.get_row(index=row_index)
         if row is None:
             return None
         return row.get_cell(index=column_index)
 
-    def add_row(self, values: List[object], tags=None) -> Optional[Row]:
+    def add_row(self, values: "List[object]", tags=None) -> "Optional[Row]":
         if not self.is_recording:
             return None
         if self.rows_size >= self.max_size:

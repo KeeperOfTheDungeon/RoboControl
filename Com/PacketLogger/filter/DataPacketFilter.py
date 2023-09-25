@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacketType, LoggedDataPacket
 from RoboControl.Com.PacketLogger.filter.DataPacketFilterRule import DataPacketFilterRule
@@ -11,7 +11,7 @@ class DataPacketFilter:
 
     def __init__(self, name):
         self.name: str = name
-        self._rules: List[DataPacketFilterRule] = []
+        self._rules: "List[DataPacketFilterRule]" = []
 
     def append(self, rule: DataPacketFilterRule) -> None:
         self._rules.append(rule)
@@ -35,7 +35,7 @@ class DataPacketFilter:
     __str__ = __repr__
 
     @staticmethod
-    def get_example_filters() -> List["DataPacketFilter"]:
+    def get_example_filters() -> "List['DataPacketFilter']":
         empty = DataPacketFilter(DataPacketFilter.ALLOW_ALL)
         r1 = FilterRuleDirection(LoggedDataPacketType.IN)
         r5 = FilterRuleSource(1)

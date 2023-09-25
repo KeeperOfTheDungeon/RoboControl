@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
@@ -18,5 +18,5 @@ class Actor(RobotComponent):
     def get_control_value(self) -> ComponentValue:
         return self._control_value
 
-    def get_control_values(self) -> List[ComponentValue]:
+    def get_control_values(self) -> "List[ComponentValue]":
         return [self._control_value]

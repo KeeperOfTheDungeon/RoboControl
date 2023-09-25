@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Robot.Component.protocol.Cmd_getComponentSettings import Cmd_getComponentSettings
 from RoboControl.Robot.Component.protocol.Cmd_loadComponentDefaults import Cmd_loadComponentDefaults
@@ -28,11 +28,11 @@ class ComponentProtocol:
             processors.append(processor)
         return processors
 
-    def get_message_processors(self, _decoder) -> List[RemoteProcessor]:
+    def get_message_processors(self, _decoder) -> "List[RemoteProcessor]":
         return []
 
-    def get_stream_processors(self, _decoder) -> List[RemoteProcessor]:
+    def get_stream_processors(self, _decoder) -> "List[RemoteProcessor]":
         return []
 
-    def get_exception_processors(self, _decoder) -> List[RemoteProcessor]:
+    def get_exception_processors(self, _decoder) -> "List[RemoteProcessor]":
         return []

@@ -1,9 +1,9 @@
-from typing import TypeAlias
+# disabled for micropython  # from typing import TypeAlias
 
 from RoboControl.Com.ComStatistic import ComStatistic
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 
-Byte: TypeAlias = int
+# Byte: TypeAlias = int
 
 
 class RemoteDataOutput:
@@ -37,5 +37,5 @@ class RemoteDataOutput:
         print ("RDO : default Transmitter")
         return False
 
-    def send_byte(self, token: Byte) -> bool:
+    def send_byte(self, token: "Byte") -> bool:
         return False

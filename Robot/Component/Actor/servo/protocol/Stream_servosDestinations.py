@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
@@ -7,7 +7,7 @@ from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPositi
 
 
 class Stream_servosDestinations(RemoteStream):
-    _parameter_list: List[RemoteParameterServoPosition]
+    _parameter_list: "List[RemoteParameterServoPosition]"
 
     def __init__(self, id: int = LegControllerProtocol.STREAM_SERVOS_DESTINATIONS):
         super().__init__(id, "servoDestinations", "servo destinations")
@@ -30,7 +30,7 @@ class Stream_servosDestinations(RemoteStream):
     def get_positions_count(self) -> int:
         return len(self._parameter_list)
 
-    def set_data(self, destinations: List[float]) -> None:
+    def set_data(self, destinations: "List[float]") -> None:
         for index, position in enumerate(destinations):
             parameter = RemoteParameterServoPosition(
                 f"destination {index}",

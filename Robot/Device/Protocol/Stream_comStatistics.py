@@ -1,4 +1,4 @@
-from typing import List, Union
+# disabled for micropython  # from typing import List, Union
 
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint32 import RemoteParameterUint32
@@ -13,7 +13,7 @@ INDEX_COM_STATUS = 5
 
 
 class Stream_comStatistics(RemoteStream):
-    _parameter_list: List[Union[RemoteParameterUint8, RemoteParameterUint32]]
+    _parameter_list: "List[Union[RemoteParameterUint8, RemoteParameterUint32]]"
 
     def __init__(self, id):
         super().__init__(id, "comStatus", "status of the com system")

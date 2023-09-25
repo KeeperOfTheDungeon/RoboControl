@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
@@ -8,7 +8,7 @@ INDEX_SENSOR = 0
 
 
 class Cmd_getActualCurrentDrain(RemoteCommand):
-    _parameter_list: List[RemoteParameterUint8]
+    _parameter_list: "List[RemoteParameterUint8]"
 
     def __init__(self, id: int = LegControllerProtocol.CMD_GET_ACTUAL_CURRENT_DRAIN):
         super().__init__(id, "Cmd_getActualCurrentDrain", " get the actual current drain measured by this sensor")

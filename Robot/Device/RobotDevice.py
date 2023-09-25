@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
@@ -35,7 +35,7 @@ class RobotDevice(AbstractRobotDevice):
 
     def __init__(self, component_config):
         super().__init__(component_config)
-        self._aquisators: List[DataAquisator] = DeviceAquisators.get_data_aquisators()
+        self._aquisators: "List[DataAquisator]" = DeviceAquisators.get_data_aquisators()
         self._event_listener = []
         self._set_list = []
         self.build()
@@ -144,7 +144,7 @@ class RobotDevice(AbstractRobotDevice):
     def remove_event_listener(self, listener) -> None:
         self._event_listener.remove(listener)
 
-    def add_component_set(self, component_set: List) -> None:
+    def add_component_set(self, component_set: "List") -> None:
         self._set_list.append(component_set)
         for component in component_set:
             self._component_list.append(component)

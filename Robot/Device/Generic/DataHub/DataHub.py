@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Robot.Device.Generic.DataHub.DataHubAquisator import DataHubAquisator
@@ -27,7 +27,7 @@ class DataHub(RobotDevice):
     def get_texts(self) -> "TextSet":
         return self._texts
 
-    def add_texts(self, texts: List["ComponentMetaData"]) -> None:
+    def add_texts(self, texts: "List['ComponentMetaData']") -> None:
         raise ValueError("WIP TextSet")
         self._texts = TextSet(texts, DataHubProtocol.get_text_protocol(self.get_id()))
         self.add_components(self._texts)

@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
 
@@ -16,7 +16,7 @@ class RemoteData:
         self._destination_address = 0
         self._source_address = 0
 
-        self._parameter_list: List[RemoteParameter] = list()
+        self._parameter_list: "List[RemoteParameter]" = list()
         self._payload = bytearray()
 
     def set_id(self, id: int) -> None:
@@ -113,6 +113,6 @@ class RemoteData:
     def get_parameters_as_string(self, description: bool) -> str:
         return ",".join([p.get_as_string(description) for p in self._parameter_list])
 
-    def get_parameter_list(self) -> List[RemoteParameter]:
+    def get_parameter_list(self) -> "List[RemoteParameter]":
         return self._parameter_list
 

@@ -1,4 +1,4 @@
-#from typing import TypeAlias
+## disabled for micropython  # from typing import TypeAlias
 
 
 class DeviceConfig:

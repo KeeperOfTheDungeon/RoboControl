@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
@@ -8,7 +8,7 @@ INDEX_SERVO = 0
 
 
 class Cmd_servoOff(RemoteCommand):
-    _parameter_list: List[RemoteParameterUint8]
+    _parameter_list: "List[RemoteParameterUint8]"
 
     def __init__(self, id: int = LegControllerProtocol.CMD_SERVO_OFF):
         super().__init__(id, "cmd_servoOff", "switch servo off")

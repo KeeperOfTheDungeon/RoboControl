@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from Devices.LegSensors import LegSensorsProtocol
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
@@ -9,7 +9,7 @@ BRIGHTNESS_INDEX = 1
 
 
 class Cmd_setLedBrightness(RemoteCommand):
-    _parameter_list: List[RemoteParameterUint8]
+    _parameter_list: "List[RemoteParameterUint8]"
 
     def __init__(self, id: int = LegSensorsProtocol.CMD_LED_SET_BRIGHTNESS):
         super().__init__(id, "setLedBrightness", "set brightness of a LED")

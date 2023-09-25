@@ -1,5 +1,5 @@
 #import traceback
-#from typing import TypeAlias
+## disabled for micropython  # from typing import TypeAlias
 
 #from serial import Serial
 from machine import Pin

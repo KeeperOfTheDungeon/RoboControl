@@ -1,11 +1,11 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
 
 
 class Cmd_getActorValue(RemoteCommand):
-    _parameter_list: List[RemoteParameterUint8]
+    _parameter_list: "List[RemoteParameterUint8]"
     _index = 0
 
     def __init__(self, id: int = 0x0):

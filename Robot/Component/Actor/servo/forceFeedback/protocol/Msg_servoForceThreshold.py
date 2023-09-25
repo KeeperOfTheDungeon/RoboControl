@@ -1,4 +1,4 @@
-from typing import Union, List
+# disabled for micropython  # from typing import Union, List
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
@@ -10,7 +10,7 @@ INDEX_SPEED = 1
 
 
 class Msg_servoForceThreshold(RemoteMessage):
-    _parameter_list: List[Union[RemoteParameterUint8, RemoteParameterServoPosition]]
+    _parameter_list: "List[Union[RemoteParameterUint8, RemoteParameterServoPosition]]"
 
     def __init__(self, id: int = LegControllerProtocol.MSG_SERVO_POSITION):
         super().__init__(id, "servoForceThreshold", "actual servo force threshold")

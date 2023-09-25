@@ -1,6 +1,6 @@
 import math
 import traceback
-from typing import List, Optional, TypeAlias
+# disabled for micropython  # from typing import List, Optional, TypeAlias
 
 from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
@@ -30,7 +30,7 @@ FAIL_START_TOKEN_STR = str(chr(ord(FAIL_START_TOKEN)))
 
 END_TOKEN = b';'
 
-Byte: TypeAlias = int
+# Byte: TypeAlias = int
 
 
 class DataPacketAscii:
@@ -175,7 +175,7 @@ def get_char(data_byte):
     return value
 
 
-def hex_char_to_nibble(data_byte: Byte) -> Byte:
+def hex_char_to_nibble(data_byte: "Byte") -> "Byte":
     if (data_byte > 0x40) & (data_byte < 0x47):
         data_byte -= 0x37
     elif (data_byte > 0x60) & (data_byte < 0x67):
@@ -187,13 +187,13 @@ def hex_char_to_nibble(data_byte: Byte) -> Byte:
     return data_byte
 
 
-def get_byte(buffer: bytearray, position: int) -> Byte:
+def get_byte(buffer: bytearray, position: int) -> "Byte":
     hi = hex_char_to_nibble(buffer[position]) << 4
     lo = hex_char_to_nibble(buffer[position + 1])
     return hi + lo
 
 
-def parse_ascii(data_buffer: bytearray) -> Optional[RemoteDataPacket]:
+def parse_ascii(data_buffer: bytearray) -> "Optional[RemoteDataPacket]":
     if isinstance(data_buffer, str):
         _b = bytearray()
         _b.extend(data_buffer.encode("utf-8"))
@@ -205,9 +205,9 @@ def parse_ascii(data_buffer: bytearray) -> Optional[RemoteDataPacket]:
         return None
 
     try:
-        destination_address: Byte = get_byte(data_buffer, 1)
-        source_address: Byte = get_byte(data_buffer, 3)
-        command: Byte = get_byte(data_buffer, 5)
+        destination_address: "Byte" = get_byte(data_buffer, 1)
+        source_address: "Byte" = get_byte(data_buffer, 3)
+        command: "Byte" = get_byte(data_buffer, 5)
         first_token = data_buffer[0]
         """
         if first_token == COMMAND_START_TOKEN:

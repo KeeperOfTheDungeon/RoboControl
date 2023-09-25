@@ -1,4 +1,4 @@
-from typing import Optional, TypeAlias, Callable
+# disabled for micropython  # from typing import Optional, TypeAlias, Callable
 
 from RoboControl.Com.Connection.Connection import Connection
 from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
@@ -7,7 +7,7 @@ from RoboControl.Robot.AbstractRobot import AbstractDevice
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 
 # FIXME what exactly are listeners?
-Listener: TypeAlias = [Callable or any]
+# Listener: TypeAlias = [Callable or any]
 
 
 class AbstractRobot:
@@ -16,7 +16,7 @@ class AbstractRobot:
         self._device_list: list[AbstractDevice] = list()
         self._name = "generic"
         self._type_name = "generic"
-        self._connection_listener: list[Listener] = list()
+        self._connection_listener: list["Listener"] = list()
         # connection = Connection()
         # settings
         # connection listener
@@ -25,7 +25,7 @@ class AbstractRobot:
         self._data_packet_logger.set_device_list(self.get_device_list())
 
         # FIXME is this really optional?
-        self._connection: Optional[Connection] = None
+        self._connection: "Optional[Connection]" = None
 
     def get_name(self) -> str:
         return self._name
@@ -57,10 +57,10 @@ class AbstractRobot:
     def get_connection(self) -> Connection:
         return self._connection
 
-    def add_connection_listener(self, listener: Listener) -> None:
+    def add_connection_listener(self, listener: "Listener") -> None:
         self._connection_listener.append(listener)
 
-    def remove_connection_listener(self, listener: Listener) -> None:
+    def remove_connection_listener(self, listener: "Listener") -> None:
         pass
 
     def get_device_on_name(self, device_name: str) -> AbstractDevice:

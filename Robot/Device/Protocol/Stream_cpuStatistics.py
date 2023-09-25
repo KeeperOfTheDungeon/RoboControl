@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
@@ -10,7 +10,7 @@ INDEX_CPU_STATUS = 3
 
 
 class Stream_cpuStatistics(RemoteStream):
-    _parameter_list: List[RemoteParameterUint8]
+    _parameter_list: "List[RemoteParameterUint8]"
 
     def __init__(self, id: int):
         super().__init__(id, "cpuStatus", "status of the cpu containing values for min max and last cycle duration")

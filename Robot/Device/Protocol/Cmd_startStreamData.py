@@ -1,4 +1,4 @@
-from typing import List
+# disabled for micropython  # from typing import List
 
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
@@ -6,7 +6,7 @@ from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
 
 class Cmd_startStreamData(RemoteCommand):
-    _parameter_list: List[RemoteParameterUint8]
+    _parameter_list: "List[RemoteParameterUint8]"
 
     def __init__(self, id: int = DeviceProtocol.CMD_START_STREAM_DATA):
         super().__init__(id, "startStreamData", "start streaming data")

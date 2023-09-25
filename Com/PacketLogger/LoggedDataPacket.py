@@ -1,6 +1,6 @@
 import datetime
 from enum import Enum
-from typing import Optional
+# disabled for micropython  # from typing import Optional
 
 
 class LoggedDataPacketType(str, Enum):
@@ -79,7 +79,7 @@ class LoggedDataPacket:
     def get_parameters_as_string(self, description: bool) -> str:
         return self._data_packet.get_parameters_as_string(description)
 
-    def get_direction_as_string(self) -> Optional[str]:
+    def get_direction_as_string(self) -> "Optional[str]":
         if isinstance(self._data_packet_type, LoggedDataPacketType):
             return self._data_packet_type.value
         return None

@@ -1,4 +1,4 @@
-from typing import TypeAlias, Callable, Optional, Dict
+# disabled for micropython  # from typing import TypeAlias, Callable, Optional, Dict
 
 import serial.tools.list_ports
 from serial import Serial
@@ -12,21 +12,21 @@ from RoboControl.Com.Connection.Connection import Connection
 
 
 # FIXME what exactly are listeners?
-Listener: TypeAlias = [Callable or any]
+# Listener: TypeAlias = [Callable or any]
 
 
 class SerialConnection(Connection):
     port: str = "COM4"  # comPortName
 
-    open_streams: Dict[str, Optional[Serial]] = {}
+    open_streams: "Dict[str, Optional[Serial]]" = {}
 
     def __init__(self):
         super().__init__(name="serial connection")
 
         # FIXME this isn't really optional is it
-        self._serial_stream: Optional[Serial] = None  # commPort
+        self._serial_stream: "Optional[Serial]" = None  # commPort
 
-    def connect(self, data_packet_receiver: Listener) -> bool:
+    def connect(self, data_packet_receiver: "Listener") -> bool:
         """ "connect to serial interface" """
 
         # try { portIdentifier = CommPortIdentifier.getPortIdentifier(comPortName);

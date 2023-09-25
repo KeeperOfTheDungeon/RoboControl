@@ -1,8 +1,18 @@
+from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.Remote.RemoteStream import RemoteStream
 from RoboControl.Robot.Component.Actor.servo.Servo import Servo
+from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Stream_servoRawAnalogPosition import \
+    Stream_servoRawAnalogPosition
+from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Msg_servoForceThreshold import \
+    Msg_servoForceThreshold
+from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoPosition import Msg_servoPosition
+from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoSpeed import Msg_servoSpeed
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosDestinations import Stream_servosDestinations
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosPositions import Stream_servosPositions
+from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosStatus import Stream_servosStatus
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoSettings import Msg_servoSettings
 
 
 class ServoSet(ComponentSet):
@@ -50,288 +60,105 @@ class ServoSet(ComponentSet):
     """
 
     def process_stream_positions(self, stream_positions):
-
         for sensor in self:
             index = sensor.get_local_id()
             value = stream_positions.get_position(index)
             sensor.set_position(value)
 
     def process_stream_destinations(self, stream_destitions):
-
         for sensor in self:
             index = sensor.get_local_id()
             value = stream_destitions.get_destination(index)
             sensor.set_destination(value)
 
-
-"""package de.hska.lat.robot.component.actor.servo;
-
-
-
-
-import de.hska.lat.comm.remote.RemoteMessage;
-import de.hska.lat.comm.remote.RemoteStream;
-import de.hska.lat.robot.component.ComponentSet;
-import de.hska.lat.robot.component.actor.servo.feedbackServo.protocol.Stream_servoRawAnalogPosition;
-import de.hska.lat.robot.component.actor.servo.forceFeedback.protocol.Msg_servoForceThreshold;
-import de.hska.lat.robot.component.actor.servo.protocol.*;
-
-
-
-
-
-
-
-
-/**
- * 
- * @author Oktavian Gniot
- *
- * Class contains a list of servos controlled by head controller
- *
- */
-
-public class ServoSet extends ComponentSet<Servo, ServoProtocol> 
-        
-{
-
-
-    
-    
-
-
-
-/**
-     * 
-     */
-    private static final long serialVersionUID = -6296184626671050693L;
-
-
-
-protected ServoSet()
-{
-    
-}
-
-
-
-public void  processServoSettings(Msg_servoSettings remoteData)
-{
-    Servo servo;
-
-    
-    servo=this.getComponentOnLocalId(remoteData.getIndex());
-    if (servo!=null)
-    {
-        servo.setServoSetup(remoteData.getMinRange(), remoteData.getMaxRange(), 
-                remoteData.getOffset(), remoteData.getScale(),
-                remoteData.isReverse());
-        servo.setOn(remoteData.isOn());
-        servo.setForceFeedbackOn(remoteData.forceFeedbackisOn());
-        servo.setpositionFeedbackisOn(remoteData.positionFeedbackisOn());
-    }
-
-}
-    
-
-
-
-/**
- * decode servo speed message and sets the new speed value in servo component 
- * 
- * @param servoData DataPacket that contains new servo speed 
- */
-
-public void  processServoSpeed(Msg_servoSpeed remoteData)
-{
-    Servo servo;
-
-    servo=this.getComponentOnLocalId(remoteData.getIndex());
-    if (servo!=null)
-    {
-        servo.setSpeed(remoteData.getSpeed());
-    }
-    
-}
-
-
-/**
- * decode servo force threshold message and sets the new force threshold value in servo component 
- * 
- * @param servoData DataPacket that contains new servo speed 
- */
-
-public void  processServoForceThreshold(Msg_servoForceThreshold remoteData)
-{
-    Servo servo;
-
-    servo=this.getComponentOnLocalId(remoteData.getIndex());
-    if (servo!=null)
-    {
-        servo.setForceThreshold(remoteData.getForceThreshold());
-    }
-    
-}
-
-/**
- * decode servos positions from remoteStreamData
- * 
- * @param servoPositions DataPacket containing positions for all servos in ServoSet
- */
-public void processServosPositions(Stream_servosPositions servoPositions)
-{
-    Servo servo;
-
-    int index;
-
-
-    for (index=0;index<servoPositions.getParameterCount(); index++)
-    {
-        servo=this.getComponentOnLocalId(index);
-        if (servo!=null)
-        {
-            servo.setPosition(servoPositions.getPosition(index));
-        }
-    }
-
-}
-
-
-
-public void  processServosDestinations(Stream_servosDestinations servoPosition)
-{
-    Servo servo;
-
-    int index;
-
-
-    for (index=0;index<servoPosition.getParameterCount(); index++)
-    {
-        servo=this.getComponentOnLocalId(index);
-        if (servo!=null)
-        {
-            servo.setDestination(servoPosition.getDestination(index));
-            
-        }
-    }
-}
-
-
-public void  processServosStatus(Stream_servosStatus servosStatus)
-{
-    Servo servo;
-    int index;
-
-    for (index=0;index<servosStatus.getParameterCount(); index++)
-    {
-        servo=this.getComponentOnLocalId(index);
-        
-        if (servo!=null)
-        {
-        servo.setActive(servosStatus.isActive(index));
-        servo.setAtMax(servosStatus.isAtMax(index));
-        servo.setAtMin(servosStatus.isAtMin(index));
-        servo.setStalling(servosStatus.isStalling(index));
-        servo.setOn(servosStatus.isOn(index));
-        servo.setReverse(servosStatus.isReverse(index));
-        }
-        
-    }
-}
-/**
- * decode servo position from DataPacket
- *  
- * @param servoPosition DataPacket containing actual servo position
- */
-
-public void  processServoPosition(Msg_servoPosition servoPosition)
-{
-    Servo servo;
-
-
-    servo=this.getComponentOnLocalId(servoPosition.getIndex());
-    if (servo!=null)
-    {
-        servo.setPosition(servoPosition.getPosition());
-    }
-    
-}
-
-
-private void processServosRawAnalogValues(
-        Stream_servoRawAnalogPosition rawAnalogValues)
-{
-
-    int index;
-
-    for (index=0;index<rawAnalogValues.getParameterCount(); index++)
-    {
-        System.out.println ("Servo : "+index+"  Value : "+rawAnalogValues.getPosition(index));
-        
-    }
-    
-}
-
-
-
-@Override
-public boolean decodeStream(RemoteStream remoteData)
-{
-    if (remoteData instanceof Stream_servosPositions)
-    {
-        processServosPositions((Stream_servosPositions)remoteData);
-    }
-    else if (remoteData instanceof Stream_servosDestinations)
-    {
-        processServosDestinations((Stream_servosDestinations)remoteData);
-    }
-    else if (remoteData instanceof Stream_servosStatus)
-    {
-        processServosStatus((Stream_servosStatus)remoteData);
-    }
-    else if (remoteData instanceof Stream_servoRawAnalogPosition)
-    {
-        processServosRawAnalogValues((Stream_servoRawAnalogPosition)remoteData);
-    }
-    
-    return false;
-}
-
-
-
-
-
-@Override
-public boolean decodeMessage(RemoteMessage remoteData)
-{
-    if (remoteData instanceof Msg_servoSpeed)
-    {
-         this.processServoSpeed((Msg_servoSpeed) remoteData);
-    }
-    else if (remoteData instanceof Msg_servoSpeed)
-    {
-    //	processServosPositions((Stream_servosPositions)remoteData);
-    } 
-
-    
-    else if (remoteData instanceof Msg_servoPosition)
-    {
-        this.processServoPosition((Msg_servoPosition) remoteData);
-
-    } 
-
-    else if (remoteData instanceof Msg_servoSettings)
-    {
-		this.processServoSettings((Msg_servoSettings) remoteData);
-	} 
-	
-	else if (remoteData instanceof Msg_servoForceThreshold)
-	{
-		this.processServoForceThreshold((Msg_servoForceThreshold) remoteData );
-	}  
-	
-	
-	return false;
-}
-
-}"""
+    def process_servo_settings(self, remote_data: Msg_servoSettings) -> None:
+        servo: Servo = self.get_component_on_local_id(remote_data.get_index())
+        if servo is None:
+            return
+        servo.set_servo_setup(
+            remote_data.get_min_range(),
+            remote_data.get_max_range(),
+            remote_data.get_offset(),
+            remote_data.get_scale(),
+            remote_data.get_is_reverse(),
+        )
+        servo.set_on(True)
+        servo.set_remote_feedback_on(remote_data.force_feedback_is_on())
+        servo.set_position_feedback_on(remote_data.position_feedback_is_on())
+
+    def process_servo_speed(self, remote_data: Msg_servoSpeed) -> None:
+        """ "decode servo speed message and sets the new speed value in servo component" """
+        servo: Servo = self.get_component_on_local_id(remote_data.get_index())
+        if servo is None:
+            return
+        servo.set_speed(remote_data.get_speed())
+
+    def process_servo_force_threshold(self, remote_data: Msg_servoForceThreshold) -> None:
+        """ "decode servo force threshold message and sets the new force threshold value in servo component" """
+        servo: Servo = self.get_component_on_local_id(remote_data.get_index())
+        if servo is None:
+            return
+        servo.set_force_threshold(remote_data.get_force_threshold())
+
+    def process_servos_positions(self, servo_positions: Stream_servosPositions) -> None:
+        """ "decode servos positions from remoteStreamData" """
+        for index in range(servo_positions.get_parameter_count()):
+            servo: Servo = self.get_component_on_local_id(index)
+            if servo is None:
+                continue
+            servo.set_position(servo_positions.get_position(index))
+
+    def process_servos_destinations(self, servo_destinations: Stream_servosDestinations) -> None:
+        for index in range(servo_destinations.get_parameter_count()):
+            servo: Servo = self.get_component_on_local_id(index)
+            if servo is None:
+                continue
+            servo.set_destination(servo_destinations.get_destination(index))
+
+    def process_servos_status(self, servos_status: "Stream_servosStatus") -> None:
+        for index in range(servos_status.get_parameter_count()):
+            servo: Servo = self.get_component_on_local_id(index)
+            if servo is None:
+                continue
+            servo.set_active(servos_status.is_active(index));
+            servo.set_at_max(servos_status.is_at_max(index));
+            servo.set_at_min(servos_status.is_at_min(index));
+            servo.set_stalling(servos_status.is_stalling(index));
+            servo.set_on(servos_status.is_on(index));
+            servo.set_reverse(servos_status.is_reverse(index));
+
+    def process_servo_position(self, servo_position: Msg_servoPosition) -> None:
+        """ "decode servo position from DataPacket" """
+        servo: Servo = self.get_component_on_local_id(servo_position.get_index())
+        if servo is None:
+            return
+        servo.set_position(servo_position.get_position())
+
+    def process_servos_raw_analog_values(self, raw_analog_values: Stream_servoRawAnalogPosition) -> None:
+        for index in range(raw_analog_values.get_parameter_count()):
+            servo: Servo = self.get_component_on_local_id(index)
+            if servo is None:
+                continue
+            print("Servo : ", index, " Value : ", raw_analog_values.get_position(index))
+
+    def decode_stream(self, remote_data: RemoteStream) -> bool:
+        if isinstance(remote_data, Stream_servosPositions):
+            self.process_servos_positions(remote_data)
+        elif isinstance(remote_data, Stream_servosDestinations):
+            self.process_servos_destinations(remote_data)
+        elif isinstance(remote_data, Stream_servosStatus):
+            self.process_servos_status(remote_data)
+        elif isinstance(remote_data, Stream_servoRawAnalogPosition):
+            self.process_servos_raw_analog_values(remote_data)
+        return False
+
+    def decode_message(self, remote_data: RemoteMessage) -> bool:
+        if isinstance(remote_data, Msg_servoSpeed):
+            self.process_servo_speed(remote_data)
+        elif isinstance(remote_data, Msg_servoPosition):
+            self.process_servo_position(remote_data)
+        elif isinstance(remote_data, Msg_servoSettings):
+            self.process_servo_settings(remote_data)
+        elif isinstance(remote_data, Msg_servoForceThreshold):
+            self.process_servo_force_threshold(remote_data)
+        return False

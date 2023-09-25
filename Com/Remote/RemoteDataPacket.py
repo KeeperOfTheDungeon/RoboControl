@@ -2,6 +2,7 @@ import datetime
 from typing import Optional
 
 from RoboControl.Com.Remote.RemoteData import RemoteData
+from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
 
 
 class DataPacketType:

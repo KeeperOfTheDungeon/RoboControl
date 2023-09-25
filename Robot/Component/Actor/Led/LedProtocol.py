@@ -1,73 +1,40 @@
+from typing import List
+
 from RoboControl.Robot.Component.Actor.ActorProtocol import ActorProtocol
+from RoboControl.Robot.Component.Actor.Led.protocol.Cmd_getLedBrightness import Cmd_getLedBrightness
+from RoboControl.Robot.Component.Actor.Led.protocol.Cmd_setLedBrightness import Cmd_setLedBrightness
+from RoboControl.Robot.Device.remoteProcessor.RemoteDecoder import RemoteDecoder
+from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 
 
 class LedProtocol(ActorProtocol):
-	pass
+    def get_command_processors(self, remote_decoder: RemoteDecoder) -> List[RemoteProcessor]:
+        """ "get led command processors"
+        @:param "remoteDecoder barometric sensor set"
+        @:return "commands processors for barometric sensor"
+        """
+        commands = super().get_command_processors(remote_decoder)
+        for cmd in [
+            RemoteProcessor(Cmd_setLedBrightness(self._cmd_set_value_id), remote_decoder),
+            RemoteProcessor(Cmd_getLedBrightness(self._cmd_get_value_id), remote_decoder),
+        ]:
+            commands.append(cmd)
+        return commands
 
-"""
+    def get_stream_processors(self, remote_decoder: RemoteDecoder) -> List[RemoteProcessor]:
+        """ "get led stream processors"
+        @:param "remoteDecoder led set"
+        @:return "stream processors for led"
+        """
+        commands = super().get_stream_processors(remote_decoder)
+        # commands.append( Stream_barometricPressures(self.streamValuesId, sensor) )
+        return commands
 
-
-/**
- * get led command processors
- * @param remoteDecoder barometric sensor set
- * @return commands processors for barometric sensor
- */
-
-public ArrayList<RemoteCommandProcessor> getCommandProcessors(RemoteDecoder remoteDecoder)	
-{
-	
-	ArrayList<RemoteCommandProcessor> commands = super.getCommandProcessors(remoteDecoder);
-	
-	commands.add(new RemoteCommandProcessor(
-			new Cmd_setLedBrightness(this.cmdSetValueId), 
-			remoteDecoder));
-	
-	commands.add(new RemoteCommandProcessor(
-			new Cmd_getLedBrightness(this.cmdGetValueId), 
-			remoteDecoder));
-	
-	return(commands);
-}
-	
-/**
- * get led stream processors
- * @param remoteDecoder  led set
- * @return stream processors for led
- */
-
-public ArrayList<RemoteStreamProcessor> getStreamProcessors(RemoteDecoder remoteDecoder)
-{
-	
-	ArrayList<RemoteStreamProcessor> streams =super.getStreamProcessors(remoteDecoder);
-	
-	/*
-	streams.add(new RemoteStreamProcessor(
-			new Stream_barometricPresures(this.streamValuesId), 
-			sensor));
-	*/
-	
-	return (streams);
-	
-}
-
-/**
- * get led message processors
- * @param remoteDecoder led set
- * @return message processors for led
- */
-
-public ArrayList<RemoteMessageProcessor> getMessageProcessors(RemoteDecoder remoteDecoder)
-{
-	
-	ArrayList<RemoteMessageProcessor> messages = super.getMessageProcessors(remoteDecoder);
-	
-	/*
-	messages.add(new RemoteMessageProcessor(
-			new Msg_ledBrightnes(this.msgValueId), 
-			sensorSet));
-	*/
-	
-	return (messages);
-}	
-
-}"""
+    def get_message_processors(self, remote_decoder: RemoteDecoder) -> List[RemoteProcessor]:
+        """ "get led message processors"
+        @:param "remoteDecoder led set"
+        @:return "message processors for led"
+        """
+        commands = super().get_message_processors(remote_decoder)
+        # commands.append( Msg_ledBrightness(self.msgValueId, sensorSet) )
+        return commands

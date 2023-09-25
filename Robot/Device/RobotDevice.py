@@ -33,7 +33,7 @@ class RobotDevice(AbstractRobotDevice):
 
     def __init__(self, component_config):
         super().__init__(component_config)
-        self.aquisators: List["DataAquisator"] = ["cpu status", "com ststus"]  # TODO is this correct?
+        self.aquisators: List["DataAquisator"] = ["cpu status", "com status"]
         self._event_listener = []
         self._set_list = []
         self.build()
@@ -99,7 +99,7 @@ class RobotDevice(AbstractRobotDevice):
         self.send_data(cmd)
 
     def remote_save_streams(self):
-        cmd = Cmd_saveDataStreams.get_command()
+        cmd = Cmd_saveDataStreams.get_command(DeviceProtocol.CMD_SAVE_STREAMS)
         self.send_data(cmd)
 
     def remote_load_streams(self):
@@ -107,7 +107,10 @@ class RobotDevice(AbstractRobotDevice):
         self.send_data(cmd)
 
     def remote_start_stream(self, index, period):
-        cmd = Cmd_startStreamData.get_command(index, period)
+        cmd = Cmd_startStreamData.get_command(
+            DeviceProtocol.CMD_START_STREAM_DATA,
+            new_type=index, period=period
+        )
         self.send_data(cmd)
 
     def remote_stop_stream(self, index):

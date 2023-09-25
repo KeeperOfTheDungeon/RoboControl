@@ -35,3 +35,6 @@ class DeviceProtocol(AbstractProtocol):
         super().__init__()
         self._device_id = device.get_id()
         self._device = device
+
+        self._message_list = []
+        self._stream_list = []

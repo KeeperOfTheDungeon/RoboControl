@@ -6,6 +6,8 @@ from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.Remote.RemoteNegativeAck import RemoteNegativeAck
+from RoboControl.Com.Remote.RemotePositiveAck import RemotePositiveAck
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 
 # TODO "make enum"
@@ -22,13 +24,16 @@ EXCEPTION_START_TOKEN = b'^'
 ALLERT_START_TOKEN = b'!'
 
 OK_START_TOKEN = b'O'
+OK_START_TOKEN_STR = str(chr(ord(OK_START_TOKEN)))
 FAIL_START_TOKEN = b'N'
+FAIL_START_TOKEN_STR = str(chr(ord(FAIL_START_TOKEN)))
+
 END_TOKEN = b';'
 
 Byte: TypeAlias = int
 
 
-class DataPacketAscii(RemoteDataPacket):
+class DataPacketAscii:
 
     # TODO why does this inherit from RemoteDataPacket without forwarding init
     def __init__(self):  # noqa
@@ -50,6 +55,16 @@ class DataPacketAscii(RemoteDataPacket):
         elif message_type == STREAM_START_TOKEN_STR:
             # print("Stream sync")
             remote_data = RemoteStream(0, "", "")
+            return self.do_decode(remote_data)
+        elif message_type == STREAM_START_TOKEN_STR:
+            # print("Stream sync")
+            remote_data = RemoteStream(0, "", "")
+            return self.do_decode(remote_data)
+        elif message_type == OK_START_TOKEN_STR:
+            remote_data = RemotePositiveAck(0, "", "")
+            return self.do_decode(remote_data)
+        elif message_type == FAIL_START_TOKEN_STR:
+            remote_data = RemoteNegativeAck(0, "", "")
             return self.do_decode(remote_data)
         print("unsync")
         return RemoteData(0, "", "")

@@ -9,6 +9,7 @@ class ServoDestinationValue(RadiantValue):
         meta_data["type_name"] = "servo destination"
         meta_data["description"] = "servo destination value"
 
+        # WIP are these correct?
         meta_data["max_range"] = 100
         meta_data["min_range"] = -100
         super().__init__(meta_data)

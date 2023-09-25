@@ -66,11 +66,11 @@ class Robot(AbstractRobot):
             device.receive(remote_data)
             data_packet = remote_data.get_data_packet()
             if data_packet is None:
-                print("#" * 10)
+                print("#" * 10, "UNSYNC", "#" * 10)
                 print(remote_data)
-                print("#" * 10)
-                raise Exception
-            self._data_packet_logger.add_input_packet(data_packet)
+                print("#" * 28)
+            else:
+                self._data_packet_logger.add_input_packet(data_packet)
 
     def get_panaromas(self) -> List["Panorama"]:
         raise ValueError("WIP: Panoramas not yet implemented")

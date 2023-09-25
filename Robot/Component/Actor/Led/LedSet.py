@@ -5,12 +5,10 @@ from RoboControl.Robot.Component.ComponentSet import ComponentSet
 # unused
 class LedSet(ComponentSet):
     def __init__(self, components, protocol):
-        actors = list()
-        for component in components:
-            actor = Led(component)
-            actors.append(actor)
-
-        super().__init__(actors)
+        # TODO why typecast here?
+        super().__init__(
+            [Led(component) for component in components]
+        )
 
     def get_command_processors(self):
         command_list = super().get_command_processors()
@@ -23,45 +21,3 @@ class LedSet(ComponentSet):
     def get_stream_processors(self):
         stream_list = super().get_stream_processors()
         return stream_list
-
-
-"""package de.hska.lat.robot.component.actor.led;
-
-
-
-/**
- * 
- * @author Oktavian Gniot
- *
- * 
- *
- */
-
-public class LedSet extends ComponentSet<Led, LedProtocol> {
-
-
-protected LedSet()
-{
-}	
-
-
-public LedSet(ArrayList<ComponentMetaData> leds, LedProtocol protocol)
-{
-
-        
-    for (ComponentMetaData led: leds)
-    {
-        this.add(new Led(led, protocol));
-    }
-    
-
-    
-}
-
-
-
-
-
-
-}
-"""

@@ -1,6 +1,7 @@
 from typing import List
 
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Robot.Device.Generic.DataHub.DataHubAquisator import DataHubAquisator
 from RoboControl.Robot.Device.Protocol.DeviceProtocol import DeviceProtocol
 from RoboControl.Robot.Device.Protocol.Msg_pingResponse import Msg_pingResponse
 from RoboControl.Robot.Device.RobotDevice import RobotDevice
@@ -13,7 +14,7 @@ class DataHub(RobotDevice):
 
     def __init__(self, component_config):
         super().__init__(component_config)  # super(DataHub.NAME, DataHub.ID)
-        # self._aquisators = DataHubAquisator.aquisators
+        self._aquisators = DataHubAquisator.get_data_aquisators()
         # self.add_texts(component_config)
 
     def build(self):

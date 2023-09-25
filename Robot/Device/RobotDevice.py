@@ -21,6 +21,8 @@ from RoboControl.Robot.Device.Protocol.Cmd_stopStreamData import Cmd_stopStreamD
 from RoboControl.Robot.Device.Protocol.Msg_pingResponse import Msg_pingResponse
 from RoboControl.Robot.Device.Protocol.Stream_comStatistics import Stream_comStatistics
 from RoboControl.Robot.Device.Protocol.Stream_cpuStatistics import Stream_cpuStatistics
+from RoboControl.Robot.Device.control.DataAquisator import DataAquisator
+from RoboControl.Robot.Device.control.DeviceAquisators import DeviceAquisators
 
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 
@@ -33,7 +35,7 @@ class RobotDevice(AbstractRobotDevice):
 
     def __init__(self, component_config):
         super().__init__(component_config)
-        self.aquisators: List["DataAquisator"] = ["cpu status", "com status"]
+        self._aquisators: List[DataAquisator] = DeviceAquisators.get_data_aquisators()
         self._event_listener = []
         self._set_list = []
         self.build()
@@ -41,7 +43,7 @@ class RobotDevice(AbstractRobotDevice):
     # self.build_protocol()
 
     def get_data_aquisators(self):
-        return self.aquisators
+        return self._aquisators
 
 
     def build_protocol(self):
@@ -148,7 +150,7 @@ class RobotDevice(AbstractRobotDevice):
             self._component_list.append(component)
 
     def get_aquisators(self):
-        return self.aquisators
+        return self._aquisators
 
     def remote_getNextError(self) -> bool:
         cmd = Cmd_getNextError.get_command()

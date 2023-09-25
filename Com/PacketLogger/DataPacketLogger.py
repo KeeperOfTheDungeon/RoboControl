@@ -67,6 +67,9 @@ class DataPacketLogger(TableModel):
                     return device.get_name()
             return f"?? ({device_id})"
 
+        if data_packet_type == LoggedDataPacketType.IN:
+            packet._data_packet.data = packet._data_packet._remote_data._payload
+
         values = [
             int(packet.get_number()),
             packet.get_timestamp(),

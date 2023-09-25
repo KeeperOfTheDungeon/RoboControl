@@ -1,10 +1,13 @@
 from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensor import LuxSensor
 
+VCNL4000_MAX_RANGE = 16383.5
+VCNL4000_MIN_RANGE = 0.0
+
 
 class Vcnl4000LuxSensor(LuxSensor):
     def __init__(self, meta_data):
-        meta_data["min_range"] = 0.0
-        meta_data["max_range"] = 16383.5
+        meta_data["min_range"] = VCNL4000_MIN_RANGE
+        meta_data["max_range"] = VCNL4000_MAX_RANGE
         meta_data["protocol"]['cmd_getValue'] = meta_data["protocol"]['cmd_getLux']
         super().__init__(meta_data)
         self._gain = 0

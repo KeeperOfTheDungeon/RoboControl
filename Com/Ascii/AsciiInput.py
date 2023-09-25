@@ -52,7 +52,7 @@ class AsciiInput(RemoteDataInput):
                 if not receiving_packet:
                     self.statistic.count_up_error_packets()
                     continue
-
+                print(data_packet.get_ascii_buffer())
                 remote_data = data_packet.decode()
                 # data_packet_buffer = copy(data_packet._data_buffer)
                 # data_packet = DataPacketAscii.parse_ascii(data_packet_buffer)

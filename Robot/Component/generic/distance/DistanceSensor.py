@@ -1,33 +1,26 @@
-
-
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.generic.distance.protocol.Cmd_getDistance import Cmd_getDistance
-
 from RoboControl.Robot.Value.distance.DistanceValue import DistanceValue
 
 
 class DistanceSensor(Sensor):
 
-	def __init__(self, meta_data):
-		super().__init__(meta_data)
-		self._distance_value = DistanceValue(meta_data)
+    def __init__(self, meta_data):
+        super().__init__(meta_data)
+        self._distance_value = DistanceValue(meta_data)
 
+    def get_distance_value(self):
+        return self._distance_value
 
-	def get_distance_value(self):
-		return self._distance_value
+    def get_distance(self):
+        self._distance_value.get_milimeters()
 
-	def get_distance(self):
-		self._distance_value.get_milimeters()
+    def set_distance(self, value):
+        self._distance_value.set_value(value)
 
-
-	def set_distance(self, value):
-		self._distance_value.set_value(value)
-
-
-	def remote_get_distance(self):
-		cmd = Cmd_getDistance.get_command(self._cmd_get_value , self._local_id)
-		self.send_data(cmd)
-
+    def remote_get_distance(self):
+        cmd = Cmd_getDistance.get_command(self._cmd_get_value, self._local_id)
+        self.send_data(cmd)
 
 
 """package de.hska.lat.robot.component.generic.distance;
@@ -57,39 +50,39 @@ import de.hska.lat.robot.value.distance.DistanceValue;
  */
 
 public abstract class DistanceSensor<S extends ComponentSettingsChangeNotifier , P extends SensorProtocol> 
-		extends  Sensor <DistanceChangeNotifier,S,P> 
+        extends  Sensor <DistanceChangeNotifier,S,P> 
 {
 
-	
+    
 
-	
-	
-	
-	protected DistanceValue distance;
-	
-
-
+    
+    
+    
+    protected DistanceValue distance;
+    
 
 
-	
+
+
+    
 //2012.02.15	
 public DistanceSensor(ComponentMetaData metaData, float minRange, float maxRange, float beamWidth, P protocol) 
 {
-	super(metaData, protocol);
-	//TODO this is not correct !!!! 
-	
-	this.distance = new DistanceValue(this.getComponentName(), minRange, maxRange, beamWidth);
+    super(metaData, protocol);
+    //TODO this is not correct !!!! 
+    
+    this.distance = new DistanceValue(this.getComponentName(), minRange, maxRange, beamWidth);
 }
 
 public void setDistance(float distance)
 {
-	
-	this.distance.setValue(distance);
-	
-	for (DistanceChangeNotifier  listener :  sensorListener )
-	{
-		listener.distanceChanged(this);
-	}
+    
+    this.distance.setValue(distance);
+    
+    for (DistanceChangeNotifier  listener :  sensorListener )
+    {
+        listener.distanceChanged(this);
+    }
 }
 
 /**
@@ -99,7 +92,7 @@ public void setDistance(float distance)
 
 public void setGranularity(float granularity)
 {
-	this.distance.setGranularity(granularity);
+    this.distance.setGranularity(granularity);
 }
 
 /**
@@ -108,7 +101,7 @@ public void setGranularity(float granularity)
  */
 public float getGranularity()
 {
-	return(this.distance.getGranularity());
+    return(this.distance.getGranularity());
 }
 
 /**
@@ -117,7 +110,7 @@ public float getGranularity()
  */
 public float getMilimeters()
 {
-	return (this.distance.getValue());
+    return (this.distance.getValue());
 }
 
 
@@ -128,44 +121,44 @@ public float getMilimeters()
 
 public float getCentimeters()
 {
-	int distance;
-	distance = (int)this.distance.getValue() /10;
-	
-	return (distance);
+    int distance;
+    distance = (int)this.distance.getValue() /10;
+    
+    return (distance);
 }
 
 
 public DistanceValue getDistanceValue()
 {
-	return (this.distance);
+    return (this.distance);
 }
 
 
 public float getMaxRange()
 {
-	return(this.distance.getMaxRange());
+    return(this.distance.getMaxRange());
 }
 
 public float getMinRange()
 {
-	return(this.distance.getMinRange());
+    return(this.distance.getMinRange());
 }
 
 
 @Override
 public ArrayList<ComponentValue<?>> getDataValues()
 {
-	
-	ArrayList<ComponentValue<?>> values = new ArrayList<ComponentValue<?>>();
-	
-	values.add(this.distance);	
-			
-	return (values);
+    
+    ArrayList<ComponentValue<?>> values = new ArrayList<ComponentValue<?>>();
+    
+    values.add(this.distance);	
+            
+    return (values);
 }
 
 public float getBeamWidth()
 {
-	return(this.distance.getBeamWidth());
+    return(this.distance.getBeamWidth());
 
 }
 

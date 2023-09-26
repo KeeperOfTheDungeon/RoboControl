@@ -170,9 +170,8 @@ class AbstractRobotDevice:
            # remote_stream = copy.copy(remote_data)
             #remote_stream.parse_payload(data_packet.get_payload())
             remote_data.parse_payload(data_packet.get_payload())
-
             processor.execute(remote_data)
-            pass
+
 
 # device remote functions
         

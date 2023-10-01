@@ -41,7 +41,7 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
         self._data_output.set_remote()
 
     def transmitt(self, remote_data: RemoteData) -> bool:
-        print("c : Transmitt")
+        # print("c : Transmitt")
         if self._data_output is None:
             print("Can't transmit as _data_output isn't set.")
             return False
@@ -59,7 +59,7 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
         if self._data_packet_logger is not None:
             self._data_packet_logger.add_output_packet(data_packet)
         print("c : Transmitting")
-        print(self._data_output)
+        # print(self._data_output)
         self._data_output.transmitt(data_packet)
         
         return True

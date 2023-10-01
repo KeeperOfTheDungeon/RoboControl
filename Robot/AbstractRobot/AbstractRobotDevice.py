@@ -147,14 +147,11 @@ class AbstractRobotDevice:
 
         query_id = data_packet.get_id()
         processor = None
-        print ("ARD : ParseDataPAcket")
-        print ("ARD : query_id",query_id)
-        print(data_packet)
+        # print ("ARD : ParseDataPAcket", query_id, data_packet)
         
         if isinstance(data_packet, RemoteCommand):
-            print ("ARD : Command Prozessor")
             processor = self._remote_command_processor_list.find_on_id(query_id)
-            print ("ARD : found Prozessor",processor)
+            # print ("ARD : Command Prozessor", processor)
             
         elif isinstance(data_packet, RemoteMessage):
             processor = self._remote_message_processor_list.find_on_id(query_id)

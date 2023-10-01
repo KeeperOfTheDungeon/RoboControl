@@ -30,7 +30,6 @@ class ComStatistic:
             last_chars_recived = 0
 
             def update(inner_self) -> None:
-                print("hey")
                 char_in = self.get_recived_chars_count()
                 char_out = self.get_send_chars_count()
 

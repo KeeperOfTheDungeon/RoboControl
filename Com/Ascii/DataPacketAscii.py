@@ -45,19 +45,15 @@ class DataPacketAscii:
         index = 0
         message_type = self._data_buffer[index]
         if message_type == COMMAND_START_TOKEN_STR:
-            print("Message sync")
             remote_data = RemoteCommand(0, "", "")
             return self.do_decode(remote_data)
         elif message_type == MESSAGE_START_TOKEN_STR:
-            print("Message sync")
             remote_data = RemoteMessage(0, "", "")
             return self.do_decode(remote_data)
         elif message_type == STREAM_START_TOKEN_STR:
-            # print("Stream sync")
             remote_data = RemoteStream(0, "", "")
             return self.do_decode(remote_data)
         elif message_type == STREAM_START_TOKEN_STR:
-            # print("Stream sync")
             remote_data = RemoteStream(0, "", "")
             return self.do_decode(remote_data)
         elif message_type == OK_START_TOKEN_STR:

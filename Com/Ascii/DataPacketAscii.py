@@ -181,6 +181,7 @@ class DataPacketAscii:
         return token in [
             COMMAND_START_TOKEN,
             MESSAGE_START_TOKEN,
+            STREAM_START_TOKEN,
             OK_START_TOKEN,
             FAIL_START_TOKEN,
         ]

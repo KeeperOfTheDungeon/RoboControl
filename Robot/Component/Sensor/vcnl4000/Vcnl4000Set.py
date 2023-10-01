@@ -9,14 +9,14 @@ class Vcnl4000Set(ComponentSet):
     def __init__(self, components, protocol):
 
         lux_sensors = list()
-        distance_semsors = list()
+        distance_sensors = list()
         vcnl_sensors = list()
 
         for component in components:
             sensor = Vcnl4000(component)
             vcnl_sensors.append(sensor)
             lux_sensors.append(sensor.get_lux_sensor())
-            distance_semsors.append(sensor.get_distance_sensor())
+            distance_sensors.append(sensor.get_distance_sensor())
 
         super().__init__(vcnl_sensors)
 
@@ -24,7 +24,7 @@ class Vcnl4000Set(ComponentSet):
         self._lux_sensor_set = Vcnl4000LuxSensorSet(lux_sensors, protocol)
 
         protocol["cmd_getValue"] = protocol["cmd_getDistance"]
-        self._distance_sensor_set = Vcnl4000DistanceSensorSet(distance_semsors, protocol)
+        self._distance_sensor_set = Vcnl4000DistanceSensorSet(distance_sensors, protocol)
 
     def get_distance_sensor(self):
         return self._distance_sensor

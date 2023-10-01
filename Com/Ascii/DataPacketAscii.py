@@ -10,6 +10,11 @@ from RoboControl.Com.Remote.RemoteNegativeAck import RemoteNegativeAck
 from RoboControl.Com.Remote.RemotePositiveAck import RemotePositiveAck
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 
+from logger import getLogger
+
+logger = getLogger(__name__)
+
+
 # TODO "make enum"
 COMMAND_START_TOKEN = b'#'
 COMMAND_START_TOKEN_STR = str(chr(ord(COMMAND_START_TOKEN)))

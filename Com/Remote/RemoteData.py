@@ -2,6 +2,10 @@ from typing import List
 
 from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
 
+from logger import getLogger
+
+logger = getLogger(__name__)
+
 
 # noinspection PyShadowingBuiltins
 class RemoteData:
@@ -80,7 +84,7 @@ class RemoteData:
     def parse_payload(self, payload):
 
         if self.get_payload_size() != len(payload):
-            print("wrong payload")
+            logger.warning("wrong payload %s", payload)
         else:
             # print("correct payload")
             index = 0

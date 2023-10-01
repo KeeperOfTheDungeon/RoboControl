@@ -2,8 +2,10 @@ from typing import List
 
 from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacketType, LoggedDataPacket
 from RoboControl.Com.PacketLogger.filter.DataPacketFilterRule import DataPacketFilterRule
+from RoboControl.Com.PacketLogger.filter.FilterRuleDataPacketType import FilterRuleDataPacketType
 from RoboControl.Com.PacketLogger.filter.FilterRuleDevice import FilterRuleSource, FilterRuleDestination
 from RoboControl.Com.PacketLogger.filter.FilterRuleDirection import FilterRuleDirection
+from RoboControl.Com.Remote.RemoteDataPacket import DataPacketType
 
 
 class DataPacketFilter:
@@ -44,9 +46,13 @@ class DataPacketFilter:
         f1.append(r1)
         f1.append(r5)
         r2 = FilterRuleDirection(LoggedDataPacketType.IN)
-        r6 = FilterRuleDestination(1)
+        r6 = FilterRuleSource(1)
         r2.set_type(False)
-        f2 = DataPacketFilter("out2con")
+        f2 = DataPacketFilter("outFromCon")
         f2.append(r2)
         f2.append(r6)
-        return [empty, f1, f2]
+        f3 = DataPacketFilter("notStream")
+        r7 = FilterRuleDataPacketType(DataPacketType.STREAM)
+        r7.set_type(False)
+        f3.append(r7)
+        return [empty, f1, f2, f3]

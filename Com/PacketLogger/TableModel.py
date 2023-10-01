@@ -9,6 +9,7 @@ import tkinter as tk
 import tkinter.filedialog
 
 from RoboControl.Com.PacketLogger.LoggedDataPacket import DisplayDataWidth_e, DisplayFormat_e, LoggedDataPacket
+from RoboControl.Com.PacketLogger.utils.ratelimit import dropping_ratelimit
 from RoboView.Robot.Ui.utils.colors import Color
 
 Renderer = Callable[[object], str]
@@ -78,6 +79,8 @@ class PacketColumn(Column):
 
 
 class Row:
+    ID_COLUMN = "nr"
+
     def __init__(self, columns: List[Column], values: List[object], tags=None):
         if len(values) != len(columns):
             raise ValueError(f"Column size {len(columns)} doesn't match values size {len(values)}")
@@ -100,6 +103,9 @@ class Row:
 
     def __str__(self):
         return str([str(cell.value) for cell in self.cells.values()])
+
+    def get_id(self) -> str:
+        return str(self.get_cell(column_name=self.ID_COLUMN))
 
 
 class Cell:
@@ -230,13 +236,22 @@ class TableModel:
         for listener in self._listeners:
             listener.on_change()
 
+    @dropping_ratelimit(seconds=1)
     def paint_on_table(self, table: ttk.Treeview) -> None:
-        old_data = table.get_children()
-        if old_data:
-            table.delete(*old_data)
+        old_ids = table.get_children()
+        new_ids = [row.get_id() for row in self._rows]
+
+        trash = [i for i in old_ids if i not in new_ids]
+        table.delete(*trash)
+
         for row in self._rows:
+            row_id = row.get_id()
+            if row_id in old_ids:
+                continue
             table_row = []
             for column_index in range(self.columns_size):
                 cell = row.get_cell(column_index)
                 table_row.append(str(cell))
-            table.insert('', tk.END, values=table_row, tags=row.tags or "")
+            item = table.insert('', tk.END, row_id, values=table_row, tags=row.tags or "")
+            table.see(item)
+            # yield

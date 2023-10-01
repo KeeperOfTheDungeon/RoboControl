@@ -11,3 +11,8 @@ class FilterRuleDataPacketType(DataPacketFilterRule):
 
     def does_pass(self, data_packet: LoggedDataPacket) -> bool:
         return data_packet.get_data_packet().get_type() == self._allow_type
+
+    def as_dict(self) -> dict:
+        return {
+            "type": self._allow_type
+        }

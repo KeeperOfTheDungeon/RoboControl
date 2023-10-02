@@ -7,9 +7,10 @@ from RoboControl.Robot.Component.RobotComponent import RobotComponent
 class ComponentSet(list, List[Union[RobotComponent, AbstractComponent]]):
     """ "Basis class for a list of device components of same type" """
 
+    _transmitter: "RemoteDataTransmitter"
+
     def __init__(self, components):
         super().__init__(components)
-        self._transmitter: "RemoteDataTransmitter"
 
     def get_component_on_global_id(self, id: int) -> Optional[AbstractComponent]:
         """ "search for an component with given id" """

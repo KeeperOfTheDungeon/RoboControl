@@ -35,6 +35,13 @@ FAIL_START_TOKEN_STR = str(chr(ord(FAIL_START_TOKEN)))
 
 END_TOKEN = b';'
 
+OFFSET_DESTINATION = 1
+OFFSET_SOURCE = 3
+OFFSET_ID = 5
+OFFSET_PAYLOAD = 7
+
+
+
 Byte: TypeAlias = int
 
 
@@ -49,50 +56,65 @@ class DataPacketAscii:
         # print(self.data_buffer)
         index = 0
         message_type = self._data_buffer[index]
+        remote_data = None
         if message_type == COMMAND_START_TOKEN_STR:
             remote_data = RemoteCommand(0, "", "")
-            return self.do_decode(remote_data)
         elif message_type == MESSAGE_START_TOKEN_STR:
             remote_data = RemoteMessage(0, "", "")
-            return self.do_decode(remote_data)
         elif message_type == STREAM_START_TOKEN_STR:
             remote_data = RemoteStream(0, "", "")
-            return self.do_decode(remote_data)
-        elif message_type == STREAM_START_TOKEN_STR:
-            remote_data = RemoteStream(0, "", "")
-            return self.do_decode(remote_data)
         elif message_type == OK_START_TOKEN_STR:
             remote_data = RemotePositiveAck(0, "", "")
-            return self.do_decode(remote_data)
         elif message_type == FAIL_START_TOKEN_STR:
             remote_data = RemoteNegativeAck(0, "", "")
-            return self.do_decode(remote_data)
-        print("unsync")
+        if remote_data:
+            if parsed_remote_data := self.do_decode(remote_data):
+                return parsed_remote_data
+
+        self.error("UNSYNC")
         return RemoteData(0, "", "")
 
-    def do_decode(self, remote_data: RemoteData) -> RemoteData:
+    def get_byte(self, offset: int, length: int = 2):
+        if offset + length >= len(self._data_buffer):
+            self.error(f"Data Buffer is too small to parse bytes {offset}-{offset + length}")
+            return None
+        return int(self._data_buffer[offset:offset + length], 16)
 
-        index = 1
-        remote_data.set_destination_address(int(self._data_buffer[index:index + 2], 16))
-        index += 2
-        remote_data.set_source_address(int(self._data_buffer[index:index + 2], 16))
-        index += 2
-        remote_data.set_id(int(self._data_buffer[index:index + 2], 16))
+    def error(self, message: str, remote_data: RemoteData = None):
+        logger.warning(message)
+        logger.warning(self)
+        logger.warning(remote_data)
 
-        index += 2  # get payload
+    def do_decode(self, remote_data: RemoteData) -> "Optional[RemoteData]":
+        content_size = len(self._data_buffer) - 2
+        if content_size < (OFFSET_ID + 2):
+            self.error("Data Buffer is too small to parse the command id.", remote_data=remote_data)
+            return None
+        remote_data.set_destination_address(self.get_byte(OFFSET_DESTINATION))
+        remote_data.set_source_address(self.get_byte(OFFSET_SOURCE))
+        remote_data.set_id(self.get_byte(OFFSET_ID))
+
+        index = OFFSET_PAYLOAD
         data_size = len(self._data_buffer)
-        data_size -= index + 1
-        data_size /= 2
-        # data_size = int((len(self._data_buffer) - (index+1)) /2)
+        data_size -= (index + 1)
+        data_size = math.ceil(data_size / 2)
+        payload = bytearray(data_size)
 
-        payload = bytearray(int(data_size))
         pindex = 0
-
         while index < (len(self._data_buffer) - 1):
-            value = int(self._data_buffer[index:index + 2], 16)
+            value = self.get_byte(index)
+            if value is None:
+                break
             index += 2
             payload[pindex] = value
             pindex += 1
+        """
+        for value_offset in range(data_size):
+            value = self.get_byte(OFFSET_PAYLOAD + value_offset)
+            if not value:
+                return remote_data
+            payload[value_offset] = value
+        """
 
         remote_data.set_payload(payload)
 

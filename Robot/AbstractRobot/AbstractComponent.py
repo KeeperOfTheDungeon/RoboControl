@@ -31,13 +31,13 @@ class AbstractComponent:
         self._transmitter = transmitter
 
     def get_data_values(self) -> List[ComponentValue]:
-        return []  # TODO ??
+        return []
 
     def get_control_values(self) -> List[ComponentValue]:
-        return []  # TODO ??
+        return []
 
     def get_control_clients(self) -> List[ComponentValue]:
-        return []  # TODO ??
+        return []
 
     def recover_string(self, key: str, value: str) -> str:
         """ "recover a String value from active settings. This property key will be generated from instance key + local key" """

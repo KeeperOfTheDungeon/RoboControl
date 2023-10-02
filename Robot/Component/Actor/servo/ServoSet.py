@@ -1,3 +1,5 @@
+from typing import List
+
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 from RoboControl.Robot.Component.Actor.servo.Servo import Servo
@@ -15,9 +17,10 @@ from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProce
 from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoSettings import Msg_servoSettings
 
 
-class ServoSet(ComponentSet):
+class ServoSet(ComponentSet, List[Servo]):
     def __init__(self, components, protocol):
         # self._msg_distance = protocol['msg_distance']
+        self._msg_settings = protocol['msg_settings']
         self._stream_positions = protocol['stream_servoPositions']
         self._stream_destinations = protocol['stream_servoDestinations']
 
@@ -35,7 +38,9 @@ class ServoSet(ComponentSet):
 
     def get_message_processors(self):
         msg_list = super().get_message_processors()
-        return msg_list
+        cmd = Msg_servoSettings.get_command(self._msg_settings)
+        processor = RemoteProcessor(cmd, self.process_servo_settings)
+        return msg_list + [processor]
 
     def get_stream_processors(self):
         stream_list = super().get_stream_processors()
@@ -80,11 +85,11 @@ class ServoSet(ComponentSet):
             remote_data.get_max_range(),
             remote_data.get_offset(),
             remote_data.get_scale(),
-            remote_data.get_is_reverse(),
+            remote_data.is_reverse(),
         )
-        servo.set_on(True)
-        servo.set_remote_feedback_on(remote_data.force_feedback_is_on())
-        servo.set_position_feedback_on(remote_data.position_feedback_is_on())
+        servo.set_on(remote_data.is_on())
+        # servo.set_remote_feedback_on(remote_data.force_feedback_is_on())
+        # servo.set_position_feedback_on(remote_data.position_feedback_is_on())
 
     def process_servo_speed(self, remote_data: Msg_servoSpeed) -> None:
         """ "decode servo speed message and sets the new speed value in servo component" """
@@ -120,12 +125,12 @@ class ServoSet(ComponentSet):
             servo: Servo = self.get_component_on_local_id(index)
             if servo is None:
                 continue
-            servo.set_active(servos_status.is_active(index));
-            servo.set_at_max(servos_status.is_at_max(index));
-            servo.set_at_min(servos_status.is_at_min(index));
-            servo.set_stalling(servos_status.is_stalling(index));
-            servo.set_on(servos_status.is_on(index));
-            servo.set_reverse(servos_status.is_reverse(index));
+            servo.set_active(servos_status.is_active(index))
+            servo.set_at_max(servos_status.is_at_max(index))
+            servo.set_at_min(servos_status.is_at_min(index))
+            servo.set_stalling(servos_status.is_stalling(index))
+            servo.set_on(servos_status.is_on(index))
+            servo.set_reverse(servos_status.is_reverse(index))
 
     def process_servo_position(self, servo_position: Msg_servoPosition) -> None:
         """ "decode servo position from DataPacket" """
@@ -162,3 +167,6 @@ class ServoSet(ComponentSet):
         elif isinstance(remote_data, Msg_servoForceThreshold):
             self.process_servo_force_threshold(remote_data)
         return False
+    
+    def get_component_on_local_id(self, id: int) -> Servo:
+        return super().get_component_on_local_id(id)

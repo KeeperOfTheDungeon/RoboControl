@@ -1,5 +1,6 @@
 
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
+from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.Sensor.luxSensor.protocol.Msg_lux import Msg_lux
 from RoboControl.Robot.Component.Sensor.luxSensor.protocol.Stream_lux import Stream_lux
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
@@ -47,38 +48,15 @@ class LuxSensorSet(ComponentSet):
 			value = stream_lux.get_lux_Value(index)
 			sensor.set_lux(value)
 
-
-
-
-"""package de.hska.lat.robot.component.generic.luxSensor;
-
-
-
-import de.hska.lat.comm.remote.RemoteMessage;
-import de.hska.lat.comm.remote.RemoteStream;
-import de.hska.lat.robot.component.ComponentSet;
-import de.hska.lat.robot.component.generic.luxSensor.protocol.Msg_lux;
-import de.hska.lat.robot.component.generic.luxSensor.protocol.Stream_lux;
+	def process_lux(self, remote_data: Msg_lux) -> None:
+		sensor: Sensor = self.get_component_on_local_id(remote_data.get_index())
+		if sensor is not None:
+			sensor.set_lux(remote_data.get_lux_value())
 
 
 
 
-/**
- * Super class for Sharp Gp2 Sensor sets.  
- * 
- * @author Oktavian Gniot
- *
- */
-public abstract class LuxSensorSet<T extends LuxSensor<?,?>,P extends LuxSensorProtocol>  extends ComponentSet<T,P>
-	{
-
-	
-/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1985714891299637009L;
-
-	
+"""
 
 protected void processLux(Msg_lux remoteData)
 {

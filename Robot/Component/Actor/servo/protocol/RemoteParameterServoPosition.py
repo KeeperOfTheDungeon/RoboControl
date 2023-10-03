@@ -1,27 +1,30 @@
 from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Robot.Math.Radiant import Radiant
+
+BYTE_SIZE = 2
 
 
 class RemoteParameterServoPosition(RemoteParameter):
 
     def __init__(self, name, description):
-        super().__init__(name, description, 2)
-        self._value = 0
+        super().__init__(name, description, BYTE_SIZE)
+        self._value = 0  # position
 
-    def set_position(self, position):
+    def set_position(self, position: float) -> None:
         self._value = position
 
     def get_position(self):
         return self._value
 
     def parse_from_buffer(self, data_buffer, index):
-        position = 0
-
+        # WIP why?
         position = data_buffer[index] << 8
         position |= data_buffer[index + 1]
 
         if position > 0x7fff:
             position = position - 0x10000
 
+        # below is same as the java version
         position = float(position)
         self._value = position / 10000
 
@@ -34,3 +37,12 @@ class RemoteParameterServoPosition(RemoteParameter):
         buffer[1] = position & 0xff
 
         return buffer
+
+    def get_as_string(self, description: bool) -> str:
+        if description:
+            return self.get_name() + "=" + str(Radiant.convert_radiant_to_degree(self._value)) + "°"
+        return str(self._value)
+
+    def put_data(self, data_buffer):
+        data_buffer.append(self._value * 10000)
+        return data_buffer

@@ -1,11 +1,20 @@
+""" TODO redundant
+import abc
+class ComponentValueChangeListener(abc.ABC):
+    def notify_value_changed(self, component_value: ComponentValue) -> None:
+        pass
+"""
+from typing import List
+
+
 class ComponentValue:
     def __init__(self, meta_data: dict):
-        self._name: str = meta_data["name"]
-        self._type_name: str = meta_data["type_name"]
-        self._description: str = meta_data["description"]
+        self._name: str = meta_data.get("name", "generic")
+        self._type_name: str = meta_data.get("type_name", "generic")
+        self._description: str = meta_data.get("description", "generic")
 
-        self._max_range: float = meta_data["max_range"]
-        self._min_range: float = meta_data["min_range"]
+        self._max_range: float = meta_data["max_range"]  # sys.sys.float_info.max
+        self._min_range: float = meta_data["min_range"]  # sys.sys.float_info.min
         self._value: float = 0
 
         self._overflow: bool = False
@@ -13,7 +22,7 @@ class ComponentValue:
         self._valid: bool = False
 
         self._notifyAllways: bool = True
-        self._value_changed_listener_list = list()
+        self._value_changed_listener_list: "List[ComponentValueChangeListener]" = list()  # this.listeners
 
     def set_name(self, name: str):
         self._name = name
@@ -31,6 +40,7 @@ class ComponentValue:
         return self._description
 
     def set_range(self, min_range: float, max_range: float) -> None:
+        """ "set minimum und maximum range of this float value" """
         self._max_range = max_range
         self._min_range = min_range
 
@@ -88,7 +98,7 @@ class ComponentValue:
 
     def notify_value_changed(self):
         for listener in self._value_changed_listener_list:
-            listener()
+            listener.value_changed(self)
 
     def actualize(self):
         return False
@@ -98,6 +108,7 @@ class ComponentValue:
 
     @staticmethod
     def to_formated_fraction_string(value: float, fraction: int) -> str:
+        # TODO why not just fstring?
         value_as_string = str(value)
         separator_index = value_as_string.index('.')
         fraction_size = len(value_as_string) - separator_index

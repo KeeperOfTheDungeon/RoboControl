@@ -61,7 +61,7 @@ class AbstractRobot:
         self._connection_listener.append(listener)
 
     def remove_connection_listener(self, listener: Listener) -> None:
-        pass
+        self._connection_listener.remove(listener)
 
     def get_device_on_name(self, device_name: str) -> AbstractDevice:
         for device in self._device_list:

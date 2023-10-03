@@ -42,7 +42,7 @@ class AsciiOutput(RemoteDataOutput):
         self.send(ascii_data)
         print(
             data_packet.get_type(),
-            data_packet._remote_data.get_name(),
+            data_packet.get_remote_data().get_name(),
             data_packet.get_source_address(), "->", data_packet.get_destination_address(),
             data_packet.get_parameters_as_string(True),
             ": " + str(ascii_data.get_ascii_buffer())

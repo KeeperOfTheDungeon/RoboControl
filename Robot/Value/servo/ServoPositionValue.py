@@ -3,6 +3,7 @@ from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboControl.Robot.Value.RadiantValue import RadiantValue
 
 
+# WIP This isn't used anywhere in the Java project
 class ServoPositionValue(RadiantValue):  # ServoAngleValue
     _is_at_max: bool
     _is_at_min: bool
@@ -70,3 +71,116 @@ class ServoPositionValue(RadiantValue):  # ServoAngleValue
         # elif source == self._max_servo_range:
         # 	self._max_range = source.get_value()
         self.set_value(source.get_value())
+
+
+
+"""
+package de.hska.lat.robot.value.servoPosition;
+
+import de.hska.lat.robot.value.ComponentValue;
+
+
+public class ServoPositionValue extends ComponentValue<ServoPositionValue>
+{
+
+	private static final String TYPE_NAME = "servo position";
+	
+	protected boolean isAtMax;
+	protected boolean isAtMin;
+	protected boolean isActive;
+	
+
+
+public ServoPositionValue(String name)
+{
+	super(name);
+	// TODO Auto-generated constructor stub
+}
+
+
+@Override
+public String getTypeName()
+{
+	return(ServoPositionValue.TYPE_NAME);
+}
+}
+
+"""
+
+
+
+"""
+
+public class ServoPosition extends FloatValue //extends ComponentValue<ServoPosition,ServoPositionChangeNotifier> implements FloatValueChangeListener
+{
+
+//	protected FloatValue maxServoRange;
+//	protected FloatValue minServoRange;
+	
+	protected float minRange;
+	protected float maxRange;
+
+public ServoPosition(float minRange,float maxRange)
+{
+	super("servo position");
+
+	this.minRange=minRange;
+	this.maxRange=maxRange;
+	
+//	this.minRange = this.minServoRange.getValue();
+//	this.maxRange = this.maxServoRange.getValue(); 
+	
+//	this.minServoRange.addListener(this);
+//	this.maxServoRange.addListener(this);
+	
+}
+	
+	
+
+
+
+public float getPositionAsRadiant()
+{
+
+	 float radiant;
+	
+	radiant = this.value * ((float)Math.PI / 180f );
+	
+	return(radiant);
+
+}
+
+
+public float getPositionAsDegree()
+{
+	return(Radiant.convertRadiantToDegree(this.value));
+}
+
+
+
+
+/*
+@Override
+public void valueChanged(ComponentValue<FloatValue, ?> source)
+{
+	if (source==minServoRange)
+	{
+		this.minRange=source.getValue();
+	}
+	else if (source==maxServoRange)
+	{
+		this.maxRange=source.getValue();
+	}
+	
+	this.setValue(source.getValue());
+}
+
+*/
+
+	
+
+
+
+}
+
+"""

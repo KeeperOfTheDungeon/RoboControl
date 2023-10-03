@@ -89,7 +89,7 @@ class RobotComponent(AbstractComponent):
         self._value_listener.remove(listener)
 
     def notify_value_changed(self):
-        for listener in self._setup_listener:
+        for listener in self._value_listener:
             listener.value_changed()
 
     def get_values(self):

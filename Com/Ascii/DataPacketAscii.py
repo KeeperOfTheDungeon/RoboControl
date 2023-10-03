@@ -40,6 +40,7 @@ OFFSET_SOURCE = 3
 OFFSET_ID = 5
 OFFSET_PAYLOAD = 7
 
+SIZE_PARAM = 2
 
 
 class DataPacketAscii:
@@ -71,11 +72,11 @@ class DataPacketAscii:
         self.error("UNSYNC")
         return RemoteData(0, "", "")
 
-    def get_byte(self, offset: int, length: int = 2):
+    def get_byte(self, offset: int, length: int = SIZE_PARAM):
         if offset + length >= len(self._data_buffer):
             self.error(f"Data Buffer is too small to parse bytes {offset}-{offset + length}")
             return None
-        return int(self._data_buffer[offset:offset + length], 16)
+        return int(self._data_buffer[offset:offset + length], 8 * SIZE_PARAM)
 
     def error(self, message: str, remote_data: RemoteData = None):
         logger.warning(message)
@@ -83,35 +84,24 @@ class DataPacketAscii:
         logger.warning(remote_data)
 
     def do_decode(self, remote_data: RemoteData) -> "Optional[RemoteData]":
-        content_size = len(self._data_buffer) - 2
-        if content_size < (OFFSET_ID + 2):
+        content_size = len(self._data_buffer) - 2  # minus start & end tokens
+        raw_payload_size = content_size - OFFSET_PAYLOAD
+        if content_size < (OFFSET_ID + SIZE_PARAM):
             self.error("Data Buffer is too small to parse the command id.", remote_data=remote_data)
             return None
         remote_data.set_destination_address(self.get_byte(OFFSET_DESTINATION))
         remote_data.set_source_address(self.get_byte(OFFSET_SOURCE))
         remote_data.set_id(self.get_byte(OFFSET_ID))
 
-        index = OFFSET_PAYLOAD
-        data_size = len(self._data_buffer)
-        data_size -= (index + 1)
-        data_size = math.ceil(data_size / 2)
-        payload = bytearray(data_size)
+        parsed_payload_size = math.ceil(raw_payload_size / SIZE_PARAM)
+        payload = bytearray(parsed_payload_size)
 
-        pindex = 0
-        while index < (len(self._data_buffer) - 1):
-            value = self.get_byte(index)
+        for param_index in range(0, raw_payload_size, SIZE_PARAM):
+            value = self.get_byte(OFFSET_PAYLOAD + param_index)
             if value is None:
                 break
-            index += 2
-            payload[pindex] = value
-            pindex += 1
-        """
-        for value_offset in range(data_size):
-            value = self.get_byte(OFFSET_PAYLOAD + value_offset)
-            if not value:
-                return remote_data
-            payload[value_offset] = value
-        """
+            payload_index = math.floor(param_index / SIZE_PARAM)
+            payload[payload_index] = value
 
         remote_data.set_payload(payload)
 

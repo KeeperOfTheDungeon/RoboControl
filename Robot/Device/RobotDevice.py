@@ -45,33 +45,8 @@ class RobotDevice(AbstractRobotDevice):
     def get_data_aquisators(self):
         return self._aquisators
 
-
     def build_protocol(self):
-        stream = Stream_comStatistics(DeviceProtocol.STREAM_COM_STATISTICS)
-        handler = self._com_status.process_com_status_message
-        processor = RemoteProcessor(stream, handler)
-        self._remote_stream_processor_list.append(processor)
-
-        stream = Stream_cpuStatistics(DeviceProtocol.STREAM_CPU_STATISTICS)
-        handler = self._cpu_status.process_cpu_status_message
-        processor = RemoteProcessor(stream, handler)
-        self._remote_stream_processor_list.append(processor)
-
-        command = Cmd_ping(DeviceProtocol.CMD_PING)
-        handler = self.process_ping_command
-        processor = RemoteProcessor(command, handler)
-        self._remote_command_processor_list.append(processor)
-
-        command = Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID)
-        handler = self.process_node_id_command
-        processor = RemoteProcessor(command, handler)
-        self._remote_command_processor_list.append(processor)
-
-        message = Msg_pingResponse(DeviceProtocol.MSG_PING_RESPONSE)
-        handler = self.process_ping_response
-        processor = RemoteProcessor(message, handler)
-        self._remote_message_processor_list.append(processor)
-
+        super().build_protocol()
         """
         this.commandList.add(new RemoteCommandProcessor(new Cmd_startStreamData(DeviceProtocol.CMD_START_STREAM_DATA),device));
         this.commandList.add(new RemoteCommandProcessor(new Cmd_stopStreamData(DeviceProtocol.CMD_STOP_STREAM_DATA),device));
@@ -123,11 +98,9 @@ class RobotDevice(AbstractRobotDevice):
         cmd = Cmd_clearCpuStatistics.get_command()
         self.send_data(cmd)
 
-    def Cmd_clear_com_statistics(self):
+    def remote_clear_com_statistics(self):
         cmd = Cmd_clearComStatistics.get_command()
         self.send_data(cmd)
-
-
 
     def decode_stream(self, remote_stream_data: RemoteStream) -> bool:
         if isinstance(remote_stream_data, Stream_cpuStatistics):

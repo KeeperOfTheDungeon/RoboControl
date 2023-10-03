@@ -44,25 +44,30 @@ class AbstractRobotDevice:
         self._cpu_status = CpuStatus()
 
     def build_protocol(self):
-        print("ARD : Build Protocol")
+        stream = Stream_comStatistics(DeviceProtocol.STREAM_COM_STATISTICS)
+        handler = self._com_status.process_com_status_message
+        processor = RemoteProcessor(stream, handler)
+        self._remote_stream_processor_list.append(processor)
 
-        self._remote_stream_processor_list.append(
-            RemoteProcessor(Stream_comStatistics(DeviceProtocol.STREAM_COM_STATISTICS),
-                            self._com_status.process_com_status_message))
-        self._remote_stream_processor_list.append(
-            RemoteProcessor(Stream_cpuStatistics(DeviceProtocol.STREAM_CPU_STATISTICS),
-                            self._cpu_status.process_cpu_status_message))
+        stream = Stream_cpuStatistics(DeviceProtocol.STREAM_CPU_STATISTICS)
+        handler = self._cpu_status.process_cpu_status_message
+        processor = RemoteProcessor(stream, handler)
+        self._remote_stream_processor_list.append(processor)
 
-        self._remote_command_processor_list.append(
-            RemoteProcessor(Cmd_ping(DeviceProtocol.CMD_PING), self.process_ping_command))
+        command = Cmd_ping(DeviceProtocol.CMD_PING)
+        handler = self.process_ping_command
+        processor = RemoteProcessor(command, handler)
+        self._remote_command_processor_list.append(processor)
 
-        self._remote_command_processor_list.append(
-            RemoteProcessor(Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID), self.process_node_id_command))
+        command = Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID)
+        handler = self.process_node_id_command
+        processor = RemoteProcessor(command, handler)
+        self._remote_command_processor_list.append(processor)
 
-        self._remote_command_processor_list.append(
-            RemoteProcessor(Cmd_ping(DeviceProtocol.CMD_PING), self.process_ping_command))
-
-        self._remote_message_processor_list.append(RemoteProcessor(Msg_pingResponse(), self.process_ping_response))
+        message = Msg_pingResponse(DeviceProtocol.MSG_PING_RESPONSE)
+        handler = self.process_ping_response
+        processor = RemoteProcessor(message, handler)
+        self._remote_message_processor_list.append(processor)
 
     def set_transmitter(self, transmitter):
         self._transmitter = transmitter
@@ -97,11 +102,11 @@ class AbstractRobotDevice:
         return len(self._component_list)
 
     def add_cpu_status_listener(self, listener):
-        # self._cpu_status_listener.append(listener)
+        self._cpu_status_listener.append(listener)
         self._cpu_status.add_status_listener(listener)
 
     def remove_cpu_status_listener(self, listener):
-        # self._cpu_status_listener.remove(listener)
+        self._cpu_status_listener.remove(listener)
         self._cpu_status.remove_status_listener(listener)
 
     def add_com_status_listener(self, listener):

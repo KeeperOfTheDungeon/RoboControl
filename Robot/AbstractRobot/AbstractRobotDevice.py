@@ -24,6 +24,7 @@ from RoboControl.Robot.Device.Protocol.Msg_pingResponse import Msg_pingResponse
 
 class AbstractRobotDevice:
     _name = "AbstractRobotDevice"
+    _transmitter: RemoteDataOutput
 
     def __init__(self, component_config):
         self._name = component_config.get_name()
@@ -38,8 +39,6 @@ class AbstractRobotDevice:
         self._cpu_status_listener = list()
         self._com_status_listener = list()
         self._protocol = AbstractProtocol()
-
-        self._transmitter: RemoteDataOutput
 
         self._com_status = ComStatus()
         self._cpu_status = CpuStatus()
@@ -58,7 +57,7 @@ class AbstractRobotDevice:
             RemoteProcessor(Cmd_ping(DeviceProtocol.CMD_PING), self.process_ping_command))
 
         self._remote_command_processor_list.append(
-            RemoteProcessor(Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID), self.process_Node_id_command))
+            RemoteProcessor(Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID), self.process_node_id_command))
 
         self._remote_command_processor_list.append(
             RemoteProcessor(Cmd_ping(DeviceProtocol.CMD_PING), self.process_ping_command))
@@ -88,7 +87,7 @@ class AbstractRobotDevice:
     def get_component(self, index: int) -> RobotComponent:
         return self._component_list[index]
 
-    def find_copmonent_on_name(self, name):
+    def find_component_on_name(self, name):
         pass
 
     def find_copmonent_on_global_is(self, query_id):
@@ -175,13 +174,16 @@ class AbstractRobotDevice:
 
     # Remote Prozessors
 
+    # noinspection PyMethodMayBeStatic
     def process_ping_response(self, message_data):
         print("******************got ping response************************")
 
+    # noinspection PyMethodMayBeStatic
     def process_ping_command(self, command_data):
         msg = Msg_pingResponse.get_command(DeviceProtocol.MSG_PING_RESPONSE)
         self.send_data(msg)
         print("******************got ping command************************")
 
-    def process_Node_id_command(self, command_data):
+    # noinspection PyMethodMayBeStatic
+    def process_node_id_command(self, command_data):
         print("******************got node Id command************************")

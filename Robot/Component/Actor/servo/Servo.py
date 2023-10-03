@@ -41,7 +41,7 @@ class Servo(Actor):
         self._destination_control = ServoDestinationValue(meta_data)  # addListener?
         self._destination = ServoDestinationValue(meta_data)  # addListener?
 
-        self._position = ServoPositionValue(meta_data)  # addListener?
+        self._position = ServoPositionValue(meta_data)  # = this.value # addListener?
         self._position_control = ServoPositionValue(meta_data)  # addListener?
 
         self.component_protocol = meta_data["protocol"]

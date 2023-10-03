@@ -12,7 +12,7 @@ class Actor(RobotComponent):
         super().__init__(meta_data)
 
     @abstractmethod
-    def remote_getValue(self) -> bool:
+    def remote_get_value(self) -> bool:
         pass
 
     def get_control_value(self) -> ComponentValue:

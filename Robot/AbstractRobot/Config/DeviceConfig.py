@@ -1,6 +1,3 @@
-#from typing import TypeAlias
-
-
 class DeviceConfig:
 
     def __init__(self, id: int, name: str):
@@ -13,8 +10,5 @@ class DeviceConfig:
     def get_name(self) -> str:
         return self._name
 
-    def get_device_metadata(self) -> "DeviceMetaData":
-        return DeviceMetaData(self._id, self._name)
-
-
-#DeviceMetaData: TypeAlias = DeviceConfig
+    # def get_device_metadata(self) -> "DeviceMetaData":
+    #     return DeviceMetaData(self._id, self._name)

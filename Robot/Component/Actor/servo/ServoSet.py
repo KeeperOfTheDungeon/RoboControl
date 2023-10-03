@@ -169,4 +169,5 @@ class ServoSet(ComponentSet, List[Servo]):
         return False
     
     def get_component_on_local_id(self, id: int) -> Servo:
+        # noinspection PyTypeChecker
         return super().get_component_on_local_id(id)

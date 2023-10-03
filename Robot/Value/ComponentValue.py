@@ -13,7 +13,7 @@ class ComponentValue:
         self._valid: bool = False
 
         self._notifyAllways: bool = True
-        self._value_chanege_listener_list = list()
+        self._value_changed_listener_list = list()
 
     def set_name(self, name: str):
         self._name = name
@@ -81,13 +81,13 @@ class ComponentValue:
         return self._valid
 
     def add_listener(self, listener):
-        self._value_chanege_listener_list.append(listener)
+        self._value_changed_listener_list.append(listener)
 
     def remove_listener(self, listener):
-        self._value_chanege_listener_list.remove(listener)
+        self._value_changed_listener_list.remove(listener)
 
     def notify_value_changed(self):
-        for listener in self._value_chanege_listener_list:
+        for listener in self._value_changed_listener_list:
             listener()
 
     def actualize(self):

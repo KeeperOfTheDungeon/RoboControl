@@ -63,7 +63,7 @@ class RobotDevice(AbstractRobotDevice):
         self._remote_command_processor_list.append(processor)
 
         command = Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID)
-        handler = self.process_Node_id_command
+        handler = self.process_node_id_command
         processor = RemoteProcessor(command, handler)
         self._remote_command_processor_list.append(processor)
 

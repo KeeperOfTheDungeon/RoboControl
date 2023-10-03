@@ -10,5 +10,5 @@ class AnalogServo(Servo):
 		super().__init__(meta_data)
 		# self._position = ServoPosition(-90, 90)
 
-	def remote_getValue(self) -> bool:
+	def remote_get_value(self) -> bool:
 		raise ValueError("WIP: AnalogServo")

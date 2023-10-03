@@ -1,5 +1,4 @@
-
-#import copy
+# import copy
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteException import RemoteException
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
@@ -8,7 +7,7 @@ from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteP
 
 
 class AbstractProtocol:
-	
-#klasse überflüssig ?
-	def __init__(self):
-		pass
+
+    # klasse überflüssig ?
+    def __init__(self):
+        pass

@@ -1,4 +1,4 @@
-#import copy
+# import copy
 
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Com.Remote.RemoteData import RemoteData
@@ -44,11 +44,9 @@ class AbstractRobotDevice:
         self._com_status = ComStatus()
         self._cpu_status = CpuStatus()
 
-
     def build_protocol(self):
-        print ("ARD : Build Protocol")
-        
-        
+        print("ARD : Build Protocol")
+
         self._remote_stream_processor_list.append(
             RemoteProcessor(Stream_comStatistics(DeviceProtocol.STREAM_COM_STATISTICS),
                             self._com_status.process_com_status_message))
@@ -58,7 +56,7 @@ class AbstractRobotDevice:
 
         self._remote_command_processor_list.append(
             RemoteProcessor(Cmd_ping(DeviceProtocol.CMD_PING), self.process_ping_command))
-        
+
         self._remote_command_processor_list.append(
             RemoteProcessor(Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID), self.process_Node_id_command))
 
@@ -148,11 +146,11 @@ class AbstractRobotDevice:
         query_id = data_packet.get_id()
         processor = None
         # print ("ARD : ParseDataPAcket", query_id, data_packet)
-        
+
         if isinstance(data_packet, RemoteCommand):
             processor = self._remote_command_processor_list.find_on_id(query_id)
             # print ("ARD : Command Prozessor", processor)
-            
+
         elif isinstance(data_packet, RemoteMessage):
             processor = self._remote_message_processor_list.find_on_id(query_id)
 
@@ -164,21 +162,18 @@ class AbstractRobotDevice:
 
         if processor is not None:
             remote_data = processor.get_remote_data()
-           # remote_stream = copy.copy(remote_data)
-            #remote_stream.parse_payload(data_packet.get_payload())
+            # remote_stream = copy.copy(remote_data)
+            # remote_stream.parse_payload(data_packet.get_payload())
             remote_data.parse_payload(data_packet.get_payload())
             processor.execute(remote_data)
 
+    # device remote functions
 
-# device remote functions
-        
-        
     def remote_ping_device(self):
         cmd = Cmd_ping.get_command(DeviceProtocol.CMD_PING)
         self.send_data(cmd)
 
-
-# Remote Prozessors
+    # Remote Prozessors
 
     def process_ping_response(self, message_data):
         print("******************got ping response************************")
@@ -190,5 +185,3 @@ class AbstractRobotDevice:
 
     def process_Node_id_command(self, command_data):
         print("******************got node Id command************************")
-
-

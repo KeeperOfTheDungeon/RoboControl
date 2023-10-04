@@ -1,10 +1,11 @@
+from RoboControl.Robot.AbstractRobot.AbstractListener import ComponentValueChangeListener
 from RoboControl.Robot.Math.Radiant import Radiant
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboControl.Robot.Value.RadiantValue import RadiantValue
 
 
 # WIP This isn't used anywhere in the Java project
-class ServoPositionValue(RadiantValue):  # ServoAngleValue
+class ServoPositionValue(RadiantValue, ComponentValueChangeListener):  # ServoAngleValue
     _is_at_max: bool
     _is_at_min: bool
 
@@ -65,7 +66,7 @@ class ServoPositionValue(RadiantValue):  # ServoAngleValue
     def set_at_max(self, status: bool) -> None:
         self._is_at_max = status
 
-    def on_change(self, source: ComponentValue) -> None:
+    def component_value_changed(self, source: ComponentValue) -> None:
         # if source == self._min_servo_range:
         # 	self._min_range = source.get_value()
         # elif source == self._max_servo_range:

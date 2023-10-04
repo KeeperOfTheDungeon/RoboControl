@@ -1,3 +1,4 @@
+from RoboControl.Robot.AbstractRobot.AbstractListener import CurrentSensorListener
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.generic.currentSensor.protocol.Cmd_getActualCurrentDrain import Cmd_getActualCurrentDrain
 from RoboControl.Robot.Component.generic.currentSensor.protocol.Cmd_getMaximalCurrentDrain import Cmd_getMaximalCurrentDrain
@@ -8,6 +9,8 @@ from RoboControl.Robot.Value.current.CurrentValue import CurrentValue
 
 
 class CurrentSensor(Sensor):
+	_sensor_listener: list[CurrentSensorListener]
+
 	def __init__(self, meta_data):
 		super().__init__(meta_data)
 

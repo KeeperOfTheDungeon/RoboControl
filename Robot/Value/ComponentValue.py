@@ -1,10 +1,4 @@
-""" TODO redundant
-import abc
-class ComponentValueChangeListener(abc.ABC):
-    def notify_value_changed(self, component_value: ComponentValue) -> None:
-        pass
-"""
-from typing import List
+from RoboControl.Robot.AbstractRobot.AbstractListener import ComponentValueChangeListener
 
 
 class ComponentValue:
@@ -22,7 +16,7 @@ class ComponentValue:
         self._valid: bool = False
 
         self._notifyAllways: bool = True
-        self._value_changed_listener_list: "List[ComponentValueChangeListener]" = list()  # this.listeners
+        self._value_changed_listener_list: list[ComponentValueChangeListener] = list()  # this.listeners
 
     def set_name(self, name: str):
         self._name = name
@@ -98,7 +92,7 @@ class ComponentValue:
 
     def notify_value_changed(self):
         for listener in self._value_changed_listener_list:
-            listener.value_changed(self)
+            listener.component_value_changed(self)
 
     def actualize(self):
         return False

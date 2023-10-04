@@ -10,6 +10,7 @@ import tkinter.filedialog
 
 from RoboControl.Com.PacketLogger.LoggedDataPacket import DisplayDataWidth_e, DisplayFormat_e, LoggedDataPacket
 from RoboControl.Com.PacketLogger.utils.ratelimit import dropping_ratelimit
+from RoboControl.Robot.AbstractRobot.AbstractListener import PacketLoggerListener, ChangeListener
 from RoboView.Robot.Ui.utils.colors import Color
 
 Renderer = Callable[[object], str]
@@ -121,7 +122,7 @@ class Cell:
         return self.column.render(self.value)
 
 
-class TableModel:
+class TableModel(ChangeListener):
     _max_size = None
 
     def __init__(self):
@@ -129,7 +130,7 @@ class TableModel:
         self._rows: List[Row] = []
 
         self.is_recording = False
-        self._listeners = []
+        self._listeners: list[PacketLoggerListener] = []
 
     @property
     def column_names(self) -> List[str]:

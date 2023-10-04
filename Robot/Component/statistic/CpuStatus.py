@@ -1,8 +1,10 @@
+from RoboControl.Robot.AbstractRobot.AbstractListener import CpuStatusListener
 from RoboControl.Robot.Component.statistic.DeviceStatus import DeviceStatus
 
 
 class CpuStatus(DeviceStatus):
     _SYSTEM_STATE_NAMES = ["init", "running", "stopped", "selftest", "standby"]
+    _status_listener: list[CpuStatusListener]
 
     def __init__(self):
         super().__init__()

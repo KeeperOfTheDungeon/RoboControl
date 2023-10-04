@@ -1,22 +1,20 @@
-from typing import Optional, TypeAlias, Callable
+from typing import Optional
 
 from RoboControl.Com.Connection.Connection import Connection
 from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot import AbstractDevice
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
-
-# FIXME what exactly are listeners?
-Listener: TypeAlias = [Callable or any]
+from RoboControl.Robot.AbstractRobot.AbstractListener import ConnectionListener, DataPacketReceiver
 
 
-class AbstractRobot:
+class AbstractRobot(DataPacketReceiver):
 
     def __init__(self):
         self._device_list: list[AbstractDevice] = list()
         self._name = "generic"
         self._type_name = "generic"
-        self._connection_listener: list[Listener] = list()
+        self._connection_listener: list[ConnectionListener] = list()
         # connection = Connection()
         # settings
         # connection listener
@@ -57,10 +55,10 @@ class AbstractRobot:
     def get_connection(self) -> Connection:
         return self._connection
 
-    def add_connection_listener(self, listener: Listener) -> None:
+    def add_connection_listener(self, listener: ConnectionListener) -> None:
         self._connection_listener.append(listener)
 
-    def remove_connection_listener(self, listener: Listener) -> None:
+    def remove_connection_listener(self, listener: ConnectionListener) -> None:
         self._connection_listener.remove(listener)
 
     def get_device_on_name(self, device_name: str) -> AbstractDevice:

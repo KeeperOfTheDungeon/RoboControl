@@ -110,7 +110,7 @@ class AbstractRobotDevice:
     def remove_com_status_listener(self, listener):
         self._com_status.remove_status_listener(listener)
 
-    def receive(self, data_packet):
+    def receive(self, data_packet: RemoteData):
         self.parse_data_packet(data_packet)
 
     def send_data(self, data_packet: RemoteData) -> bool:

@@ -1,4 +1,4 @@
-from typing import TypeAlias, Callable, Optional, Dict
+from typing import Optional, Dict
 
 import serial.tools.list_ports
 from serial import Serial
@@ -7,12 +7,10 @@ from serial.tools.list_ports_common import ListPortInfo
 from RoboControl.Com.Ascii.AsciiInput import AsciiInput
 from RoboControl.Com.Ascii.AsciiOutput import AsciiOutput
 from RoboControl.Com.Connection.Connection import Connection
+from RoboControl.Robot.AbstractRobot.AbstractListener import DataPacketReceiver
+
 
 # from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii
-
-
-# FIXME what exactly are listeners?
-Listener: TypeAlias = [Callable or any]
 
 
 class SerialConnection(Connection):
@@ -26,7 +24,7 @@ class SerialConnection(Connection):
         # FIXME this isn't really optional is it
         self._serial_stream: Optional[Serial] = None  # commPort
 
-    def connect(self, data_packet_receiver: Listener) -> bool:
+    def connect(self, data_packet_receiver: DataPacketReceiver) -> bool:
         """ "connect to serial interface" """
 
         # try { portIdentifier = CommPortIdentifier.getPortIdentifier(comPortName);

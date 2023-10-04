@@ -1,6 +1,7 @@
 from typing import Type, List
 
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
+from RoboControl.Robot.AbstractRobot.AbstractListener import ServoSetupListener, ServoDataListener
 from RoboControl.Robot.Component.Actor.Actor import Actor
 from RoboControl.Robot.Component.Actor.servo.protocol.Cmd_getServoPosition import Cmd_getServoPosition
 from RoboControl.Robot.Component.Actor.servo.protocol.Cmd_getServoSpeed import Cmd_getServoSpeed
@@ -20,6 +21,9 @@ from RoboControl.Robot.Value.servo.ServoVelocityValue import ServoVelocityValue
 
 
 class Servo(Actor):
+    _setup_listener: list[ServoSetupListener]
+    _sensor_listener: list[ServoDataListener]
+
     def __init__(self, meta_data):
         super().__init__(meta_data)
 
@@ -126,10 +130,10 @@ class Servo(Actor):
     def set_on(self, status: bool) -> bool:
         if self._is_on == status:
             return False
-        self._is_on = status
+        self._is_on = bool(status)
         self._position.set_on(status)
-        for notifier in self._sensor_listener:
-            notifier.is_on(self)
+        for listener in self._sensor_listener:
+            listener.is_on(self)
         return True
 
     def is_on(self) -> bool:
@@ -139,8 +143,8 @@ class Servo(Actor):
         if self._is_force_feedback_on == status:
             return False
         self._is_force_feedback_on = status
-        for notifier in self._sensor_listener:
-            notifier.forceFeedbackOn(self)
+        for listener in self._sensor_listener:
+            listener.force_feedback_on(self)
         return True
 
     def is_force_feedback_on(self) -> bool:
@@ -150,8 +154,8 @@ class Servo(Actor):
         if self._is_position_feedback_on == status:
             return False
         self._is_position_feedback_on = status
-        for notifier in self._sensor_listener:
-            notifier.positionFeedbackOn(self)
+        for listener in self._sensor_listener:
+            listener.position_feedback_on(self)
         return True
 
     def is_position_feedback_on(self) -> bool:
@@ -161,8 +165,8 @@ class Servo(Actor):
         if self._position.is_at_min() == status:
             return False
         self._position.set_at_min(status)
-        for notifier in self._sensor_listener:
-            notifier.isAtMin(self)
+        for listener in self._sensor_listener:
+            listener.is_at_min(self)
         return True
 
     def is_at_min(self):
@@ -172,8 +176,8 @@ class Servo(Actor):
         if self._position.is_at_max() == status:
             return False
         self._position.set_at_max(status)
-        for notifier in self._sensor_listener:
-            notifier.isAtMax(self)
+        for listener in self._sensor_listener:
+            listener.is_at_max(self)
         return True
 
     def is_at_max(self):
@@ -183,8 +187,8 @@ class Servo(Actor):
         if self._is_active == status:
             return False
         self._is_active = status
-        for notifier in self._sensor_listener:
-            notifier.isActive(self)
+        for listener in self._sensor_listener:
+            listener.is_active(self)
         return True
 
     def is_active(self):

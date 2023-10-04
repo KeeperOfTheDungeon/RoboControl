@@ -1,11 +1,6 @@
-from typing import Callable, TypeAlias
-
 from RoboControl.Com.ComStatistic import ComStatistic
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
-
-# FIXME what exactly are listeners?
-Listener: TypeAlias = [Callable or any]
-DataPacketReceiver: TypeAlias = Listener
+from RoboControl.Robot.AbstractRobot.AbstractListener import DataPacketReceiver
 
 
 class RemoteDataInput:

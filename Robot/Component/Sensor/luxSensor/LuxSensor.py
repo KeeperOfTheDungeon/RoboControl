@@ -1,5 +1,4 @@
-from typing import List
-
+from RoboControl.Robot.AbstractRobot.AbstractListener import LuxSensorListener
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.Sensor.luxSensor.protocol.Cmd_getLux import Cmd_getLux
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
@@ -7,6 +6,7 @@ from RoboControl.Robot.Value.lux.LuxValue import LuxValue
 
 
 class LuxSensor(Sensor):
+    _sensor_listener: list[LuxSensorListener]
 
     def __init__(self, meta_data):
         super().__init__(meta_data)
@@ -27,5 +27,5 @@ class LuxSensor(Sensor):
         cmd = Cmd_getLux.get_command(self._cmd_get_value, self._local_id)
         self.send_data(cmd)
 
-    def get_data_values(self) -> List[ComponentValue]:
+    def get_data_values(self) -> list[ComponentValue]:
         return [self.get_lux_value()]

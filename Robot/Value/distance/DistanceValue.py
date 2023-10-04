@@ -2,7 +2,6 @@ from RoboControl.Robot.Value.ComponentValue import ComponentValue
 
 
 class DistanceValue(ComponentValue):
-
     def __init__(self, meta_data):
         meta_data["type_name"] = "distance"
         meta_data["description"] = "distance value"

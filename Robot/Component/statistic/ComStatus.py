@@ -1,8 +1,10 @@
-
+from RoboControl.Robot.AbstractRobot.AbstractListener import ComStatusListener
 from RoboControl.Robot.Component.statistic.DeviceStatus import DeviceStatus
 
 
 class ComStatus(DeviceStatus):
+	_status_listener: list[ComStatusListener]
+
 	def __init__(self):
 		super().__init__()
 		self._recived_messages = 0
@@ -39,4 +41,3 @@ class ComStatus(DeviceStatus):
 
 		for listener in self._status_listener:
 			listener.com_status_changed(self)
-

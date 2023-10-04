@@ -1,6 +1,6 @@
 import math
 import traceback
-from typing import List, Optional, TypeAlias
+from typing import Optional
 
 from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
@@ -40,9 +40,6 @@ OFFSET_SOURCE = 3
 OFFSET_ID = 5
 OFFSET_PAYLOAD = 7
 
-
-
-Byte: TypeAlias = int
 
 
 class DataPacketAscii:
@@ -199,7 +196,7 @@ def get_char(data_byte):
     return value
 
 
-def hex_char_to_nibble(data_byte: Byte) -> Byte:
+def hex_char_to_nibble(data_byte: int) -> int:
     if (data_byte > 0x40) & (data_byte < 0x47):
         data_byte -= 0x37
     elif (data_byte > 0x60) & (data_byte < 0x67):
@@ -211,7 +208,7 @@ def hex_char_to_nibble(data_byte: Byte) -> Byte:
     return data_byte
 
 
-def get_byte(buffer: bytearray, position: int) -> Byte:
+def get_byte(buffer: bytearray, position: int) -> int:
     hi = hex_char_to_nibble(buffer[position]) << 4
     lo = hex_char_to_nibble(buffer[position + 1])
     return hi + lo
@@ -229,9 +226,9 @@ def parse_ascii(data_buffer: bytearray) -> Optional[RemoteDataPacket]:
         return None
 
     try:
-        destination_address: Byte = get_byte(data_buffer, 1)
-        source_address: Byte = get_byte(data_buffer, 3)
-        command: Byte = get_byte(data_buffer, 5)
+        destination_address: int = get_byte(data_buffer, 1)
+        source_address: int = get_byte(data_buffer, 3)
+        command: int = get_byte(data_buffer, 5)
         first_token = data_buffer[0]
         """
         if first_token == COMMAND_START_TOKEN:

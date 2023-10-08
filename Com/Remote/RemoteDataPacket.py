@@ -31,7 +31,7 @@ class RemoteDataPacket:
         self._command = command  # default =? 0
         self._timestamp = datetime.datetime.now()
 
-        self.data: bytearray = bytearray(data_size) if data_size else bytearray
+        self.data: bytearray = bytearray(data_size) if data_size else bytearray()
 
         self._remote_data: Optional["RemoteData"] = None
         # self._reply: int = reply  # default =? 0
@@ -52,15 +52,6 @@ class RemoteDataPacket:
 
     def allocate(self, size: int) -> None:
         self.data = bytearray(size)
-
-    def do_decode(self, remote_data: RemoteData) -> None:  # data_buffer
-        pass
-
-    def decode(self) -> RemoteData:
-        pass
-
-    def encode(self, data_packet):
-        pass
 
     def set_byte(self, position: int, value: int) -> None:
         """ set a byte in payload array

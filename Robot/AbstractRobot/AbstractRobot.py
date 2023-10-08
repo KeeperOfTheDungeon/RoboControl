@@ -3,15 +3,15 @@ from typing import Optional
 from RoboControl.Com.Connection.Connection import Connection
 from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
-from RoboControl.Robot.AbstractRobot import AbstractDevice
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 from RoboControl.Robot.AbstractRobot.AbstractListener import ConnectionListener, DataPacketReceiver
+from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
 
 
 class AbstractRobot(DataPacketReceiver):
 
     def __init__(self):
-        self._device_list: list[AbstractDevice] = list()
+        self._device_list: list[AbstractRobotDevice] = list()
         self._name = "generic"
         self._type_name = "generic"
         self._connection_listener: list[ConnectionListener] = list()
@@ -61,13 +61,13 @@ class AbstractRobot(DataPacketReceiver):
     def remove_connection_listener(self, listener: ConnectionListener) -> None:
         self._connection_listener.remove(listener)
 
-    def get_device_on_name(self, device_name: str) -> AbstractDevice:
+    def get_device_on_name(self, device_name: str) -> AbstractRobotDevice:
         for device in self._device_list:
             if device.get_name() == device_name:
                 return device
         return None
 
-    def get_device_on_id(self, device_id: int) -> AbstractDevice:
+    def get_device_on_id(self, device_id: int) -> AbstractRobotDevice:
         for device in self._device_list:
             if device.has_id(device_id):
                 return device
@@ -76,7 +76,7 @@ class AbstractRobot(DataPacketReceiver):
     def get_component_on_global_id(self, device_id: int) -> AbstractComponent:
         pass
 
-    def get_device_list(self) -> list[AbstractDevice]:
+    def get_device_list(self) -> list[AbstractRobotDevice]:
         return self._device_list
 
     def get_device_count(self) -> int:

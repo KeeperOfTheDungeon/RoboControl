@@ -51,8 +51,8 @@ class RemoteData:
         self._source_address = source
 
     # noinspection PyMethodMayBeStatic
-    def get_data_packet(self) -> None:
-        return None  # TODO Why?
+    def get_data_packet(self) -> "RemoteDataPacket":
+        return None
 
     def make_data_packet(self, data_packet: "RemoteDataPacket") -> "RemoteDataPacket":
         data_packet.set_remote_data(self)

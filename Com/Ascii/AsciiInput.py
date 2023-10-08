@@ -27,7 +27,7 @@ class AsciiInput(RemoteDataInput):
         print("x is running")
 
         receiving_packet = False
-        data_packet = DataPacketAscii()
+        ascii_data_packet = DataPacketAscii()
 
         while self.running:
             # try
@@ -48,16 +48,16 @@ class AsciiInput(RemoteDataInput):
                 if receiving_packet:
                     self.statistic.count_up_error_packets()
                 receiving_packet = True
-                data_packet = DataPacketAscii()
+                ascii_data_packet = DataPacketAscii()
 
-            data_packet.put_token(token)
+            ascii_data_packet.put_token(token)
 
             if DataPacketAscii.is_end_token(token):
                 if not receiving_packet:
                     self.statistic.count_up_error_packets()
                     continue
-                logger.debug(data_packet.get_ascii_buffer())
-                remote_data = data_packet.decode()
+                logger.debug(ascii_data_packet.get_ascii_buffer())
+                remote_data = ascii_data_packet.decode()
                 # data_packet_buffer = copy(data_packet._data_buffer)
                 # data_packet = DataPacketAscii.parse_ascii(data_packet_buffer)
 
@@ -66,7 +66,7 @@ class AsciiInput(RemoteDataInput):
 
                 self.statistic.count_up_recived_packets()
                 receiving_packet = False
-                data_packet = DataPacketAscii()
+                ascii_data_packet = DataPacketAscii()
 
             # } catch (IOException e) { e.printStackTrace();
             # } catch (InterruptedException e) { e.printStackTrace();

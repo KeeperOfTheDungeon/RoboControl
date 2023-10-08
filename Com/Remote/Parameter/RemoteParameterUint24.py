@@ -2,7 +2,6 @@ from RoboControl.Com.Remote.Parameter.RemoteParameterInt import RemoteParameterI
 
 
 class RemoteParameterUint24(RemoteParameterInt):
-
     def __init__(self, name, description):
         super().__init__(name, description, 0, 0xffffff, 3)
 

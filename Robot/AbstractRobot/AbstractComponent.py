@@ -62,3 +62,9 @@ class AbstractComponent:
     def save_boolean(self, key: str, value: int) -> str:
         """ "save a boolean value in active settings. This property key will be generated from instance key + local key" """
         return self._settings.save_boolean(self._instance_key + key, value)
+
+    def on_save_settings(self) -> None:
+        raise ValueError("WIP AbstractComponent.on_save_settings")
+
+    def on_load_settings(self) -> None:
+        raise ValueError("WIP AbstractComponent.on_load_settings")

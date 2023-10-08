@@ -2,20 +2,7 @@ from RoboControl.Robot.Component.generic.distance.DistanceSensorSet import Dista
 
 
 class Vcnl4000DistanceSensorSet(DistanceSensorSet):
-    def __init__(self, sensors, protocol):
-        super().__init__(sensors, protocol)
-
-    def get_command_processors(self):
-        command_list = super().get_command_processors()
-        return command_list
-
-    def get_message_processors(self):
-        msg_list = super().get_message_processors()
-        return msg_list
-
-    def get_stream_processors(self):
-        stream_list = super().get_stream_processors()
-        return stream_list
+    pass
 
 
 """package de.hska.lat.robot.component.sensor.vcnl4000;

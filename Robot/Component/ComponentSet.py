@@ -1,5 +1,8 @@
 from typing import Optional, List, Union
 
+from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 
@@ -7,7 +10,7 @@ from RoboControl.Robot.Component.RobotComponent import RobotComponent
 class ComponentSet(list, List[Union[RobotComponent, AbstractComponent]]):
     """ "Basis class for a list of device components of same type" """
 
-    _transmitter: "RemoteDataTransmitter"
+    _transmitter: RemoteDataOutput
 
     def __init__(self, components):
         super().__init__(components)
@@ -53,7 +56,13 @@ class ComponentSet(list, List[Union[RobotComponent, AbstractComponent]]):
         """ "returns an array list with all components of this set" """
         return list(self)
 
-    def set_transmitter(self, transmitter: "RemoteDataTransmitter") -> None:
+    def set_transmitter(self, transmitter: RemoteDataOutput) -> None:
         self._transmitter = transmitter
         for component in self:
             component.set_transmitter(self._transmitter)
+
+    def decode_message(self, remote_data: RemoteMessage) -> bool:
+        return False
+
+    def decode_stream(self, remote_data: RemoteStream) -> bool:
+        return False

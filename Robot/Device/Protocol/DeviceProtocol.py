@@ -1,5 +1,3 @@
-from RoboControl.Robot.AbstractRobot.AbstractProtocol import AbstractProtocol
-
 CMD_PING = 0x03
 
 CMD_GET_NODE_ID = 0x05
@@ -30,7 +28,7 @@ STREAM_COM_STATISTICS = 0x03
 STREAM_CPU_STATISTICS = 0x04
 
 
-class DeviceProtocol(AbstractProtocol):
+class DeviceProtocol:
     def __init__(self, device):
         super().__init__()
         self._device_id = device.get_id()

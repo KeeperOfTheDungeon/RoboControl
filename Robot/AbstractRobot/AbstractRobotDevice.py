@@ -6,7 +6,6 @@ from RoboControl.Com.Remote.RemoteException import RemoteException
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
-from RoboControl.Robot.AbstractRobot.AbstractProtocol import AbstractProtocol
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.statistic.ComStatus import ComStatus
 from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
@@ -38,7 +37,6 @@ class AbstractRobotDevice:
         self._component_list = list()
         self._cpu_status_listener = list()
         self._com_status_listener = list()
-        self._protocol = AbstractProtocol()
 
         self._com_status = ComStatus()
         self._cpu_status = CpuStatus()

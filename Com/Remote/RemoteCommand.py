@@ -1,6 +1,5 @@
 from RoboControl.Com.Remote.RemoteCommandDataPacket import RemoteCommandDataPacket
 from RoboControl.Com.Remote.RemoteData import RemoteData
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 
 
 class RemoteCommand(RemoteData):

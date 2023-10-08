@@ -3,15 +3,15 @@ class RemoteParameter:
         self._name = name
         self._description = description
         self._byte_size = size
-        self._value = None
+        self._value: object = None
 
-    def get_name(self):
+    def get_name(self) -> str:
         return self._name
 
-    def get_description(self):
+    def get_description(self) -> str:
         return self._description
 
-    def get_byte_size(self):
+    def get_byte_size(self) -> int:
         return self._byte_size
 
     def get_as_buffer(self):
@@ -23,10 +23,14 @@ class RemoteParameter:
     def parse_from_buffer(self, data_buffer, index):
         raise ValueError("WIP RemoteParameter.parse_from_buffer not yet implemented")
 
-    def get_as_string(self, description: bool):
+    def get_as_string(self, description: bool) -> str:
         if description:
             return self._name + "=" + str(self._value)
         return str(self._value)
 
     def set_value(self, value: object) -> None:
         self._value = value
+
+    def get_value(self) -> object:
+        return self._value
+

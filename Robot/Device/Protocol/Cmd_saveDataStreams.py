@@ -8,5 +8,5 @@ class Cmd_saveDataStreams(RemoteCommand):
         super().__init__(id, "saveDataStreams", "save device actuals data Streams to non volatile memory")
 
     @staticmethod
-    def get_command(id: int):
+    def get_command(id: int = DeviceProtocol.CMD_SAVE_STREAMS):
         return Cmd_saveDataStreams(id)

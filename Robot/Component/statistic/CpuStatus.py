@@ -1,5 +1,6 @@
 from RoboControl.Robot.AbstractRobot.AbstractListener import CpuStatusListener
 from RoboControl.Robot.Component.statistic.DeviceStatus import DeviceStatus
+from RoboControl.Robot.Device.Protocol.Stream_cpuStatistics import Stream_cpuStatistics
 
 
 class CpuStatus(DeviceStatus):
@@ -29,7 +30,7 @@ class CpuStatus(DeviceStatus):
     def remove_status_listener(self, listener):
         self._status_listener.remove(listener)
 
-    def process_cpu_status_message(self, remote_data):
+    def process_cpu_status_message(self, remote_data: Stream_cpuStatistics) -> None:
         self._min_load = remote_data.get_min_load()
         self._max_load = remote_data.get_max_load()
         self._last_load = remote_data.get_last_load()

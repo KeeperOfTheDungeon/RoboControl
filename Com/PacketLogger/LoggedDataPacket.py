@@ -47,9 +47,6 @@ class LoggedDataPacket:
         if remote_data is None:
             return "undefined"
         answer = remote_data.get_name()
-        # WIP debug
-        if remote_data.get_type_name() == "message":
-            answer = answer or remote_data.guess_command_name(remote_data.get_id())
         return answer or "-"
 
     def get_type_name(self) -> str:

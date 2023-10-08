@@ -56,19 +56,13 @@ class Robot(AbstractRobot):
             pass  # FIXME DataHub has no .on_disconnected
         super().on_disconnected()
 
-    def receive(self, remote_data: RemoteDataPacket) -> None:
-        source = remote_data.get_source_address()
+    def receive(self, data_packet: RemoteDataPacket) -> None:
+        source = data_packet.get_source_address()
         device = self.get_device_on_id(source)
 
         if device is not None:
-            device.receive(remote_data)
-            data_packet = remote_data.get_data_packet()
-            if data_packet is None:
-                print("#" * 10, "UNSYNC", "#" * 10)
-                print(remote_data)
-                print("#" * 28)
-            else:
-                self._data_packet_logger.add_input_packet(data_packet)
+            device.receive(data_packet)
+            self._data_packet_logger.add_input_packet(data_packet)
 
     def get_panaromas(self) -> list["Panorama"]:
         raise ValueError("WIP: Panoramas not yet implemented")

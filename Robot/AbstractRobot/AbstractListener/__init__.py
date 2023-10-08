@@ -98,6 +98,11 @@ class DataPacketReceiver(abc.ABC):
         pass
 
 
+class DeviceEventNotifier(abc.ABC):
+    def ping_received(self, device: "RobotDevice") -> None:
+        pass
+
+
 class ComponentValueChangeListener(abc.ABC):
     def component_value_changed(self, component_value: "ComponentValue") -> None:
         pass

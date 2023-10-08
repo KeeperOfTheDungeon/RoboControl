@@ -63,12 +63,15 @@ class RemoteData:
         return data_packet
 
     def parse_data_packet_data(self, data_packet: "RemoteDataPacket") -> None:
-        data_index = 0
-        data_buffer = data_packet.get_data()
-        for parameter in self._parameter_list:
-            data_index += parameter.parse_from_buffer(data_buffer, data_index)
-        # TODO and?
-        # self._data = data_buffer  # ?
+        payload = data_packet.get_payload()
+        if self.get_payload_size() != len(payload):
+            logger.warning("wrong payload %s", payload)
+        else:
+            # print("correct payload")
+            index = 0
+            # print(payload)
+            for parameter in self._parameter_list:
+                index += parameter.parse_from_buffer(payload, index)
 
     def parse_data_packet(self, data_packet: "RemoteDataPacket") -> None:
         self._source_address = data_packet.get_source_address()
@@ -80,17 +83,6 @@ class RemoteData:
 
     def get_payload(self):
         return self._payload
-
-    def parse_payload(self, payload):
-
-        if self.get_payload_size() != len(payload):
-            logger.warning("wrong payload %s", payload)
-        else:
-            # print("correct payload")
-            index = 0
-            # print(payload)
-            for parameter in self._parameter_list:
-                index += parameter.parse_from_buffer(payload, index)
 
     def __str__(self) -> str:
         res = f"RemoteData"

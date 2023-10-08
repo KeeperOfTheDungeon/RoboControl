@@ -1,8 +1,16 @@
 from typing import List
 
+from RoboControl.Com.Remote.RemoteData import RemoteData
+from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
+from RoboControl.Robot.AbstractRobot.AbstractListener import DeviceEventNotifier
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
+from RoboControl.Robot.AbstractRobot.Config.ComponentConfig import ComponentConfig
+from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
+from RoboControl.Robot.Component.ComponentSet import ComponentSet
+from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Device.Protocol import DeviceProtocol
 from RoboControl.Robot.Device.Protocol.Cmd_clearAllDataStreams import Cmd_clearAllDataStreams
 from RoboControl.Robot.Device.Protocol.Cmd_clearComStatistics import Cmd_clearComStatistics
@@ -24,83 +32,137 @@ from RoboControl.Robot.Device.Protocol.Stream_cpuStatistics import Stream_cpuSta
 from RoboControl.Robot.Device.control.DataAquisator import DataAquisator
 from RoboControl.Robot.Device.control.DeviceAquisators import DeviceAquisators
 
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 
-
-# from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-# from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-
-
-class RobotDevice(AbstractRobotDevice):
-
-    def __init__(self, component_config):
+class RobotDevice(
+    AbstractRobotDevice,  # ControlInterface
+):
+    def __init__(self, component_config: DeviceConfig):
         super().__init__(component_config)
         self._aquisators: List[DataAquisator] = DeviceAquisators.get_data_aquisators()
-        self._event_listener = []
-        self._set_list = []
+        self._event_listener: List[DeviceEventNotifier] = []
         self.build()
 
-    # self.build_protocol()
+    def build(self):
+        self.build_protocol()
+
+    def build_protocol(self):
+        self._add_ping_processors()
+        self._add_node_id_processors()
+        self._add_stream_control()
+        self._add_statistics()
 
     def get_data_aquisators(self):
         return self._aquisators
 
-    def build_protocol(self):
-        super().build_protocol()
-        """
-        this.commandList.add(new RemoteCommandProcessor(new Cmd_startStreamData(DeviceProtocol.CMD_START_STREAM_DATA),device));
-        this.commandList.add(new RemoteCommandProcessor(new Cmd_stopStreamData(DeviceProtocol.CMD_STOP_STREAM_DATA),device));
-        this.commandList.add(new RemoteCommandProcessor(new Cmd_clearAllDataStreams(DeviceProtocol.CMD_CLEAR_ALL_DATA_STREAMS),device));
-        this.commandList.add(new RemoteCommandProcessor(new Cmd_pauseAllDataStreams(DeviceProtocol.CMD_PAUSE_ALL_DATA_STREAMS),device));	
-        this.commandList.add(new RemoteCommandProcessor(new Cmd_continueAllDataStreams(DeviceProtocol.CMD_CONTINUE_ALL_DATA_STREAMS),device));
-        this.commandList.add(new RemoteCommandProcessor(new Cmd_saveDataStreams(DeviceProtocol.CMD_SAVE_STREAMS),device));
-        this.commandList.add(new RemoteCommandProcessor(new Cmd_loadDataStreams(DeviceProtocol.CMD_LOAD_STREAMS),device));
-        """
+    def add_event_listener(self, listener: DeviceEventNotifier) -> None:
+        self._event_listener.append(listener)
 
-    # remote commands
+    def remove_event_listener(self, listener: DeviceEventNotifier) -> None:
+        self._event_listener.remove(listener)
 
-    def remote_ping_device(self):
-        cmd = Cmd_ping.get_command(DeviceProtocol.CMD_PING)
-        self.send_data(cmd)
+    def set_transmitter(self, transmitter: RemoteDataOutput) -> None:
+        super().set_transmitter(transmitter)
+        for component_set in self._component_set_list:
+            component_set.set_transmitter(transmitter)
 
-    def remote_continue_streams(self):
-        cmd = Cmd_continueAllDataStreams.get_command()
-        self.send_data(cmd)
+    def get_device_name(self) -> str:
+        return self.get_name()
 
-    def remote_pause_streams(self):
-        cmd = Cmd_pauseAllDataStreams.get_command()
-        self.send_data(cmd)
+    def add_component_set(self, component_set: ComponentSet) -> None:
+        self._component_set_list.append(component_set)
+        for component in component_set:
+            self.add_component(component)
 
-    def remote_clear_streams(self):
-        cmd = Cmd_clearAllDataStreams.get_command()
-        self.send_data(cmd)
+    def add_component(self, component: RobotComponent) -> None:
+        self._component_list.append(component)
 
-    def remote_save_streams(self):
-        cmd = Cmd_saveDataStreams.get_command(DeviceProtocol.CMD_SAVE_STREAMS)
-        self.send_data(cmd)
+    def get_aquisators(self) -> list[DataAquisator]:
+        return self._aquisators
 
-    def remote_load_streams(self):
-        cmd = Cmd_loadDataStreams.get_command()
-        self.send_data(cmd)
+    def send_data(self, data: RemoteData) -> bool:
+        # print("ARD: send Data", data_packet)
+        data.set_destination_address(self.get_id())
+        if self._transmitter is None:
+            return False
+        return self._transmitter.transmitt(data)
 
-    def remote_start_stream(self, index, period):
+    def load_setup(self) -> None:
+        for component in self._component_list:
+            component.remote_load_defaults()
+            component.remote_get_settings()
+
+    def on_connected(self) -> None:
+        """ "called when connection to remote robot succeeded" """
+        self.load_setup()
+        for component in self._component_list:
+            component.on_connected()
+
+    def on_disconnected(self) -> None:
+        """ "called when disconnecting to remote robot succeeded" """
+        self.load_setup()
+        for component in self._component_list:
+            component.on_disconnected()
+
+    def process_ping_command(self, remote_command: Cmd_ping) -> None:
+        # print("******************got ping command************************")
+        msg = Msg_pingResponse.get_command(DeviceProtocol.MSG_PING_RESPONSE)
+        self.send_data(msg)
+
+    # noinspection PyMethodMayBeStatic
+    def process_ping_response(self, remote_message: Msg_pingResponse) -> None:
+        for listener in self._event_listener:
+            listener.ping_received(self)
+
+    def remote_start_stream(self, index: int, period: int) -> bool:
         cmd = Cmd_startStreamData.get_command(
             DeviceProtocol.CMD_START_STREAM_DATA,
             new_type=index, period=period
         )
-        self.send_data(cmd)
+        return self.send_data(cmd)
 
-    def remote_stop_stream(self, index):
+    def remote_stop_stream(self, index: int) -> bool:
         cmd = Cmd_stopStreamData.get_command(index)
-        self.send_data(cmd)
+        return self.send_data(cmd)
 
-    def remote_clear_cpu_statistics(self):
-        cmd = Cmd_clearCpuStatistics.get_command()
-        self.send_data(cmd)
+    def remote_clear_streams(self) -> bool:
+        cmd = Cmd_clearAllDataStreams.get_command()
+        return self.send_data(cmd)
 
-    def remote_clear_com_statistics(self):
+    def remote_pause_streams(self) -> bool:
+        cmd = Cmd_pauseAllDataStreams.get_command()
+        return self.send_data(cmd)
+
+    def remote_continue_streams(self) -> bool:
+        cmd = Cmd_continueAllDataStreams.get_command()
+        return self.send_data(cmd)
+
+    def remote_save_streams(self) -> bool:
+        cmd = Cmd_saveDataStreams.get_command()
+        return self.send_data(cmd)
+
+    def remote_load_streams(self) -> bool:
+        cmd = Cmd_loadDataStreams.get_command()
+        return self.send_data(cmd)
+
+    def remote_ping_device(self) -> bool:
+        cmd = Cmd_ping.get_command()
+        return self.send_data(cmd)
+
+    def remote_get_next_error(self) -> bool:
+        cmd = Cmd_getNextError.get_command()
+        return self.send_data(cmd)
+
+    def remote_get_error_count(self) -> bool:
+        cmd = Cmd_getErrorCount.get_command()
+        return self.send_data(cmd)
+
+    def remote_clear_com_statistics(self) -> bool:
         cmd = Cmd_clearComStatistics.get_command()
-        self.send_data(cmd)
+        return self.send_data(cmd)
+
+    def remote_clear_cpu_statistics(self) -> bool:
+        cmd = Cmd_clearCpuStatistics.get_command()
+        return self.send_data(cmd)
 
     def decode_stream(self, remote_stream_data: RemoteStream) -> bool:
         if isinstance(remote_stream_data, Stream_cpuStatistics):
@@ -111,30 +173,41 @@ class RobotDevice(AbstractRobotDevice):
             return True
         return False
 
-    def add_event_listener(self, listener) -> None:
-        self._event_listener.append(listener)
-
-    def remove_event_listener(self, listener) -> None:
-        self._event_listener.remove(listener)
-
-    def add_component_set(self, component_set: List) -> None:
-        self._set_list.append(component_set)
-        for component in component_set:
-            self._component_list.append(component)
-
-    def get_aquisators(self):
-        return self._aquisators
-
-    def remote_getNextError(self) -> bool:
-        cmd = Cmd_getNextError.get_command()
-        return self.send_data(cmd)
-
-    def remote_getErrorCount(self) -> bool:
-        cmd = Cmd_getErrorCount.get_command()
-        return self.send_data(cmd)
-
     def decode_message(self, remote_message: RemoteMessage) -> bool:
         if isinstance(remote_message, Msg_pingResponse):
             self.process_ping_response(remote_message)
             return True
         return False
+
+    # noinspection PyMethodMayBeStatic
+    def process_node_id_command(self, command_data):
+        print("******************got node Id command************************")
+
+    def _add_ping_processors(self) -> None:
+        self.add_command_processor(
+            Cmd_ping(DeviceProtocol.CMD_PING),
+            self,
+        )
+        self.add_message_processor(
+            Msg_pingResponse(DeviceProtocol.MSG_PING_RESPONSE),
+            self,
+        )
+
+    def _add_node_id_processors(self) -> None:
+        self.add_command_processor(
+            Cmd_getNodeId(DeviceProtocol.CMD_GET_NODE_ID),
+            self,
+        )
+
+    def _add_stream_control(self) -> None:
+        self.add_command_processor(Cmd_startStreamData(DeviceProtocol.CMD_START_STREAM_DATA), self)
+        self.add_command_processor(Cmd_startStreamData(DeviceProtocol.CMD_STOP_STREAM_DATA), self)
+        self.add_command_processor(Cmd_startStreamData(DeviceProtocol.CMD_CLEAR_ALL_DATA_STREAMS), self)
+        self.add_command_processor(Cmd_startStreamData(DeviceProtocol.CMD_PAUSE_ALL_DATA_STREAMS), self)
+        self.add_command_processor(Cmd_startStreamData(DeviceProtocol.CMD_CONTINUE_ALL_DATA_STREAMS), self)
+        self.add_command_processor(Cmd_startStreamData(DeviceProtocol.CMD_SAVE_STREAMS), self)
+        self.add_command_processor(Cmd_startStreamData(DeviceProtocol.CMD_LOAD_STREAMS), self)
+
+    def _add_statistics(self) -> None:
+        self.add_stream_processor(Stream_comStatistics(DeviceProtocol.STREAM_COM_STATISTICS), self)
+        self.add_stream_processor(Stream_cpuStatistics(DeviceProtocol.STREAM_CPU_STATISTICS), self)

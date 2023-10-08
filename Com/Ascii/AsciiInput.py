@@ -61,8 +61,9 @@ class AsciiInput(RemoteDataInput):
                 # data_packet_buffer = copy(data_packet._data_buffer)
                 # data_packet = DataPacketAscii.parse_ascii(data_packet_buffer)
 
-                self.deliver_packet(remote_data)
-                # self.deliver_packet(data_packet)
+                # self.deliver_packet(remote_data)
+                data_packet = remote_data.get_data_packet()
+                self.deliver_packet(data_packet)
 
                 self.statistic.count_up_recived_packets()
                 receiving_packet = False

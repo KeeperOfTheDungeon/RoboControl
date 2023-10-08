@@ -156,3 +156,6 @@ class RemoteDataPacket:
 
     def get_timestamp(self) -> datetime.datetime:
         return self._timestamp
+
+    def get_payload(self):
+        return self.get_remote_data().get_payload()

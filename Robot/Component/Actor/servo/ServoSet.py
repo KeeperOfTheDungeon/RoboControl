@@ -9,6 +9,7 @@ from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Msg_servoFor
     Msg_servoForceThreshold
 from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoPosition import Msg_servoPosition
 from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoSpeed import Msg_servoSpeed
+from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosDestinations import Stream_servosDestinations
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosPositions import Stream_servosPositions
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosStatus import Stream_servosStatus
@@ -23,6 +24,7 @@ class ServoSet(ComponentSet, List[Servo]):
         self._msg_settings = protocol['msg_settings']
         self._stream_positions = protocol['stream_servoPositions']
         self._stream_destinations = protocol['stream_servoDestinations']
+        self._stream_statuses = protocol['stream_servoStatuses']
 
         actors = list()
 
@@ -39,20 +41,28 @@ class ServoSet(ComponentSet, List[Servo]):
     def get_message_processors(self):
         msg_list = super().get_message_processors()
         cmd = Msg_servoSettings.get_command(self._msg_settings)
-        processor = RemoteProcessor(cmd, self.process_servo_settings)
+        processor = RemoteProcessor(cmd, self)
         return msg_list + [processor]
 
     def get_stream_processors(self):
         stream_list = super().get_stream_processors()
 
         if self._stream_positions != 0:
-            cmd = Stream_servosPositions.get_command(self._stream_positions, len(self))
-            processor = RemoteProcessor(cmd, self.process_stream_positions)
+            initial_values = [0 for i in self]
+            cmd = Stream_servosPositions.get_command(self._stream_positions, initial_values)
+            processor = RemoteProcessor(cmd, self)
             stream_list.append(processor)
 
         if self._stream_destinations != 0:
-            cmd = Stream_servosDestinations.get_command(self._stream_positions, len(self))
-            processor = RemoteProcessor(cmd, self.process_stream_destinations)
+            initial_values = [0 for i in self]
+            cmd = Stream_servosDestinations.get_command(self._stream_destinations, initial_values)
+            processor = RemoteProcessor(cmd, self)
+            stream_list.append(processor)
+
+        if self._stream_statuses != 0:
+            initial_values = [RemoteParameterServoStatus("WIP", "WIP") for i in self]
+            cmd = Stream_servosStatus.get_command(self._stream_statuses, initial_values)
+            processor = RemoteProcessor(cmd, self)
             stream_list.append(processor)
 
         return stream_list

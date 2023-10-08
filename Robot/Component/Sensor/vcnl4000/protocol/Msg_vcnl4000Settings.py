@@ -1,178 +1,65 @@
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Robot.Component.Sensor.vcnl4000.protocol.RemoteParameterVcnl4000Settings import \
+    RemoteParameterVcnl4000Settings
+
+INDEX_SENSOR = 0
+INDEX_PARAMETERS = 1
 
 
 class Msg_vcnl4000Settings(RemoteMessage):
-    def __init__(self):
-        super().__init__("Vcnl4000Settings", "settings for a Vcnl4000 Sensor")
+    _parameter_list: list[RemoteParameterUint8, RemoteParameterVcnl4000Settings]
+
+    def __init__(self, id: int):
+        super().__init__(id, "setVcnl4000Settings", "set settings for a Vcnl4000 Sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "VCNL4000 sensor index"))
-        #	self._parameter_list.append(RemoteParameterUint8("brightness","LED brightness"))
+        self._parameter_list.append(RemoteParameterVcnl4000Settings())
 
-        pass
+    @staticmethod
+    def get_command(
+            id: int,
+            index: int = None,
+            ir_current: "Vcnl4000IrCurrent" = None,
+            averaging_mode: "Vcnl4000AveragingModes" = None,
+            proximity_frequency: "Vcnl4000FrequencyModes" = None,
+            auto_conversion: bool = None,
+            auto_compensation: bool = None,
+    ) -> "Msg_vcnl4000Settings":
+        cmd = Msg_vcnl4000Settings(id)
+        if None not in [ir_current, averaging_mode, proximity_frequency, auto_conversion, auto_compensation]:
+            cmd.set_data(index, ir_current, averaging_mode, proximity_frequency, auto_conversion, auto_compensation)
+        return cmd
 
+    def set_data(
+            self,
+            index: int,
+            ir_current: "Vcnl4000IrCurrent",
+            averaging_mode: "Vcnl4000AveragingModes",
+            proximity_frequency: "Vcnl4000FrequencyModes",
+            auto_conversion: bool,
+            auto_compensation: bool,
+    ) -> None:
+        self._parameter_list[INDEX_SENSOR].set_value(index)
+        self._parameter_list[INDEX_PARAMETERS].set_ir_current(ir_current)
+        self._parameter_list[INDEX_PARAMETERS].set_averaging_mode(averaging_mode)
+        self._parameter_list[INDEX_PARAMETERS].set_proximity_frequency(proximity_frequency)
+        self._parameter_list[INDEX_PARAMETERS].set_auto_conversion(auto_conversion)
+        self._parameter_list[INDEX_PARAMETERS].set_auto_compensation(auto_compensation)
 
-"""package de.hska.lat.robot.component.sensor.vcnl4000.protocol;
+    def get_ir_current(self) -> "Vcnl4000IrCurrent":
+        return self._parameter_list[INDEX_PARAMETERS].get_ir_current()
 
-import de.hska.lat.comm.remote.RemoteMessage;
+    def get_averaging_mode(self) -> "Vcnl4000AveragingModes":
+        return self._parameter_list[INDEX_PARAMETERS].get_averaging_mode()
 
-import de.hska.lat.comm.remote.parameter.RemoteParameterUint8;
-import de.hska.lat.robot.component.sensor.vcnl4000.Vcnl4000AveragingModes;
-import de.hska.lat.robot.component.sensor.vcnl4000.Vcnl4000FrequencyModes;
-import de.hska.lat.robot.component.sensor.vcnl4000.Vcnl4000IrCurrent;
+    def get_proximity_frequency(self) -> "Vcnl4000FrequencyModes":
+        return self._parameter_list[INDEX_PARAMETERS].get_proximity_frequency()
 
+    def get_auto_conversion(self) -> bool:
+        return self._parameter_list[INDEX_PARAMETERS].get_auto_conversion()
 
+    def get_auto_compensation(self) -> bool:
+        return self._parameter_list[INDEX_PARAMETERS].get_auto_compensation()
 
-
-/**
- * 
- * @author Oktavian Gniot
- *
- *command containing new settings (gradient, offset, maximal measurable distance) for a GP2 sensor
- */
-
-public class Msg_vcnl4000Settings extends RemoteMessage
-{
-    
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 2638694167468005642L;
-
-
-
-    protected static final String name = "setVcnl4000Settings";
-    protected static final String description = "set settings for a Vcnl4000 Sensor";
-
-
-    private static final int INDEX_SENSOR 				= 0;
-    private static final int INDEX_PARAMETERS			= 1;
-
-    
-
-public Msg_vcnl4000Settings() 
-{
-    this.add(new RemoteParameterUint8("index","VCNL4000 sensor index"));
-    this.add(new RemoteParameterVcnl4000Settings());
-}
-    
-    
-public Msg_vcnl4000Settings(int command) 
-{
-    this();
-    this.setId(command);
-}
-
-
-@Override
-public String getName() 
-{
-    return(Msg_vcnl4000Settings.name);
-}
-
-
-@Override
-public String getDescription() 
-{
-    return(Msg_vcnl4000Settings.description);
-}
-
-
-
-
-
-public void setData(int index,
-        Vcnl4000IrCurrent			irCurrent,
-        Vcnl4000AveragingModes		averagingMode,
-        Vcnl4000FrequencyModes 		proximityFrequency,
-        boolean 					autoConversion,
-        boolean 					autoCompensation)
-{
-    (( RemoteParameterUint8) this.get(Msg_vcnl4000Settings.INDEX_SENSOR)).setValue(index);
-    (( RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).setIrCurrent(irCurrent);
-    (( RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).setAveragingMode(averagingMode);
-    (( RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).setProximityFrequency(proximityFrequency);
-    (( RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).setAutoConversion(autoConversion);
-    (( RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).setAutoCompensation(autoCompensation);
-
-    
-}
-
-
-
-
-public Vcnl4000IrCurrent getIrCurrent()
-{
-    return((( RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).getIrCurrent());
-}
-
-
-public Vcnl4000AveragingModes getAveragingMode()
-{
-    return(((RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).getAveragingMode());
-}
-
-
-public Vcnl4000FrequencyModes getProximityFrequency()
-{
-    return(((RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).getProximityFrequency());
-}
-
-
-public boolean getAutoConversion()
-{
-    return(((RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).getAutoConversion());
-}
-
-
-public boolean getAutoCompensation()
-{
-    return(((RemoteParameterVcnl4000Settings) this.get(Msg_vcnl4000Settings.INDEX_PARAMETERS)).getAutoCopensation());
-}
-
-
-
-
-/**
- * get sensor index for sensor corresponding to this message
- * @return  index of sensor in sensor set
- */
-public int getIndex()
-{
-    return((( RemoteParameterUint8) this.get(Msg_vcnl4000Settings.INDEX_SENSOR)).getValue());
-}
-
-
-
-public static Msg_vcnl4000Settings getCommand(int id)
-{
-    Msg_vcnl4000Settings cmd;
-    cmd = new Msg_vcnl4000Settings(id);
-    
-    return(cmd);
-}
-
-
-
-public static Msg_vcnl4000Settings getCommand(int command,int index, 
-        Vcnl4000IrCurrent			irCurrent,
-        Vcnl4000AveragingModes		averagingMode,
-        Vcnl4000FrequencyModes 		proximityFrequency,
-        boolean 					autoConversion,
-        boolean 					autoCompensation
-        )
-{
-    
-    Msg_vcnl4000Settings cmd;
-    cmd = Msg_vcnl4000Settings.getCommand(command);
-    cmd.setData(index, irCurrent, averagingMode, proximityFrequency, autoConversion, autoCompensation);
-    
-    return(cmd);
-}
-
-
-
-
-
-}
-
-"""
+    def get_index(self) -> int:
+        return self._parameter_list[INDEX_SENSOR].get_value()

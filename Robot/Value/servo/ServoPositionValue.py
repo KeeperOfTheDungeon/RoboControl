@@ -1,3 +1,5 @@
+import math
+
 from RoboControl.Robot.AbstractRobot.AbstractListener import ComponentValueChangeListener
 from RoboControl.Robot.Math.Radiant import Radiant
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
@@ -6,14 +8,14 @@ from RoboControl.Robot.Value.RadiantValue import RadiantValue
 
 # WIP This isn't used anywhere in the Java project
 class ServoPositionValue(RadiantValue, ComponentValueChangeListener):  # ServoAngleValue
-    _is_at_max: bool
-    _is_at_min: bool
+    _is_at_max: bool = False
+    _is_at_min: bool = False
 
-    _is_active: bool
-    _is_on: bool
+    _is_active: bool = False
+    _is_on: bool = False
 
-    _is_inverse: bool
-    _is_stalling: bool
+    _is_inverse: bool = False
+    _is_stalling: bool = False
 
     def __init__(self, meta_data):
         meta_data["type_name"] = "servo position"
@@ -41,6 +43,7 @@ class ServoPositionValue(RadiantValue, ComponentValueChangeListener):  # ServoAn
         self._is_inverse = status
 
     def get_position_as_radiant(self) -> float:
+        # return (self.get_value() * math.pi) / 180.0
         return self.get_value()
 
     get_rotation = get_position_as_radiant
@@ -73,115 +76,19 @@ class ServoPositionValue(RadiantValue, ComponentValueChangeListener):  # ServoAn
         # 	self._max_range = source.get_value()
         self.set_value(source.get_value())
 
-
-
-"""
-package de.hska.lat.robot.value.servoPosition;
-
-import de.hska.lat.robot.value.ComponentValue;
-
-
-public class ServoPositionValue extends ComponentValue<ServoPositionValue>
-{
-
-	private static final String TYPE_NAME = "servo position";
-	
-	protected boolean isAtMax;
-	protected boolean isAtMin;
-	protected boolean isActive;
-	
-
-
-public ServoPositionValue(String name)
-{
-	super(name);
-	// TODO Auto-generated constructor stub
-}
-
-
-@Override
-public String getTypeName()
-{
-	return(ServoPositionValue.TYPE_NAME);
-}
-}
-
-"""
-
-
-
-"""
-
-public class ServoPosition extends FloatValue //extends ComponentValue<ServoPosition,ServoPositionChangeNotifier> implements FloatValueChangeListener
-{
-
-//	protected FloatValue maxServoRange;
-//	protected FloatValue minServoRange;
-	
-	protected float minRange;
-	protected float maxRange;
-
-public ServoPosition(float minRange,float maxRange)
-{
-	super("servo position");
-
-	this.minRange=minRange;
-	this.maxRange=maxRange;
-	
-//	this.minRange = this.minServoRange.getValue();
-//	this.maxRange = this.maxServoRange.getValue(); 
-	
-//	this.minServoRange.addListener(this);
-//	this.maxServoRange.addListener(this);
-	
-}
-	
-	
-
-
-
-public float getPositionAsRadiant()
-{
-
-	 float radiant;
-	
-	radiant = this.value * ((float)Math.PI / 180f );
-	
-	return(radiant);
-
-}
-
-
-public float getPositionAsDegree()
-{
-	return(Radiant.convertRadiantToDegree(this.value));
-}
-
-
-
-
-/*
-@Override
-public void valueChanged(ComponentValue<FloatValue, ?> source)
-{
-	if (source==minServoRange)
-	{
-		this.minRange=source.getValue();
-	}
-	else if (source==maxServoRange)
-	{
-		this.maxRange=source.getValue();
-	}
-	
-	this.setValue(source.getValue());
-}
-
-*/
-
-	
-
-
-
-}
-
-"""
+    def get_as_string(self, description: bool) -> str:
+        infos = []
+        if description:
+            infos.append(self._name)
+            infos.append(f"is_on={self._is_on}")
+            infos.append(f"is_active={self._is_active}")
+            infos.append(f"is_stalling={self._is_stalling}")
+            infos.append(f"is_at_max={self._is_at_max}")
+            infos.append(f"is_at_min={self._is_at_min}")
+        else:
+            infos.append(f"{self._is_on}")
+            infos.append(f"{self._is_active}")
+            infos.append(f"{self._is_stalling}")
+            infos.append(f"{self._is_at_max}")
+            infos.append(f"{self._is_at_min}")
+        return ", ".join(infos)

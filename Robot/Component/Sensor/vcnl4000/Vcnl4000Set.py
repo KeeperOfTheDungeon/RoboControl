@@ -33,11 +33,7 @@ class Vcnl4000Set(ComponentSet):
         return self._lux_sensor_set
 
     def get_distance_sensors(self):
-        return self._lux_distance_ensor_set
-
-    def process_settings(settings):
-        if isinstance(settings, Msg_vcnl4000Settings):
-            pass
+        return self._distance_sensor_set
 
     def get_command_processors(self):
         command_list = super().get_command_processors()
@@ -60,6 +56,18 @@ class Vcnl4000Set(ComponentSet):
 
         return stream_list
 
+    # noinspection PyTypeChecker
+    def get_component_on_local_id(self, index: int) -> Vcnl4000:
+        return super().get_component_on_local_id(index)
+
+    def process_settings(self, remote_message: Msg_vcnl4000Settings) -> None:
+        index = remote_message.get_index()
+        sensor = self.get_component_on_local_id(index)
+        if sensor is None:
+            return
+        sensor.set_settigs(
+            
+        )
 
 """
 private void processSettings(Msg_vcnl4000Settings remoteMessage)

@@ -13,39 +13,28 @@ class Stream_servosDestinations(RemoteStream):
         super().__init__(id, "servoDestinations", "servo destinations")
 
     @staticmethod
-    def get_command(id: int, size: int):
+    def get_command(id: int, values: list[int] = None) -> "Stream_servosDestinations":
         cmd = Stream_servosDestinations(id)
-        for index in range(0, size):
-            parameter = RemoteParameterServoPosition(
-                f"destination {index}", f"destination for servo {index}"
-            )
-            cmd._parameter_list.append(parameter)
+        if values is not None:
+            cmd.set_data(values)
         return cmd
 
-    def get_destination(self, index):
-        if index < len(self._parameter_list):
-            return self._parameter_list[index].get_position()
-        return 0
+    def get_destination(self, index: int) -> int:
+        if index >= self.get_parameter_count():
+            return 0
+        return self._parameter_list[index].get_position()
+
+    def set_data(self, values: list[int]) -> None:
+        for index, value in enumerate(values):
+            parameter = self.make_parameter(index)
+            parameter.set_position(value)
+            self._parameter_list.append(parameter)
+
+    def make_parameter(self, index: int) -> RemoteParameterServoPosition:
+        return RemoteParameterServoPosition(f"destination {index}", "destination for servo " + str(index))
+
+    def parse_data_packet_data(self, data_packet: "RemoteDataPacket") -> None:
+        return self.parse_data_packet_data_dynamic(data_packet)
 
     def get_positions_count(self) -> int:
         return len(self._parameter_list)
-
-    def set_data(self, destinations: List[float]) -> None:
-        for index, position in enumerate(destinations):
-            parameter = RemoteParameterServoPosition(
-                f"destination {index}",
-                f"destination for servo {index}"
-            )
-            parameter.set_position(position)
-            self._parameter_list.append(parameter)
-
-    def parse_data_packet_data(self, data_packet: RemoteDataPacket) -> None:
-        data_buffer: bytearray = data_packet.get_data()
-        data_index = 0
-        for index, _ in enumerate(data_buffer):
-            parameter = RemoteParameterServoPosition(
-                f"destination {index}",
-                f"destination for servo {index}"
-            )
-            data_index += parameter.parse_from_buffer(data_buffer, data_index)
-            self._parameter_list.append(parameter)

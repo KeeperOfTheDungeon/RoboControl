@@ -43,15 +43,6 @@ class AbstractRobot(DataPacketReceiver):
         # this.deviceList.setTransmitter(null);
         self.on_disconnected()
 
-    def receive(self, data_packet: RemoteDataPacket) -> None:
-
-        source = data_packet.get_source_address()
-
-        for device in self._device_list:
-            if device.sget_id() == source:
-                device.deliver_packet(data_packet)
-            self._data_packet_logger.add_input_packet(data_packet)
-
     def get_connection(self) -> Connection:
         return self._connection
 

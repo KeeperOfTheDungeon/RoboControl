@@ -13,88 +13,25 @@ class Msg_lux(RemoteMessage):
 
     def __init__(self, id: int):
         super().__init__(id, "luxValue", "actual lux value measured by a light sensor")
-        self._sensor_index = 0
-        self._sensor_value = 0
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
         self._parameter_list.append(RemoteParameterLuxValue("distance", "light value in lux"))
 
-    def get_command(id):
+    @staticmethod
+    def get_command(
+            id: int,
+            index: int = None, distance: int = None,
+    ) -> "Msg_lux":
         cmd = Msg_lux(id)
-        return (cmd)
+        if None not in [index, distance]:
+            cmd.set_data(index, distance)
+        return cmd
 
-    def get_index(self):
+    def get_index(self) -> int:
         return self._parameter_list[INDEX_SENSOR].get_value()
 
-    def get_lux(self):
-        return self._parameter_list[INDEX_LUX].get_lux()
+    def get_lux_value(self) -> float:
+        return self._parameter_list[INDEX_LUX].get_value()
 
-
-"""
-
-	
-
-public Msg_lux() 
-{
-	this.add(new RemoteParameterUint8("index","sensor index"));
-	this.add(new RemoteParameterLuxValue("distance","light value in lux"));
-}
-	
-	
-public Msg_lux(int command) 
-{
-	this();
-	this.setId(command);
-}
-
-
-
-public void setData(int index, float value)
-{
-	(( RemoteParameterUint8) this.get(Msg_lux.INDEX_SENSOR)).setValue(index);
-	(( RemoteParameterLuxValue) this.get(Msg_lux.INDEX_LUX)).setValue(value);
-}
-
-
-/**
- * get sensor index for sensor corresponding to this message
- * @return  index of sensor in sensor set
- */
-public int getIndex()
-{
-	return((( RemoteParameterUint8) this.get(Msg_lux.INDEX_SENSOR)).getValue());
-}
-
-
-
-public float getLuxValue()
-{
-	return((( RemoteParameterLuxValue) this.get(Msg_lux.INDEX_LUX)).getValue());
-}
-
-
-
-
-
-public static Msg_lux getCommand(int id)
-{
-	Msg_lux cmd;
-	cmd = new Msg_lux(id);
-	
-	return(cmd);
-}
-
-
-
-public static Msg_lux getCommand(int command, int index,
-		int distance)
-{
-
-	Msg_lux cmd;
-	cmd = Msg_lux.getCommand(command);
-	cmd.setData(index, distance);
-	
-	return(cmd);
-}
-
-
-}"""
+    def set_data(self, index: int, value: float) -> None:
+        self._parameter_list[INDEX_SENSOR].set_value(index)
+        self._parameter_list[INDEX_LUX].set_value(value)

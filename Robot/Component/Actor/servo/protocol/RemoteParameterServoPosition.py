@@ -40,7 +40,7 @@ class RemoteParameterServoPosition(RemoteParameter):
 
     def get_as_string(self, description: bool) -> str:
         if description:
-            return self.get_name() + "=" + str(Radiant.convert_radiant_to_degree(self._value)) + "°"
+            return self.get_name() + "=" + f"{Radiant.convert_radiant_to_degree(self._value):.2f}°"
         return str(self._value)
 
     def put_data(self, data_buffer):

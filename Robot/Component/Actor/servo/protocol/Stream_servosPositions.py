@@ -10,167 +10,31 @@ class Stream_servosPositions(RemoteStream):
     _parameter_list: List[RemoteParameterServoPosition]
 
     def __init__(self, id: int = LegControllerProtocol.STREAM_SERVOS_POSITIONS):
-        super().__init__(id, "Stream_servoPositions", "actual servo positions")
+        super().__init__(id, "servoPositions", "actual servo positions")
 
     @staticmethod
-    def get_command(id, size):
+    def get_command(id: int, values: list[int] = None) -> "Stream_servosPositions":
         cmd = Stream_servosPositions(id)
-        for index in range(0, size):
-            cmd._parameter_list.append(RemoteParameterServoPosition("position ", "position for servo " + str(index)))
+        if values is not None:
+            cmd.set_data(values)
         return cmd
 
-    def get_position(self, index):
-        value = 0
+    def get_position(self, index: int) -> int:
+        if index >= self.get_parameter_count():
+            return 0
+        return self._parameter_list[index].get_position()
 
-        if index < len(self._parameter_list):
-            value = self._parameter_list[index].get_position()
+    def set_data(self, values: list[int]) -> None:
+        for index, value in enumerate(values):
+            parameter = self.make_parameter(index)
+            parameter.set_position(value)
+            self._parameter_list.append(parameter)
 
-        return value
+    def make_parameter(self, index: int) -> RemoteParameterServoPosition:
+        return RemoteParameterServoPosition(f"position {index}", "position for servo " + str(index))
 
+    def parse_data_packet_data(self, data_packet: "RemoteDataPacket") -> None:
+        return self.parse_data_packet_data_dynamic(data_packet)
 
-"""
-package de.hska.lat.robot.component.actor.servo.protocol;
-
-import java.nio.ByteBuffer;
-
-import de.hska.lat.comm.remote.RemoteDataPacket;
-import de.hska.lat.comm.remote.RemoteStream;
-import de.hska.lat.comm.remote.parameter.RemoteParameter;
-
-
-public class Stream_servosPositions extends RemoteStream
-{
-
-
-    
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 4452549041406810297L;
-    
-    
-    protected static final String name = "servoPositions";
-    protected static final String description = "actual servo positions ";
-    
-    
-    
-    
-    
-    
-public Stream_servosPositions()
-{
-}
-
-
-public Stream_servosPositions(int command)
-{
-    this();
-    this.setId(command);
-}
-
-
-public String getName() 
-{
-    return (Stream_servosPositions.name);
-}
-
-
-
-public String getDescription() 
-{
-    return(Stream_servosPositions.description);
-}
-
-
-public void setData(float... positions)
-{
-    int enumerator;
-    RemoteParameterServoPosition parameter;
-    
-    enumerator = 0;
-    
-    for (float position : positions)
-    {
-        parameter = new RemoteParameterServoPosition("position "+enumerator,"position for servo "+enumerator);
-        parameter.setPosition(position);
-        this.add(parameter);
-    }
-}
-
-
-
-
-
-@Override
-public void parseDataPacketData(RemoteDataPacket packet)
-{
-    int dataIndex;
-    int enumerator;
-    ByteBuffer dataBuffer;
-    RemoteParameter<?> parameter;
-    
-    dataIndex=0;
-    
-    dataBuffer = packet.getDataBuffer();
-    enumerator =0;
-    
-
-    
-    for (dataIndex = 0; dataIndex<dataBuffer.capacity();enumerator++)
-    {
-        parameter = new RemoteParameterServoPosition("position "+enumerator,"position for servo "+enumerator);
-        dataIndex+=parameter.parseFromBuffer(dataBuffer, dataIndex);
-        this.add(parameter);
-    }
-}
-
-
-
-public int getPositionsCount()
-{
-    return(this.size());	
-}
-
-
-
-public float getPosition(int index)
-{
-    if (index < this.size())
-    {
-        return((( RemoteParameterServoPosition) this.get(index)).getPosition());
-    }
-    
-    
-    
-return(0);	
-}
-
-
-
-
-
-public static Stream_servosPositions getCommand(int command)
-{
-    Stream_servosPositions cmd;
-    cmd = new Stream_servosPositions(command);
-    
-    return(cmd);
-}
-
-
-
-
-
-public static Stream_servosPositions getCommand(int command, float...positions)
-{
-    Stream_servosPositions cmd;
-    cmd = Stream_servosPositions.getCommand(command);
-    cmd.setData(positions);
-    
-    return(cmd);
-}
-
-
-
-}
-"""
+    def get_positions_count(self) -> int:
+        return len(self._parameter_list)

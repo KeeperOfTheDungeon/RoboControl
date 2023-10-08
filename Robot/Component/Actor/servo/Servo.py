@@ -39,14 +39,20 @@ class Servo(Actor):
         self._is_in_reverse_mode = False
         self._is_stalling = False
 
-        self._velocity_control = ServoVelocityValue(meta_data)  # addListener?
-        self._velocity = ServoVelocityValue(meta_data)  # addListener?
+        self._velocity_control = ServoVelocityValue(meta_data)
+        self._velocity_control.add_listener(self)
+        self._velocity = ServoVelocityValue(meta_data)
+        self._velocity.add_listener(self)
 
-        self._destination_control = ServoDestinationValue(meta_data)  # addListener?
-        self._destination = ServoDestinationValue(meta_data)  # addListener?
+        self._destination_control = ServoDestinationValue(meta_data)
+        self._destination_control.add_listener(self)
+        self._destination = ServoDestinationValue(meta_data)
+        self._destination.add_listener(self)
 
-        self._position = ServoPositionValue(meta_data)  # = this.value # addListener?
-        self._position_control = ServoPositionValue(meta_data)  # addListener?
+        self._position = ServoPositionValue(meta_data)
+        self._position.add_listener(self)
+        self._position_control = ServoPositionValue(meta_data)
+        self._position_control.add_listener(self)
 
         self.component_protocol = meta_data["protocol"]
 
@@ -322,7 +328,7 @@ class Servo(Actor):
     def remote_get_value(self) -> bool:
         raise ValueError("WIP")
 
-    def on_value_changed(self, component_value: ComponentValue) -> None:
+    def component_value_changed(self, component_value: ComponentValue) -> None:
         if component_value == self._velocity_control:
             self.remote_move_servo(self._velocity_control.get_value())
         elif component_value == self._destination_control:

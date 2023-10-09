@@ -20,6 +20,7 @@ class RobotComponent(AbstractComponent):
         self.component_protocol = meta_data["protocol"]
 
         self._cmd_get_settings = self.component_protocol["cmd_getSettings"]
+        self._cmd_set_settings = self.component_protocol["cmd_setSettings"]
         self._cmd_save_defaults = self.component_protocol["cmd_saveDefaults"]
         self._cmd_load_defaults = self.component_protocol["cmd_loadDefaults"]
         self._cmd_get_value = self.component_protocol["cmd_getValue"]

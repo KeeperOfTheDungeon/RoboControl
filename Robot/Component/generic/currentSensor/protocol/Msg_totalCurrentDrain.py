@@ -14,7 +14,6 @@ class Msg_totalCurrentDrain(RemoteMessage):
 
     def __init__(self, id: int = LegControllerProtocol.MSG_CURRENT_TOTAL_CONSUMPTION):
         super().__init__(id, "Msg_totalCurrentDrain", "total current amount measured by this sensor")
-
         self._parameter_list.append(RemoteParameterUint8("index", "current sensor index"))
         self._parameter_list.append(RemoteParameterUint32("drain", "total current amount measured by this sensor"))
 
@@ -23,8 +22,8 @@ class Msg_totalCurrentDrain(RemoteMessage):
         cmd = Msg_totalCurrentDrain(id)
         return cmd
 
-    def get_index(self):
+    def get_index(self) -> int:
         return self._parameter_list[SENSOR_INDEX].get_value()
 
-    def get_total(self):
+    def get_total(self) -> int:
         return self._parameter_list[SENSOR_CURRENT].get_value()

@@ -1,150 +1,48 @@
+from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint16 import RemoteParameterUint16
+from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 
 
 class Stream_actualConsumption(RemoteStream):
-	def __init__(self, id):
-		super().__init__(id, "stream_actualConsumption", "measured current values from device size, size/count is device dependent")
+    _parameter_list: list[RemoteParameterUint16]
 
-	
-	def get_command(id , size):
-		cmd = Stream_actualConsumption(id)
-		for index in range (0, size):
-			cmd._parameter_list.append(RemoteParameterUint16("current","measured current for sensor"+str(index)))
-		return (cmd)	
+    def __init__(self, id: int = LegControllerProtocol.STREAM_CURRENT_CONSUMPTION):
+        super().__init__(
+            id,
+            "actualConsumption",
+            "measured current values from device size, size/count is device dependent"
+        )
 
+    @staticmethod
+    def get_command(id: int, values: list[int]) -> "Stream_actualConsumption":
+        cmd = Stream_actualConsumption(id)
+        if values is not None:
+            cmd.set_data(values)
+        return cmd
 
+    def set_data(self, values: list[int]) -> None:
+        for index, value in enumerate(values):
+            parameter = self.make_parameter(index)
+            parameter.set_value(value)
+            self._parameter_list.append(parameter)
 
-	def get_actual_consumption(self, index):
-		value = 0
+    def get_actual_consumption(self, index):
+        value = 0
+        if index < len(self._parameter_list):
+            value = self._parameter_list[index].get_value()
+        return value
 
-		if index < len(self._parameter_list):
-			value = self._parameter_list[index].get_value()
+    def get_value(self, index: int) -> int:
+        if index >= self.get_parameter_count():
+            return 0
+        return self._parameter_list[index].get_value()
 
-		return value
+    def get_values_count(self) -> int:
+        return len(self._parameter_list)
 
+    def make_parameter(self, index: int) -> RemoteParameterUint16:
+        return RemoteParameterUint16(f"current {index}", f"measured current for sensor {index}")
 
-"""package de.hska.lat.robot.component.currentSensor.protocol;
-
-	
-	
-	
-public Stream_actualConsumption()
-{
-}
-
-
-public Stream_actualConsumption(int command)
-{
-	this();
-	this.setId(command);
-}
-
-
-
-
-@Override
-public String getName() 
-{
-	return(Stream_actualConsumption.name);
-}
-
-
-@Override
-public String getDescription() 
-{
-	return(Stream_actualConsumption.description);
-}
-
-
-public void setData(int... values)
-{
-	int enumerator;
-	RemoteParameterUint16 parameter;
-	
-	enumerator = 0;
-	
-	for (int value : values)
-	{
-		parameter = new RemoteParameterUint16("current","measured current for sensor "+enumerator);
-		parameter.setValue(value);
-		this.add(parameter);
-	}
-}
-
-
-@Override
-public void parseDataPacketData(RemoteDataPacket packet)
-{
-	int dataIndex;
-	int enumerator;
-	ByteBuffer dataBuffer;
-	RemoteParameter<?> parameter;
-	
-	dataIndex=0;
-	
-	dataBuffer = packet.getDataBuffer();
-	enumerator =0;
-	
-
-	
-	for (dataIndex = 0; dataIndex<dataBuffer.capacity();enumerator++)
-	{
-		parameter = new RemoteParameterUint16("current","measured current for sensor "+enumerator);
-		dataIndex+=parameter.parseFromBuffer(dataBuffer, dataIndex);
-		this.add(parameter);
-	}
-	
-
-	
-	
-}
-
-
-
-public int getValuesCount()
-{
-	return(this.size());	
-}
-
-
-
-public int getValue(int index)
-{
-	if (index < this.size())
-	{
-		return((( RemoteParameterUint16) this.get(index)).getValue());
-	}
-	
-return(0);	
-}
-
-
-
-
-
-public static Stream_actualConsumption getCommand(int command)
-{
-	Stream_actualConsumption cmd;
-	cmd = new Stream_actualConsumption(command);
-	
-	return(cmd);
-}
-
-
-
-
-
-public static Stream_actualConsumption getCommand(int command, int...values)
-{
-	Stream_actualConsumption cmd;
-	cmd = Stream_actualConsumption.getCommand(command);
-	cmd.setData(values);
-	
-	return(cmd);
-}
-
-
-
-}
-"""
+    def parse_data_packet_data(self, data_packet: "RemoteDataPacket") -> None:
+        return self.parse_data_packet_data_dynamic(data_packet)

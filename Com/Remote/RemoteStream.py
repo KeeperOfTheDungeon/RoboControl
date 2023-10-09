@@ -1,3 +1,5 @@
+import logging
+
 from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
 from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
@@ -22,6 +24,9 @@ class RemoteStream(RemoteData):
         data_buffer = data_packet.get_payload()
         while cursor <= (len(data_buffer) - 1):
             parameter = self.make_parameter(param_index)
+            if param_index >= len(self._parameter_list):
+                logging.warning(f"Ignoring parameter {param_index} as there are only {len(self._parameter_list)}: {data_buffer}")
+            else:
+                self._parameter_list[param_index] = parameter
             cursor += parameter.parse_from_buffer(data_buffer, cursor)
-            self._parameter_list[param_index] = parameter
             param_index += 1

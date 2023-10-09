@@ -1,177 +1,49 @@
+from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint16 import RemoteParameterUint16
+from RoboControl.Com.Remote.Parameter.RemoteParameterUint32 import RemoteParameterUint32
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 
 
+# This used to be RemoteParameterUint16 but that looked wrong
 class Stream_maxConsumption(RemoteStream):
-	def __init__(self, id):
-		super().__init__(id, "stream_maxConsumption", "measured max current values from device size, size/count is device dependent")
+    _parameter_list: list[RemoteParameterUint32]
 
-	
-	def get_command(id , size):
-		cmd = Stream_maxConsumption(id)
-		for index in range (0, size):
-			cmd._parameter_list.append(RemoteParameterUint16("current","measured current for sensor"+str(index)))
-		return (cmd)	
+    def __init__(self, id: LegControllerProtocol.STREAM_CURRENT_MAX_CONSUMPTION):
+        super().__init__(
+            id,
+            "maxConsumptions",
+            "measured max current values from device size, size/count is device dependent"
+        )
 
+    @staticmethod
+    def get_command(id: int, values: list[int]) -> "Stream_maxConsumption":
+        cmd = Stream_maxConsumption(id)
+        if values is not None:
+            cmd.set_data(values)
+        return cmd
 
+    def set_data(self, values: list[int]) -> None:
+        for index, value in enumerate(values):
+            parameter = self.make_parameter(index)
+            parameter.set_value(value)
+            self._parameter_list.append(parameter)
 
-	def get_max_consumption(self, index):
-		value = 0
+    def get_value(self, index: int) -> int:
+        if index >= self.get_parameter_count():
+            return 0
+        return self._parameter_list[index].get_value()
 
-		if index < len(self._parameter_list):
-			value = self._parameter_list[index].get_value()
+    def get_values_count(self) -> int:
+        return len(self._parameter_list)
 
-		return value
-		
-		
-	"""package de.hska.lat.robot.component.currentSensor.protocol;
+    def parse_data_packet_data(self, data_packet: "RemoteDataPacket") -> None:
+        return self.parse_data_packet_data_dynamic(data_packet)
 
-import java.nio.ByteBuffer;
+    def get_max_consumption(self, index):
+        value = 0
+        if index < len(self._parameter_list):
+            value = self._parameter_list[index].get_value()
+        return value
 
-import de.hska.lat.comm.remote.RemoteDataPacket;
-import de.hska.lat.comm.remote.RemoteStream;
-import de.hska.lat.comm.remote.parameter.RemoteParameter;
-import de.hska.lat.comm.remote.parameter.RemoteParameterUint16;
-
-
-public class Stream_maxConsumption extends RemoteStream
-{
-
-
-	
-	
-	
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8877204081092268546L;
-	
-	
-	protected static final String name = "maxConsumptions";
-	protected static final String description = "measured current values from device size, size/count is device dependent";
-	
-	
-	
-	
-	
-	
-public Stream_maxConsumption()
-{
-}
-
-
-public Stream_maxConsumption(int command)
-{
-	this();
-	this.setId(command);
-}
-
-
-
-
-@Override
-public String getName() 
-{
-	return(Stream_maxConsumption.name);
-}
-
-
-@Override
-public String getDescription() 
-{
-	return(Stream_maxConsumption.description);
-}
-
-
-public void setData(int... values)
-{
-	int enumerator;
-	RemoteParameterUint16 parameter;
-	
-	enumerator = 0;
-	
-	for (int value : values)
-	{
-		parameter = new RemoteParameterUint16("current","measured current for sensor "+enumerator);
-		parameter.setValue(value);
-		this.add(parameter);
-	}
-}
-
-
-@Override
-public void parseDataPacketData(RemoteDataPacket packet)
-{
-	int dataIndex;
-	int enumerator;
-	ByteBuffer dataBuffer;
-	RemoteParameter<?> parameter;
-	
-	dataIndex=0;
-	
-	dataBuffer = packet.getDataBuffer();
-	enumerator =0;
-	
-
-	
-	for (dataIndex = 0; dataIndex<dataBuffer.capacity();enumerator++)
-	{
-		parameter = new RemoteParameterUint16("current","measured current for sensor "+enumerator);
-		dataIndex+=parameter.parseFromBuffer(dataBuffer, dataIndex);
-		this.add(parameter);
-	}
-	
-
-	
-	
-}
-
-
-
-public int getValuesCount()
-{
-	return(this.size());	
-}
-
-
-
-public int getValue(int index)
-{
-	if (index < this.size())
-	{
-		return((( RemoteParameterUint16) this.get(index)).getValue());
-	}
-	
-return(0);	
-}
-
-
-
-
-
-public static Stream_maxConsumption getCommand(int command)
-{
-	Stream_maxConsumption cmd;
-	cmd = new Stream_maxConsumption(command);
-	
-	return(cmd);
-}
-
-
-
-
-
-public static Stream_maxConsumption getCommand(int command, int...values)
-{
-	Stream_maxConsumption cmd;
-	cmd = Stream_maxConsumption.getCommand(command);
-	cmd.setData(values);
-	
-	return(cmd);
-}
-
-
-
-}
-"""
+    def make_parameter(self, index: int) -> RemoteParameterUint32:
+        return RemoteParameterUint32(f"current {index}", f"measured current for sensor {index}")

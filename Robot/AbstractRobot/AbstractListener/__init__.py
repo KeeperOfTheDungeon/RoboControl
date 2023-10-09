@@ -114,3 +114,16 @@ class ConnectionListener(abc.ABC):
 
     def disconnect(self, *args):
         pass
+
+
+class CurrentSensorChangeNotifier(abc.ABC):
+    def current_value_changed(self, current: "CurrentSensor") -> None:
+        pass
+
+
+class CurrentSensorSetupChangeNotifier(abc.ABC):
+    def current_threshold_changed(self, current: "CurrentSensor") -> None:
+        pass
+
+    def current_window_size_changed(self, current: "CurrentSensor") -> None:
+        pass

@@ -9,8 +9,8 @@ class Cmd_resetMaximalCurrentDrain(RemoteCommand):
     _parameter_list: list[RemoteParameterUint8]
 
     def __init__(self, id: int = LegControllerProtocol.CMD_RESET_MAXIMAL_CURRENT_DRAIN):
-        super().__init__(id, "Cmd_resetMaximalCurrentDrain",
-                         " reset the higest current drain ever measured by this sensor")
+        super().__init__(id, "resetMaximalCurrentDrain",
+                         "reset the highest current drain ever measured by this sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
 
     def set_index(self, index: int) -> None:

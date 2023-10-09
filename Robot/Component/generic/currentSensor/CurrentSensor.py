@@ -1,4 +1,5 @@
-from RoboControl.Robot.AbstractRobot.AbstractListener import CurrentSensorListener
+from RoboControl.Robot.AbstractRobot.AbstractListener import CurrentSensorListener, CurrentSensorChangeNotifier, \
+    CurrentSensorSetupChangeNotifier
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.generic.currentSensor.protocol.Cmd_getActualCurrentDrain import \
     Cmd_getActualCurrentDrain
@@ -9,11 +10,18 @@ from RoboControl.Robot.Component.generic.currentSensor.protocol.Cmd_resetMaximal
     Cmd_resetMaximalCurrentDrain
 from RoboControl.Robot.Component.generic.currentSensor.protocol.Cmd_resetTotalCurrentDrain import \
     Cmd_resetTotalCurrentDrain
+from RoboControl.Robot.Component.generic.currentSensor.protocol.Cmd_setCurrentSettings import Cmd_setCurrentSettings
+from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboControl.Robot.Value.current.CurrentValue import CurrentValue
 
 
-class CurrentSensor(Sensor):
+class CurrentSensor(
+    Sensor,
+    CurrentSensorChangeNotifier,
+    CurrentSensorSetupChangeNotifier
+):
     _sensor_listener: list[CurrentSensorListener]
+    _setup_listener: list[CurrentSensorSetupChangeNotifier]
 
     def __init__(self, meta_data):
         super().__init__(meta_data)
@@ -26,43 +34,42 @@ class CurrentSensor(Sensor):
 
         self._window_size = 0
         self._threshold = 0
-        self._actual = CurrentValue(meta_data)
-        self._total = CurrentValue(meta_data)
-        self._max = CurrentValue(meta_data)
+        self._actual = CurrentValue({**meta_data, "name": meta_data["name"] + " actual current"})
+        self._total = CurrentValue({**meta_data, "name": meta_data["name"] + " total current"})
+        self._max = CurrentValue({**meta_data, "name": meta_data["name"] + " max current"})
 
-    def get_actual(self):
+    def get_actual(self) -> CurrentValue:
         return self._actual
 
-    def get_total(self):
-        return self._total
+    get_value = get_actual
 
-    def get_max(self):
-        return self._max
+    def get_actual_value(self) -> float:
+        return self._actual.get_value()
 
-    def get_actual_value(self):
-        return self._actual
-
-    def set_actual(self, value):
+    def set_actual(self, value: int) -> None:
         self._actual.set_value(value)
-
         for listener in self._sensor_listener:
             listener.current_value_changed()
 
-    def get_max_value(self):
+    def get_max(self) -> CurrentValue:
         return self._max
 
-    def set_max(self, value):
-        self._max.set_value(value)
+    def get_max_value(self) -> float:
+        return self._max.get_value()
 
+    def set_max(self, value: int) -> None:
+        self._max.set_value(value)
         for listener in self._sensor_listener:
             listener.current_value_changed()
 
-    def get_total_value(self):
+    def get_total(self) -> CurrentValue:
         return self._total
 
-    def set_total(self, value):
-        self._total.set_value(value)
+    def get_total_value(self) -> float:
+        return self._total.get_value()
 
+    def set_total(self, value: float) -> None:
+        self._total.set_value(value)
         for listener in self._sensor_listener:
             listener.current_value_changed()
 
@@ -86,134 +93,33 @@ class CurrentSensor(Sensor):
         cmd = Cmd_resetTotalCurrentDrain.get_command(self._cmd_reset_total_current, self._local_id)
         self.send_data(cmd)
 
+    def remote_set_settings(self, window_size: int, threshold: int) -> bool:
+        if self.component_protocol is None:
+            return False
+        cmd = Cmd_setCurrentSettings.get_command(self._cmd_set_settings, self._local_id, window_size, threshold)
+        return self.send_data(cmd)
 
-"""package de.hska.lat.robot.component.currentSensor;
+    def get_window_size(self) -> int:
+        """ "get size of measurement window , the real size is 10 * windowSize" """
+        return self._window_size
 
-import java.util.ArrayList;
+    def set_window_size(self, window_size: int) -> None:
+        self._window_size = window_size
+        for listener in self._setup_listener:
+            listener.current_window_size_changed(self)
 
+    def get_threshold(self) -> int:
+        """ "get current threshold, threshold is the minimum level value for current sensing" """
+        return self._threshold
 
-    
-public CurrentSensor(ComponentMetaData metaData, CurrentSensorProtocol protocol)
-{
-    super(metaData, protocol);
-    
-    this.actual = new CurrentValue(metaData.getName()+" actual current");
-    this.total = new CurrentValue(metaData.getName() + " total current");
-    this.max = new CurrentValue(metaData.getName() + " max current");
-}
+    def set_threshold(self, threshold: int) -> None:
+        self._threshold = threshold
+        for listener in self._setup_listener:
+            listener.current_threshold_changed(self)
 
-
-
-
-
-/**
- * get actual current level for this source 
- * @return
- */
-
-
-
-/**
- * get size of measurement window , the real size is 10 * windowSize 
- * @return actual window size
- */
-
-public int getWindowSize()
-{
-    return (this.windowSize);
-}
-
-public void setWindowSize(int windowSize)
-{
-    int index;
-    
-
-    this.windowSize=windowSize;
-    
-    for (index=0;index<this.setupListener.size();index++)
-    {
-        this.setupListener.get(index).currentWindowSizeChanged(this);
-    }
-
-
-    
-    
-}
-
-
-/**
- * get current threshold, threshold is the minimum level value for current sensing 
- * @return actual threshold
- */
-public int getThreshold()
-{
-    return (this.threshold);
-}
-
-public void setThreshold(int threshold)
-{
-    int index;
-
-    this.threshold=threshold;
-        
-    for (index=0;index<this.setupListener.size();index++)
-    {
-            this.setupListener.get(index).currentThresholdChanged(this);
-    }
-
-}
-
-
-
-
-
-public boolean remote_setSettings(int windowSize, int threshold)
-{
-    
-    if (this.componentProtocol==null)
-        return(false);
-    
-
-    return(sendData(Cmd_setCurrentSettings.getCommand(this.componentProtocol.cmdSetSettingsId, this.localId, windowSize, threshold)));
-}
-
-public boolean remote_resetTotal()
-{
-    if (this.componentProtocol==null)
-        return(false);
-    
-    return(sendData(Cmd_resetTotalCurrentDrain.getCommand(this.componentProtocol.cmdResetTotalCurrentDrainId, this.localId )));
-}
-
-public boolean remote_resetMax()
-{
-    if (this.componentProtocol==null)
-        return(false);
-    
-    return(sendData(Cmd_resetMaximalCurrentDrain.getCommand(this.componentProtocol.cmdResetMaximalCurrentDrainId, this.localId )));
-}
-
-public CurrentValue getValue()
-{
-    return (this.actual);
-}
-
-
-@Override
-public ArrayList<ComponentValue<?>> getDataValues()
-{
-    
-    ArrayList<ComponentValue<?>> values = new ArrayList<ComponentValue<?>>();
-    values.add(this.actual);
-    values.add(this.total);
-    values.add(this.max);
-            
-    return (values);
-}
-
-
-
-
-    
-}
-"""
+    def get_data_values(self) -> list[ComponentValue]:
+        return [
+            self._actual,
+            self._total,
+            self._max,
+        ]

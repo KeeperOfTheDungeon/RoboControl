@@ -1,104 +1,32 @@
-class AbstractComponentList:
-    def __init__(self):
-        pass
+from typing import Optional
 
-    def add_component(self, name, local_id):
-        self._name = name
+from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
+from RoboControl.Robot.Value.ComponentValue import ComponentValue
 
 
-"""
+class AbstractComponentList(list[AbstractComponent]):
+    def get_component_on_name(self, name: str) -> Optional[AbstractComponent]:
+        """ "search for a component in device with given name" """
+        for component in self:
+            if component.get_component_name() == name:
+                return component
+        return None
 
-package de.hska.lat.robot.abstractRobot.component;
+    def get_component_on_global_id(self, id: int) -> Optional[AbstractComponent]:
+        """ "search for a component in device with given globalId" """
+        for component in self:
+            if component.get_global_id() == id:
+                return component
+        return None
 
-import java.util.ArrayList;
+    def get_data_values(self) -> list[ComponentValue]:
+        values = []
+        for component in self:
+            values += component.get_data_values()
+        return values
 
-import de.hska.lat.robot.value.ComponentValue;
-
-
-
-
-public class AbstractComponentList<T extends AbstractRobotComponent>  extends ArrayList <T> {
-
-
-
-/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4889237517558765138L;
-
-/**
- * search for a component in device with given name 
- * @param name name of the component 
- * @return component or null
- */
-public T  getComponentOnName(String name)
-{
-
-	for (T component : this)
-	{
-		if (component.getComponentName().equals(name))
-		{
-			return(component);
-		}
-	}
-	
-	
-	return(null);
-}
-	
-/**
- * search for a component in device with given globalId 
- * @param globalId global id of the component 
- * @return component or null
- */
-
-public T getComponentOnGlobalId(int globalId)
-{
-	
-	for (T component : this)
-	{
-		if (component.getGlobalId()==globalId)
-		{
-			return(component);
-		}
-	}
-	
-	return(null);
-}
-	
-	
-public ArrayList<ComponentValue<?>> getDataValues()
-{
-	
-	 ArrayList<ComponentValue<?>> values = new  ArrayList<ComponentValue<?>>();
-	
-	
-		for (T component : this)
-		{
-			values.addAll(component.getDataValues());
-		}
-	 
-	 
-	 return(values);
-}
-	
-
-
-
-public ArrayList<ComponentValue<?>> getControlValues()
-{
-	
-	 ArrayList<ComponentValue<?>> values = new  ArrayList<ComponentValue<?>>();
-	
-	
-		for (T component : this)
-		{
-			values.addAll(component.getControlValues());
-		}
-	 
-	 
-	 return(values);
-}
-
-}
-"""
+    def get_control_values(self) -> list[ComponentValue]:
+        values = []
+        for component in self:
+            values += component.get_control_values()
+        return values

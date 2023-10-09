@@ -3,6 +3,18 @@ from typing import Type, List
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Robot.AbstractRobot.AbstractListener import ServoSetupListener, ServoDataListener
 from RoboControl.Robot.Component.Actor.Actor import Actor
+from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Cmd_calibrateServo import Cmd_calibrateServo
+from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Cmd_positionFeedbackOff import \
+    Cmd_positionFeedbackOff
+from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Cmd_positionFeedbackOn import Cmd_positionFeedbackOn
+from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_forceFeedbackOff import Cmd_forceFeedbackOff
+from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_forceFeedbackOn import Cmd_forceFeedbackOn
+from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_getServoForceThreshold import \
+    Cmd_getServoForceThreshold
+from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_setServoForcePosition import \
+    Cmd_setServoForcePosition
+from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_setServoForceThreshold import \
+    Cmd_setServoForceThreshold
 from RoboControl.Robot.Component.Actor.servo.protocol.Cmd_getServoPosition import Cmd_getServoPosition
 from RoboControl.Robot.Component.Actor.servo.protocol.Cmd_getServoSpeed import Cmd_getServoSpeed
 from RoboControl.Robot.Component.Actor.servo.protocol.Cmd_getServoStatus import Cmd_getServoStatus
@@ -83,14 +95,6 @@ class Servo(Actor):
 
     def set_position(self, new_position: float) -> None:
         self._position.set_value(new_position)
-
-    """
-    def get_position(self) -> float:
-        return self.s_position
-
-    def get_position_as_degree(self) -> float:
-        return self._position.get_value()
-    """
 
     def get_position(self) -> float:
         return self._position.get_value()
@@ -250,7 +254,6 @@ class Servo(Actor):
         return self.send_data(cmd)
 
     def remote_get_servo_force_threshold(self) -> bool:
-        raise ValueError("WIP: Cmd_getServoForceThreshold is not yet implemented!")
         cmd = self._get_command(Cmd_getServoForceThreshold, "cmd_getServoForceThreshold")
         return self.send_data(cmd)
 
@@ -259,7 +262,6 @@ class Servo(Actor):
         return self.send_data(cmd)
 
     def remote_calibrate_servo(self):
-        raise ValueError("WIP: Cmd_calibrateServo is not yet implemented!")
         cmd = self._get_command(Cmd_calibrateServo, "cmd_calibrateServo")
         return self.send_data(cmd)
 
@@ -284,13 +286,15 @@ class Servo(Actor):
         return self.send_data(cmd)
 
     def remote_set_servo_force_threshold(self, value: int) -> bool:
-        raise ValueError("WIP: Cmd_setServoForceThreshold is not yet implemented!")
-        cmd = self._get_command(Cmd_setServoForceThreshold, "cmd_setServoForceThreshold", value)
+        cmd = self._get_command(
+            Cmd_setServoForceThreshold, "cmd_setServoForceThreshold", value
+        )
         return self.send_data(cmd)
 
     def remote_set_servo_force_position(self, value: int) -> bool:
-        raise ValueError("WIP: Cmd_setServoForcePosition is not yet implemented!")
-        cmd = self._get_command(Cmd_setServoForcePosition, "cmd_setServoForcePosition", value)
+        cmd = self._get_command(
+            Cmd_setServoForcePosition, "cmd_setServoForcePosition", value
+        )
         return self.send_data(cmd)
 
     def remote_set_servo_defaults(
@@ -303,22 +307,18 @@ class Servo(Actor):
         return self.send_data(cmd)
 
     def remote_force_feedback_is_on(self) -> bool:
-        raise ValueError("WIP: Cmd_forceFeedbackOn is not yet implemented!")
         cmd = self._get_command(Cmd_forceFeedbackOn, "cmd_forceFeedbackOn")
         return self.send_data(cmd)
 
     def remote_force_feedback_is_off(self) -> bool:
-        raise ValueError("WIP: Cmd_forceFeedbackOff is not yet implemented!")
         cmd = self._get_command(Cmd_forceFeedbackOff, "cmd_forceFeedbackOff")
         return self.send_data(cmd)
 
     def remote_position_feedback_is_on(self) -> bool:
-        raise ValueError("WIP: Cmd_positionFeedbackOn is not yet implemented!")
         cmd = self._get_command(Cmd_positionFeedbackOn, "cmd_positionFeedbackOn")
         return self.send_data(cmd)
 
     def remote_position_feedback_is_off(self) -> bool:
-        raise ValueError("WIP: Cmd_positionFeedbackOff is not yet implemented!")
         cmd = self._get_command(Cmd_positionFeedbackOff, "cmd_positionFeedbackOff")
         return self.send_data(cmd)
 

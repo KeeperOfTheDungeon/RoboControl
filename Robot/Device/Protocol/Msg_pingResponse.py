@@ -11,7 +11,7 @@ class Msg_pingResponse(RemoteMessage):
     _parameter_list: List[RemoteParameterUint8]
 
     def __init__(self, id: int = DeviceProtocol.MSG_PING_RESPONSE):
-        super().__init__(id, "msgpingResponse", "response to a ping command")
+        super().__init__(id, "pingResponse", "response to a ping command")
         self._parameter_list.append(RemoteParameterUint8("ttl", "time to live"))
 
     @staticmethod

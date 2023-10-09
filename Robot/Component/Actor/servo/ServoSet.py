@@ -9,6 +9,7 @@ from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Msg_servoFor
     Msg_servoForceThreshold
 from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoPosition import Msg_servoPosition
 from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoSpeed import Msg_servoSpeed
+from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoStatus import Msg_servoStatus
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosDestinations import Stream_servosDestinations
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosPositions import Stream_servosPositions
@@ -22,6 +23,8 @@ class ServoSet(ComponentSet, List[Servo]):
     def __init__(self, components, protocol):
         # self._msg_distance = protocol['msg_distance']
         self._msg_settings = protocol['msg_settings']
+        self._msg_servo_status = protocol['msg_servo_status']
+        self._msg_servo_speed = protocol['msg_servo_speed']
         self._stream_positions = protocol['stream_servoPositions']
         self._stream_destinations = protocol['stream_servoDestinations']
         self._stream_statuses = protocol['stream_servoStatuses']
@@ -42,7 +45,17 @@ class ServoSet(ComponentSet, List[Servo]):
         msg_list = super().get_message_processors()
         cmd = Msg_servoSettings.get_command(self._msg_settings)
         processor = RemoteProcessor(cmd, self)
-        return msg_list + [processor]
+        msg_list.append(processor)
+
+        cmd = Msg_servoStatus.get_command(self._msg_servo_status)
+        processor = RemoteProcessor(cmd, self)
+        msg_list.append(processor)
+
+        cmd = Msg_servoStatus.get_command(self._msg_servo_speed)
+        processor = RemoteProcessor(cmd, self)
+        msg_list.append(processor)
+
+        return msg_list
 
     def get_stream_processors(self):
         stream_list = super().get_stream_processors()
@@ -66,13 +79,6 @@ class ServoSet(ComponentSet, List[Servo]):
             stream_list.append(processor)
 
         return stream_list
-
-    """def decode_stream(self, remote_data):
-        if isinstance(remote_data,Stream_servosPositions):
-            self.process_stream_positions(remote_data)
-        if isinstance(remote_data,Stream_servosDestinations):
-            self.process_stream_destinations(remote_data)
-    """
 
     def process_stream_positions(self, stream_positions):
         for sensor in self:

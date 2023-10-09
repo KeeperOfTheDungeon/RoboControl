@@ -60,7 +60,8 @@ class LoggedDataPacket:
         return self._data_packet.get_timestamp()
 
     def get_data_as_hex_string(self) -> str:  # noqa
-        _ = """
+        raise ValueError("WIP: self.get_data_as_hex_string() isn't implemented")
+        """
         res = []
         for d in self._data_packet.data:
             r = Integer.to_hex_string(d)
@@ -71,7 +72,6 @@ class LoggedDataPacket:
             res.append(r)
         return ",".join(res)
         """
-        raise ValueError("WIP: self.get_data_as_hex_string() isn't implemented")
 
     def get_parameters_as_string(self, description: bool) -> str:
         return self._data_packet.get_parameters_as_string(description)
@@ -86,7 +86,8 @@ class LoggedDataPacket:
 
     @staticmethod
     def get_data_as_hex_string_string24(*args) -> str:  # noqa
-        _ = """
+        raise ValueError("WIP: get_data_as_hex_string_string24 not implemented")
+        """
         //2012.02.9
         public String getDataAsHexStringString24()
         {
@@ -103,7 +104,6 @@ class LoggedDataPacket:
             return(returnString);
         }
         """
-        raise ValueError("WIP: get_data_as_hex_string_string24 not implemented")
 
 
 def render_data(data_packet: "RemoteDataPacket", data_width: DisplayDataWidth_e = None, as_hexadecimal: bool = False) -> str:

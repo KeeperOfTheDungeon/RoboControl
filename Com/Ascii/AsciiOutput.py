@@ -75,29 +75,15 @@ class AsciiOutput(RemoteDataOutput):
     def transmit(self, data_packet: RemoteDataPacket) -> bool:
         # TODO "transmit exception -> break & error !!"
         self.out_byte_pointer = 0
-        if isinstance(data_packet, RemoteCommandDataPacket):
+        # packet_type = data_packet.get_type()
+        if isinstance(data_packet, RemoteCommandDataPacket):  # DataPacketType.COMMAND
             self.send_token(DataPacketAscii.COMMAND_START_TOKEN)
-        elif isinstance(data_packet, RemoteMessageDataPacket):
+        elif isinstance(data_packet, RemoteMessageDataPacket):  # DataPacketType.MESSAGE
             self.send_token(DataPacketAscii.MESSAGE_START_TOKEN)
-        elif isinstance(data_packet, RemoteStreamDataPacket):
+        elif isinstance(data_packet, RemoteStreamDataPacket):  # DataPacketType.STREAM
             self.send_token(DataPacketAscii.STREAM_START_TOKEN)
         else:
-            """
-            packet_type = data_packet.get_type()
-            if packet_type == COMMAND:
-                self.send_token(DataPacketAscii.COMMAND_START_TOKEN)
-            elif packet_type == MESSAGE:
-                self.send_token(DataPacketAscii.MESSAGE_START_TOKEN)
-            elif packet_type == STREAM:
-                self.send_token(DataPacketAscii.STREAM_START_TOKEN)
-            elif packet_type == OK:
-                self.send_token(DataPacketAscii.OK_START_TOKEN)
-            elif packet_type == FAIL:
-                self.send_token(DataPacketAscii.FAIL_START_TOKEN)
-            else:
-                return False
-            """
-            raise ValueError("WIP: packet_types are not implemented")
+            raise ValueError("Trying to transmit an invalid packet type.")
         self.send_byte(data_packet.get_destination_address())
         self.send_byte(data_packet.get_source_address())
         self.send_byte(data_packet.get_command())

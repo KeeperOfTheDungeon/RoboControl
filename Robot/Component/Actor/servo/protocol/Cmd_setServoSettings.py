@@ -24,7 +24,6 @@ class Cmd_setServoSettings(RemoteCommand):
 
     def __init__(self, id: int = LegControllerProtocol.CMD_SERVO_ON):
         super().__init__(id, "cmd_setServoSettings", "set settings for a servo")
-        self._ttl_index = 0
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("min range", "servo min range"))
         self._parameter_list.append(RemoteParameterServoPosition("max range", "servo max range"))

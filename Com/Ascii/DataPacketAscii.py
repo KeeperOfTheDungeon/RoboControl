@@ -220,24 +220,13 @@ def parse_ascii(data_buffer: bytearray) -> Optional[RemoteDataPacket]:
         source_address: int = get_byte(data_buffer, 3)
         command: int = get_byte(data_buffer, 5)
         first_token = data_buffer[0]
-        """
-        if first_token == COMMAND_START_TOKEN:
-            packet_type = DataPacketType.COMMAND
-        elif first_token == MESSAGE_START_TOKEN:
-            packet_type = DataPacketType.MESSAGE
-        elif first_token == STREAM_START_TOKEN:
-            packet_type = DataPacketType.STREAM
-        elif first_token == OK_START_TOKEN:
-            packet_type = DataPacketType.OK
-        elif first_token == FAIL_START_TOKEN:
-            packet_type = DataPacketType.FAIL
-        """
+
         if first_token not in [ord(t) for t in [
-            COMMAND_START_TOKEN,
-            MESSAGE_START_TOKEN,
-            STREAM_START_TOKEN,
-            OK_START_TOKEN,
-            FAIL_START_TOKEN
+            COMMAND_START_TOKEN,  # DataPacketType.COMMAND
+            MESSAGE_START_TOKEN,  # DataPacketType.MESSAGE
+            STREAM_START_TOKEN,  # DataPacketType.STREAM
+            OK_START_TOKEN,  # DataPacketType.OK
+            FAIL_START_TOKEN  # DataPacketType.FAIL
         ]]:
             print("first_token", first_token)
             return None

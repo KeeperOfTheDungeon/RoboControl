@@ -17,7 +17,6 @@ class Cmd_setServoSpeed(RemoteCommand):
             id, "cmd_setServoSpeed",
             "set servos actual speed"
         )
-        self._ttl_index = 0
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("speed", "servo speed"))
 

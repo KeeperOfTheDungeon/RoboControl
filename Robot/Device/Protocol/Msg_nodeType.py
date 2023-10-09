@@ -12,7 +12,6 @@ class Msg_nodeType(RemoteMessage):
 
     def __init__(self, id: int = DeviceProtocol.MSG_PING_RESPONSE):
         super().__init__(id, "nodeType", "type of a node")
-        self._ttl_index = 0
         self._parameter_list.append(RemoteParameterUint8("type", "type of a node"))
 
     @staticmethod

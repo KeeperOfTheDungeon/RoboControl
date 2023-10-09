@@ -12,7 +12,6 @@ class Cmd_servoOn(RemoteCommand):
 
     def __init__(self, id: int = LegControllerProtocol.CMD_SERVO_ON):
         super().__init__(id, "cmd_servoOn", "switch servo on")
-        self._ttl_index = 0
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
 
     def set_index(self, index) -> None:

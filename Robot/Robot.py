@@ -7,15 +7,13 @@ from RoboControl.Robot.Device.Generic.DataHub.DataHub import DataHub
 # from RoboView.Robot.Viewer.RobotSettings import RobotSettings
 
 
-"""
-An instance of this class represents a robot. It contains all robot devices
-and provides connection for data transfer between this python robot representation and real robot.
-    
-@author Oktavian Gniot
-"""
-
-
 class Robot(AbstractRobot):
+    """
+    An instance of this class represents a robot. It contains all robot devices
+    and provides connection for data transfer between this python robot representation and real robot.
+
+    @author Oktavian Gniot
+    """
 
     def __init__(self, name: str):
         super().__init__()

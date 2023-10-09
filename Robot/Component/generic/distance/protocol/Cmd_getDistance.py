@@ -3,22 +3,19 @@ from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParamete
 
 INDEX_SENSOR = 0
 
+
 class Cmd_getDistance(RemoteCommand):
-	
-	def __init__(self, id):
-		super().__init__(id,"Cmd_getDistance","get measured distance from a distance sensor")
-		self._ttl_index = 0
-		self._parameter_list.append(RemoteParameterUint8("index","sensor index"))
+    _parameter_list: list[RemoteParameterUint8]
 
+    def __init__(self, id: int):
+        super().__init__(id, "Cmd_getDistance", "get measured distance from a distance sensor")
+        self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
 
+    def set_index(self, index: int) -> None:
+        self._parameter_list[INDEX_SENSOR].set_value(index)
 
-	def set_index(self, index):
-		self._parameter_list[INDEX_SENSOR].set_value(index)
-
-
-
-	def get_command(id, local_id):
-		cmd = Cmd_getDistance(id)
-		cmd.set_index(local_id)
-
-		return (cmd)
+    @staticmethod
+    def get_command(id: int, local_id: int) -> "Cmd_getDistance":
+        cmd = Cmd_getDistance(id)
+        cmd.set_index(local_id)
+        return cmd

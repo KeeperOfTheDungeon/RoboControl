@@ -17,7 +17,6 @@ class Cmd_setServoPosition(RemoteCommand):
             id, "cmd_setServoPosition",
             "set servo position, if received, servo try to reach this position at full speed"
         )
-        self._ttl_index = 0
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("position", "servo position"))
 

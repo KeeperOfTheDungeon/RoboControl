@@ -7,7 +7,7 @@ from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoFlags import RemoteParameterServoFlags
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus
-# from RoboControl.Robot.Component.generic.luxSensor.protocol.RemoteParameterLuxValue import RemoteParameterLuxValue
+
 
 INDEX_SENSOR = 0
 INDEX_MIN_RANGE = 1
@@ -17,18 +17,16 @@ INDEX_SCALE = 4
 INDEX_FLAGS = 5
 
 
-
 class Msg_servoSettings(RemoteMessage):
     _parameter_list: List[
-            Union[RemoteParameterUint8, RemoteParameterUint16, RemoteParameterServoPosition,
-            RemoteParameterServoFlags,
+        Union[
+            RemoteParameterUint8, RemoteParameterUint16,
+            RemoteParameterServoPosition, RemoteParameterServoFlags,
         ]
     ]  # RemoteParameterServoStatus
 
     def __init__(self, id: int = LegControllerProtocol.MSG_SERVO_SETTINGS):
         super().__init__(id, "servoSettings", "actual servo settings")
-        # self._servo_index = 0
-        # self._servo_position = 0
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("min range", "servo min range"))
         self._parameter_list.append(RemoteParameterServoPosition("max range", "servo max range"))

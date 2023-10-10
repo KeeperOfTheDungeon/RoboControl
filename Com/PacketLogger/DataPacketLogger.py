@@ -1,3 +1,4 @@
+import threading
 from typing import List, Optional
 
 from RoboControl.Com.Connection import Connection
@@ -30,6 +31,7 @@ class DataPacketLogger(TableModel):
             self.add_column(column)
         self.max_size = self.DEFAULT_MAX_SIZE
         self._cursor = 0
+        self._cursor_lock = threading.Lock()
 
         self.all_filters = DataPacketFilter.get_example_filters()
         self.filter: Optional[DataPacketFilter] = self.all_filters[0]
@@ -53,8 +55,9 @@ class DataPacketLogger(TableModel):
         self.on_change()
 
     def _add_packet(self, data_packet: RemoteDataPacket, data_packet_type: LoggedDataPacketType) -> Optional[Row]:
-        packet = LoggedDataPacket(data_packet, data_packet_type, self._cursor)
-        self._cursor += 1
+        with self._cursor_lock:
+            packet = LoggedDataPacket(data_packet, data_packet_type, self._cursor)
+            self._cursor += 1
         if self.filter and self.filter.name != DataPacketFilter.ALLOW_ALL:
             if not self.filter.check(packet):
                 return None

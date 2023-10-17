@@ -4,10 +4,10 @@ from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
 
 class Cmd_getNextError(RemoteCommand):
-	
-	def __init__(self, id: int = DeviceProtocol.CMD_GET_NEXT_ERROR):
-		super().__init__(id, "getNextError", "get next error from error queue")
 
-	@staticmethod
-	def get_command():
-		return Cmd_getNextError()
+    def __init__(self, id: int = DeviceProtocol.CMD_GET_NEXT_ERROR):
+        super().__init__(id, "getNextError", "get next error from error queue")
+
+    @staticmethod
+    def get_command():
+        return Cmd_getNextError()

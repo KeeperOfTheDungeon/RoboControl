@@ -117,13 +117,36 @@ class ConnectionListener(abc.ABC):
 
 
 class CurrentSensorChangeNotifier(abc.ABC):
+    # public interface CurrentSensorChangeNotifier extends ComponentChangeNotifier
     def current_value_changed(self, current: "CurrentSensor") -> None:
         pass
 
 
 class CurrentSensorSetupChangeNotifier(abc.ABC):
+    # CurrentSensorSetupChangeNotifier extends ComponentSettingsChangeNotifier
     def current_threshold_changed(self, current: "CurrentSensor") -> None:
         pass
 
     def current_window_size_changed(self, current: "CurrentSensor") -> None:
+        pass
+
+
+class DistanceChangeNotifier(abc.ABC):
+    # public interface DistanceChangeNotifier extends ComponentChangeNotifier
+
+    def distance_changed(self, sensor: "DistanceSensor") -> None:
+        pass
+
+
+class LuxChangeNotifier(abc.ABC):
+    # public interface LuxChangeNotifier extends AnalogDetectorChangeNotifier
+
+    def lux_value_changed(self, sensor: "LuxSensor") -> None:
+        pass
+
+
+class Vcnl4000DistanceSensorSettingsChangeNotifier(abc.ABC):
+    # public interface Vcnl4000DistanceSensorSettingsChangeNotifier extends ComponentSettingsChangeNotifier
+
+    def distance_table_changed(self, sensor: "Vcnl4000DistanceSensor") -> None:
         pass

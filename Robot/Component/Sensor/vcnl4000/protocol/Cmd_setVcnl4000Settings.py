@@ -1,7 +1,7 @@
 from typing import Union
 
 from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000AveragingModes import Vcnl4000AveragingModes
 from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000FrequencyModes import Vcnl4000FrequencyModes
 from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000IrCurrent import Vcnl4000IrCurrent
@@ -12,11 +12,13 @@ INDEX_SENSOR = 0
 INDEX_PARAMETERS = 1
 
 
-class Msg_vcnl4000Settings(RemoteMessage):
+class Cmd_setVcnl4000Settings(RemoteCommand):
     _parameter_list: list[Union[RemoteParameterUint8, RemoteParameterVcnl4000Settings]]
 
     def __init__(self, id: int):
-        super().__init__(id, "vcnl4000Settings", "settings for a Vcnl4000 Sensor")
+        # name = "setMpu9150Settings" # description = "set settings for a mpu9150Sensor"
+        super().__init__(id, "setVcnl4000Settings", "set settings for a Vcnl4000 Sensor")
+        # RemoteParameterUint8("index","mpu9150 sensor index")
         self._parameter_list.append(RemoteParameterUint8("index", "VCNL4000 sensor index"))
         self._parameter_list.append(RemoteParameterVcnl4000Settings())
 
@@ -29,8 +31,8 @@ class Msg_vcnl4000Settings(RemoteMessage):
             proximity_frequency: Vcnl4000FrequencyModes = None,
             auto_conversion: bool = None,
             auto_compensation: bool = None,
-    ) -> "Msg_vcnl4000Settings":
-        cmd = Msg_vcnl4000Settings(id)
+    ) -> "Cmd_setVcnl4000Settings":
+        cmd = Cmd_setVcnl4000Settings(id)
         if None not in [ir_current, averaging_mode, proximity_frequency, auto_conversion, auto_compensation]:
             cmd.set_data(index, ir_current, averaging_mode, proximity_frequency, auto_conversion, auto_compensation)
         return cmd
@@ -50,21 +52,6 @@ class Msg_vcnl4000Settings(RemoteMessage):
         self._parameter_list[INDEX_PARAMETERS].set_proximity_frequency(proximity_frequency)
         self._parameter_list[INDEX_PARAMETERS].set_auto_conversion(auto_conversion)
         self._parameter_list[INDEX_PARAMETERS].set_auto_compensation(auto_compensation)
-
-    def get_ir_current(self) -> Vcnl4000IrCurrent:
-        return self._parameter_list[INDEX_PARAMETERS].get_ir_current()
-
-    def get_averaging_mode(self) -> Vcnl4000AveragingModes:
-        return self._parameter_list[INDEX_PARAMETERS].get_averaging_mode()
-
-    def get_proximity_frequency(self) -> Vcnl4000FrequencyModes:
-        return self._parameter_list[INDEX_PARAMETERS].get_proximity_frequency()
-
-    def get_auto_conversion(self) -> bool:
-        return self._parameter_list[INDEX_PARAMETERS].get_auto_conversion()
-
-    def get_auto_compensation(self) -> bool:
-        return self._parameter_list[INDEX_PARAMETERS].get_auto_compensation()
 
     def get_index(self) -> int:
         return self._parameter_list[INDEX_SENSOR].get_value()

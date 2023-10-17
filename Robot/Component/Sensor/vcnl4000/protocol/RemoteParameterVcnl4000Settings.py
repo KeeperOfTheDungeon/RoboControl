@@ -1,4 +1,7 @@
 from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000AveragingModes import Vcnl4000AveragingModes
+from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000FrequencyModes import Vcnl4000FrequencyModes
+from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000IrCurrent import Vcnl4000IrCurrent
 
 BYTE_SIZE = 2
 
@@ -16,31 +19,31 @@ AUTO_OFFSET_INDEX = 12
 
 
 class RemoteParameterVcnl4000Settings(RemoteParameter):
-    _ir_current: "Vcnl4000IrCurrent"
-    _averaging_mode: "Vcnl4000AveragingModes"
-    _proximity_frequency: "Vcnl4000FrequencyModes"
+    _ir_current: Vcnl4000IrCurrent
+    _averaging_mode: Vcnl4000AveragingModes
+    _proximity_frequency: Vcnl4000FrequencyModes
     _auto_conversion: bool
     _auto_compensation: bool
 
     def __init__(self):
         super().__init__("Vcnl4000 parameters", "Vcnl4000 parameters", BYTE_SIZE)
 
-    def get_ir_current(self) -> "Vcnl4000IrCurrent":
+    def get_ir_current(self) -> Vcnl4000IrCurrent:
         return self._ir_current
 
-    def set_ir_current(self, ir_current: "Vcnl4000IrCurrent"):
+    def set_ir_current(self, ir_current: Vcnl4000IrCurrent):
         self._ir_current = ir_current
 
-    def get_averaging_mode(self) -> "Vcnl4000AveragingModes":
+    def get_averaging_mode(self) -> Vcnl4000AveragingModes:
         return self._averaging_mode
 
-    def set_averaging_mode(self, averaging_mode: "Vcnl4000AveragingModes"):
+    def set_averaging_mode(self, averaging_mode: Vcnl4000AveragingModes):
         self._averaging_mode = averaging_mode
 
-    def get_proximity_frequency(self) -> "Vcnl4000FrequencyModes":
+    def get_proximity_frequency(self) -> Vcnl4000FrequencyModes:
         return self._proximity_frequency
 
-    def set_proximity_frequency(self, proximity_frequency: "Vcnl4000FrequencyModes"):
+    def set_proximity_frequency(self, proximity_frequency: Vcnl4000FrequencyModes):
         self._proximity_frequency = proximity_frequency
 
     def get_auto_conversion(self) -> bool:

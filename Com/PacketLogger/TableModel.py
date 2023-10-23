@@ -106,7 +106,7 @@ class Row:
         return str([str(cell.value) for cell in self.cells.values()])
 
     def get_id(self) -> str:
-        return str(self.get_cell(column_name=self.ID_COLUMN))
+        return str(self.get_cell(column_name=self.ID_COLUMN)) or str(datetime.datetime.utcnow().timestamp())
 
 
 class Cell:

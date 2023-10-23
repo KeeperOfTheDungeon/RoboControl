@@ -234,8 +234,12 @@ class Servo(Actor):
         if self.component_protocol is None:
             return None
         cmd_id = self.component_protocol[protocol_key]
-        return protocol_class.get_command(cmd_id, 1 << self._local_id,
-                                          *args)  # TODO this is different from the java source?
+        return protocol_class.get_command(
+            cmd_id,
+            # 1 << self._local_id,  # FIXME this is different from the java source?
+            self._local_id,
+            *args
+        )
 
     def remote_servo_on(self) -> bool:
         cmd = self._get_command(Cmd_servoOn, "cmd_servoOn")

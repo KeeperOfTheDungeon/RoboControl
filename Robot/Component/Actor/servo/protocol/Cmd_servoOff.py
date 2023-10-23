@@ -23,5 +23,5 @@ class Cmd_servoOff(RemoteCommand):
     @staticmethod
     def get_command(id: int, local_id) -> "Cmd_servoOff":
         cmd = Cmd_servoOff(id)
-        cmd.set_index(local_id)
+        cmd.set_index(1 << local_id)
         return cmd

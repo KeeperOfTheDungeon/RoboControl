@@ -120,37 +120,17 @@ class RemoteParameterServoStatus(RemoteParameter):
 
         return buffer
 
-
-"""
-
-
-@Override
-public String getAsString(boolean description)
-{
-    String returnString ="";
-    
-    if (description)
-    {
-        returnString+= RemoteParameterServoStatus.name+" ";
-        
-        returnString+= "on="+ this.on;
-        returnString+= ", reverse="+this.reverse;
-        returnString+= ", active="+this.active;
-        returnString+= ", isAtMin="+this.isAtMin;
-        returnString+= ", isAtMax="+this.isAtMax;
-        returnString+= ", stalling="+this.stalling;
-        
-    }
-    else
-    {
-        returnString+= this.on+", ";
-        returnString+= this.reverse;
-        
-    }
-        
-    return(returnString);
-}
-
-
-}
-"""
+    def get_as_string(self, description: bool) -> str:
+        infos = []
+        if description:
+            infos.append(self._name)
+            infos.append(f"on={self.is_on()}")
+            infos.append(f"reverse={self.is_reverse()}")
+            infos.append(f"active={self.is_active()}")
+            infos.append(f"isAtMin={self.is_at_min()}")
+            infos.append(f"isAtMax={self.is_at_max()}")
+            infos.append(f"stalling={self.is_stalling()}")
+        else:
+            infos.append(f"{self.is_on()}")
+            infos.append(f"{self.is_reverse()}")
+        return ", ".join(infos)

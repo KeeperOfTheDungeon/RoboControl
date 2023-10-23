@@ -7,7 +7,7 @@ from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 
 
 # TODO
-class ChangeListener(abc.ABC):
+class ChangeListener(abc.ABC):  # ChangeListener = ActionListener??
     def on_change(self):
         raise ValueError("WIP AbstractListener.on_change should be overridden")
 
@@ -37,7 +37,7 @@ class ServoSensorListener(SensorListener):
         pass
 
 
-class ServoSetupListener(SetupListener, ServoSensorListener):
+class ServoSetupListener(SetupListener, ServoSensorListener):  # ServoSetupChangeNotifier
     def servo_setup_changed(self, servo: "Servo") -> None:
         pass
 
@@ -48,7 +48,7 @@ class ServoSetupListener(SetupListener, ServoSensorListener):
         pass
 
 
-class ServoDataListener(ServoSensorListener):
+class ServoDataListener(ServoSensorListener):  # ServoChangeNotifier
     def position_feedback_on(self, servo: "Servo") -> None:
         pass
 

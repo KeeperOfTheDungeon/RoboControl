@@ -98,3 +98,304 @@ class RobotComponent(AbstractComponent):
 
     def add_sensor_listener(self, listener):
         self._sensor_listener.append(listener)
+
+
+"""
+package de.hska.lat.robot.component;
+
+import java.util.ArrayList;
+
+import de.hska.lat.robot.abstractRobot.component.AbstractRobotComponent;
+import de.hska.lat.robot.component.protocol.Cmd_getComponentSettings;
+import de.hska.lat.robot.component.protocol.Cmd_loadComponentDefaults;
+import de.hska.lat.robot.component.protocol.Cmd_saveComponentDefaults;
+import de.hska.lat.robot.device.device.remoteProcessor.RemoteDecoder;
+import de.hska.lat.comm.remote.RemoteCommand;
+import de.hska.lat.comm.remote.RemoteData;
+import de.hska.lat.comm.remote.RemoteException;
+import de.hska.lat.comm.remote.RemoteMessage;
+import de.hska.lat.comm.remote.RemoteStream;
+
+
+
+/**
+ * 
+ * @author Oktavian Gniot
+ *
+ * @param <I>
+ */
+
+public abstract class RobotComponent<I extends ComponentChangeNotifier,S extends ComponentSettingsChangeNotifier, P extends ComponentProtocol> 
+						extends AbstractRobotComponent implements  RemoteDecoder
+						{
+
+
+		
+
+	
+	
+
+	protected ArrayList <I> sensorListener = new ArrayList <I> ();
+	protected ArrayList <S> setupListener = new ArrayList <S> ();
+
+
+	
+	// remove make components independend from device
+
+	
+	
+	
+	protected int localId;
+	
+	/**
+	 * robot   
+	 */
+
+	protected int deviceAddres;
+	
+	protected P componentProtocol;
+	
+	
+protected void notifySetupChanged()
+{
+	for (S  listener : this.setupListener)
+	{
+		listener.settingsChanged(this);
+	}
+}
+	
+public 	RobotComponent(ComponentMetaData metaData, P protocol )
+{
+	super(metaData);
+	this.localId=metaData.getLocalId();
+	this.deviceAddres = metaData.getDeviceId();
+	
+	this.componentProtocol = protocol;
+}
+	
+
+
+
+
+/**
+ * add given sensor listener to components context
+ *  
+ * @param sensorListener sensor listener
+ */
+
+public void addSensorListener(I sensorListener)
+{
+	this.sensorListener.add(sensorListener);	
+}
+
+/**
+ * remove given Sensor listener from components context 
+ * 
+ * @param sensorListener sensor listener to be removed
+ */
+
+public void removeSensorListener(I sensorListener)
+{
+	this.sensorListener.remove(sensorListener);
+}
+
+
+
+/**
+ * add given setup listener to components context
+ *  
+ * @param sensorListener setup listener
+ */
+
+public void addSetupListener(S setupListener)
+{
+	this.setupListener.add(setupListener);	
+}
+
+/**
+ * remove given setup listener from components context 
+ * 
+ * @param setupListener sensor listener to be removed
+ */
+
+public void removeSetupListener(S setupListener)
+{
+	this.setupListener.remove(setupListener);
+}
+
+
+
+
+/**
+ * 
+ * gets component local id i.e. index in component set messages
+ * 
+ * @return local component id
+ */
+
+public int getLocalId()
+{
+	return(this.localId);
+}
+
+
+
+/**
+ * gets address of device that contains this component
+ * @return device address
+ */
+public int getDeviceAddres()
+{
+	return(this.deviceAddres);
+}
+
+
+/**
+ * called when connestion to remote robot succed
+ */
+public void onConnected()
+{
+}
+
+/**
+ * called whwn diconesting form a remote robot
+ */
+
+public void onDisconnected()
+{
+	
+}
+
+/**
+ * get values of this component. Some components may be composed of more then one value  
+ * @return all values of this component
+ */
+
+/*
+public ArrayList<ComponentValue<?>> getValues()
+{
+	
+	ArrayList<ComponentValue<?>> values = new ArrayList<ComponentValue<?>>();
+
+			
+	return (values);
+}
+*/
+
+/**
+ * 
+ * @param data
+ * @return
+ */
+
+protected boolean sendData(RemoteData data)
+{
+	data.setDestination(this.deviceAddres);
+	
+	if (this.transmitter == null)
+		return(false);
+	
+	return (this.transmitter.transmitt(data));
+}
+
+
+
+/**
+ * send save default command to remote counterpart
+ * @return true if command could be send, false if not
+ */
+
+public boolean remote_saveDefaults()
+{
+	if (this.componentProtocol == null)
+		return(false);
+	
+	
+	return(sendData(Cmd_saveComponentDefaults.getCommand(this.componentProtocol.cmdSaveDefaultsId,this.localId)));
+}
+
+
+
+/**
+ * send load default command to remote counterpart
+ * @return true if command could be send, false if not
+ */
+
+public boolean remote_loadDefaults()
+{
+	
+	if (this.componentProtocol == null)
+		return(false);
+	
+	return(sendData(Cmd_loadComponentDefaults.getCommand(this.componentProtocol.cmdLoadDefaultsId,this.localId)));
+}
+
+
+/**
+ * send get setting command to remote counterpart
+ * @return true if command could be send, false if not
+ */
+
+public boolean remote_getSettings()
+{
+	if (this.componentProtocol == null)
+		return(false);
+	
+	
+	return(sendData(Cmd_getComponentSettings.getCommand(this.componentProtocol.cmdGetSettingsId,this.localId)));
+}
+
+
+
+
+
+/**
+ * get actual value(s) from real component. 
+ * @return
+ *//*
+public boolean actualizeNow()
+{
+	return(false);
+}
+*/
+
+@Override
+public boolean decodeStream(RemoteStream remoteStreamData)
+{
+	return(false);
+}
+
+
+@Override
+public boolean decode(RemoteData remoteData)
+{
+	return false;
+}
+
+
+@Override
+public boolean decodeCommand(RemoteCommand remoteData)
+{
+	return false;
+}
+
+
+@Override
+public boolean decodeMessage(RemoteMessage remoteData)
+{
+	return false;
+}
+
+@Override
+public boolean decodeException(RemoteException remoteData)
+{
+	return false;
+}
+
+
+
+
+
+}
+
+"""

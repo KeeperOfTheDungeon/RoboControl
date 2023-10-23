@@ -59,7 +59,7 @@ class RemotePacketHandler:
             return self._stream_processor_list.find_on_id(remote_id)
         elif isinstance(data_packet, RemoteExceptionDataPacket):
             return self._exception_processor_list.find_on_id(remote_id)
-        print("unsuported data packet type")
+        print("unsuported data packet type", data_packet)
         return None
 
     def parse_data_packet(self, data_packet: RemoteDataPacket) -> Optional[RemoteData]:

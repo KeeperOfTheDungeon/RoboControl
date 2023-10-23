@@ -8,8 +8,7 @@ class Cmd_getActorValue(RemoteCommand):
     _parameter_list: List[RemoteParameterUint8]
     _index = 0
 
-    def __init__(self, id: int = 0x0):
-        # WIP what is the default id for ACTOR_VALUE?
+    def __init__(self, id: int):
         super().__init__(id, "getActorValue", "get actors value")
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
 

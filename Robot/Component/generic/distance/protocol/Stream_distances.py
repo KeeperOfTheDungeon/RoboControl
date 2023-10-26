@@ -1,4 +1,4 @@
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint24 import RemoteParameterUint24
+from RoboControl.Com.RemoteParameter import RemoteParameterUint24
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 
 

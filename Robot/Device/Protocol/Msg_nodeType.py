@@ -1,7 +1,7 @@
 from typing import List
 
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Robot.Device.Protocol import DeviceProtocol
 
 NODE_TYPE = 0

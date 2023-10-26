@@ -1,6 +1,6 @@
 from typing import Union
 
-from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Com.RemoteParameter import RemoteParameter
 
 FLAG_REVERSE = 0
 FLAG_ON = 1

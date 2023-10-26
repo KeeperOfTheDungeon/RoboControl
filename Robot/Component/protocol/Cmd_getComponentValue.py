@@ -1,5 +1,6 @@
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+
 
  
 class Cmd_getComponentValue(RemoteCommand):

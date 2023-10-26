@@ -2,7 +2,7 @@ from typing import List
 
 from Devices.LegSensors import LegSensorsProtocol
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 
 LED_INDEX = 0
 BRIGHTNESS_INDEX = 1

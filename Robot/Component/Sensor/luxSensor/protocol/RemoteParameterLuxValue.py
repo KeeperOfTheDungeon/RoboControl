@@ -1,4 +1,4 @@
-from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Com.RemoteParameter import RemoteParameter
 
 BYTE_SIZE = 3
 

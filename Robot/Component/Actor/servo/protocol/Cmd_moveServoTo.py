@@ -2,7 +2,7 @@ from typing import List, Union
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
 
 INDEX_SERVO = 0

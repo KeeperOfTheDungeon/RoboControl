@@ -1,7 +1,7 @@
 from typing import Union, List
 
 from Devices.LegController import LegControllerProtocol
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
 

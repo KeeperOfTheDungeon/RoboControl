@@ -1,4 +1,4 @@
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
 
 INDEX_SENSOR = 0

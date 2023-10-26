@@ -1,4 +1,4 @@
-from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Com.RemoteParameter import RemoteParameter
 from RoboControl.Robot.Math.Radiant import Radiant
 
 BYTE_SIZE = 2

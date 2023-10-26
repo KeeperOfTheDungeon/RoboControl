@@ -1,8 +1,8 @@
 from typing import Union
 
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint16 import RemoteParameterUint16
+from RoboControl.Com.RemoteParameter import RemoteParameterUint16
 from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 
 INDEX_SERVO = 0
 INDEX_SPEED = 1

@@ -1,7 +1,7 @@
 from typing import List, Union
 
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint32 import RemoteParameterUint32
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint32
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 
 INDEX_TRANSMITTED_MESSAGES = 0

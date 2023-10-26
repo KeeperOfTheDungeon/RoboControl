@@ -1,4 +1,4 @@
-from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Com.RemoteParameter import RemoteParameter
 
 FLAG_IS_ON = 0
 FLAG_IS_ACTIVE = 1

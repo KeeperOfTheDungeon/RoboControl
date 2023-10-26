@@ -1,6 +1,6 @@
 import logging
 
-from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Com import RemoteParameter
 from RoboControl.Com.Remote.RemoteData import RemoteData
 from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket

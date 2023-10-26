@@ -1,6 +1,6 @@
 from typing import List
 
-from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Com.RemoteParameter import RemoteParameter
 
 from logger import getLogger
 

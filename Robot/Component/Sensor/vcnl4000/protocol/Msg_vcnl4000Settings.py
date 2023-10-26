@@ -1,6 +1,6 @@
 from typing import Union
 
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
 from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000AveragingModes import Vcnl4000AveragingModes
 from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000FrequencyModes import Vcnl4000FrequencyModes

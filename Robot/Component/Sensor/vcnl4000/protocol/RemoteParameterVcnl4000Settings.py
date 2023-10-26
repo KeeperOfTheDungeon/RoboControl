@@ -1,4 +1,4 @@
-from RoboControl.Com.Remote.Parameter.RemoteParameter import RemoteParameter
+from RoboControl.Com.RemoteParameter import RemoteParameter
 from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000AveragingModes import Vcnl4000AveragingModes
 from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000FrequencyModes import Vcnl4000FrequencyModes
 from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000IrCurrent import Vcnl4000IrCurrent

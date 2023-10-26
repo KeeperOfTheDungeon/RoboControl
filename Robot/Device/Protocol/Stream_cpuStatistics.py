@@ -1,6 +1,6 @@
 from typing import List
 
-from RoboControl.Com.Remote.Parameter.RemoteParameterUint8 import RemoteParameterUint8
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Com.Remote.RemoteStream import RemoteStream
 
 INDEX_MIN_CPU_LOAD = 0

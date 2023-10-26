@@ -4,7 +4,7 @@ from time import sleep
 from serial import Serial
 
 from RoboControl.Com.ComStatistic import ComStatistic
-from RoboControl.Com.RemoteDataInput import RemoteDataInput
+from RoboControl.Com.Connection import RemoteDataInput
 from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii
 
 from logger import getLogger

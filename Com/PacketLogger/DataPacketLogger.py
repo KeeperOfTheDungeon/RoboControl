@@ -1,7 +1,7 @@
 import threading
 from typing import List, Optional
 
-from RoboControl.Com.Connection import Connection
+from RoboControl.Com import Connection
 from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacket, DisplayFormat_e, DisplayDataWidth_e, \
     LoggedDataPacketType
 from RoboControl.Com.PacketLogger.filter.DataPacketFilter import DataPacketFilter

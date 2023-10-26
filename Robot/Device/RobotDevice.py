@@ -1,7 +1,7 @@
 from typing import List
 
 from RoboControl.Com.RemoteData import RemoteData, RemoteMessage, RemoteStream
-from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
+from RoboControl.Com.Connection import RemoteDataOutput
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
 from RoboControl.Robot.AbstractRobot.Config.ComponentConfig import ComponentConfig
 from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig

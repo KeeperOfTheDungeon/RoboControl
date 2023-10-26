@@ -1,4 +1,4 @@
-from RoboControl.Com.Connection.Connection import Connection
+from RoboControl.Com.Connection import Connection
 from RoboControl.Robot.AbstractRobot.AbstractRobot import AbstractRobot
 from RoboControl.Robot.Device.Generic.DataHub.DataHub import DataHub
 

@@ -1,9 +1,10 @@
 # import copy
 from typing import Optional
 
+
 from RoboControl.Com.RemoteData import RemoteData
 from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
-from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
+
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
 from RoboControl.Robot.AbstractRobot.RemotePacketHandler import RemotePacketHandler
@@ -19,7 +20,7 @@ from RoboControl.Robot.Value.ComponentValue import ComponentValue
 class AbstractRobotDevice():
     _name = "AbstractRobotDevice"
     _type_name = "?"
-    _transmitter: RemoteDataOutput  # RemoteDataTransmitter
+    _transmitter = None  # RemoteDataTransmitter
 
     def __init__(self, component_config: DeviceConfig):
         AbstractComponent.__init__(self, {
@@ -41,7 +42,7 @@ class AbstractRobotDevice():
 
 
 
-    def set_transmitter(self, transmitter: RemoteDataOutput) -> None:
+    def set_transmitter(self, transmitter):
         self._transmitter = transmitter
         for component in self._component_list:
             if component is not None:

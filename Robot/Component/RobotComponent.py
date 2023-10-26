@@ -1,19 +1,18 @@
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
-from RoboControl.Robot.AbstractRobot.AbstractListener import SetupListener, ValueListener, SensorListener
-from RoboControl.Robot.Component.protocol.Cmd_getComponentSettings import Cmd_getComponentSettings
-from RoboControl.Robot.Component.protocol.Cmd_getComponentValue import Cmd_getComponentValue
-from RoboControl.Robot.Component.protocol.Cmd_loadComponentDefaults import Cmd_loadComponentDefaults
-from RoboControl.Robot.Component.protocol.Cmd_saveComponentDefaults import Cmd_saveComponentDefaults
+from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_getComponentSettings
+from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_getComponentValue
+from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_loadComponentDefaults
+from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_saveComponentDefaults
 
 
 class RobotComponent(AbstractComponent):
 
     def __init__(self, meta_data):
         super().__init__(meta_data)
-        self._setup_listener: list[SetupListener] = list()
-        self._value_listener: list[ValueListener] = list()
+        self._setup_listener  = list()
+        self._value_listener = list()
         # TODO why here?
-        self._sensor_listener: list[SensorListener] = list()
+        self._sensor_listener = list()
         self._local_id = meta_data["local_id"]
         self._device_address = meta_data["protocol"]["device_id"]
 
@@ -77,16 +76,16 @@ class RobotComponent(AbstractComponent):
         for listener in self._setup_listener:
             listener.settings_changed(self)
 
-    def add_setup_listener(self, listener: SetupListener) -> None:
+    def add_setup_listener(self, listener) -> None:
         self._setup_listener.append(listener)
 
-    def remove_setup_listener(self, listener: SetupListener) -> None:
+    def remove_setup_listener(self, listener) -> None:
         self._setup_listener.remove(listener)
 
-    def add_value_listener(self, listener: ValueListener) -> None:
+    def add_value_listener(self, listener) -> None:
         self._value_listener.append(listener)
 
-    def remove_value_listener(self, listener: ValueListener) -> None:
+    def remove_value_listener(self, listener) -> None:
         self._value_listener.remove(listener)
 
     def notify_value_changed(self) -> None:

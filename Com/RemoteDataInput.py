@@ -1,10 +1,10 @@
+from RoboControl.Com import RemoteDataPacket
 from RoboControl.Com.ComStatistic import ComStatistic
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
-from RoboControl.Robot.AbstractRobot.AbstractListener import DataPacketReceiver
+
 
 
 class RemoteDataInput:
-    _listener_list: list[DataPacketReceiver] = list()
+    _listener_list  = list()
 
     def __init__(self, statistic: ComStatistic):
         self.statistic = statistic
@@ -14,7 +14,7 @@ class RemoteDataInput:
     def run(self) -> None:
         pass
 
-    def add_listener(self, listener: DataPacketReceiver) -> None:
+    def add_listener(self, listener) -> None:
         """
         "ad a listener to the distribution list so this listener will become every incoming data packets received thru this input"
         :param listener:
@@ -23,7 +23,7 @@ class RemoteDataInput:
         # print(" RDI : add_listener", self._listener_list)
         self._listener_list.append(listener)
 
-    def remove_listener(self, listener: DataPacketReceiver) -> None:
+    def remove_listener(self, listener) -> None:
         """
         remove a listener from the distribution list, so this listener will not become any mor packets
         :param listener: to be removed from distribution list

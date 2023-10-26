@@ -1,12 +1,11 @@
 from typing import List
 
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.RemoteData import RemoteMessage
 from RoboControl.Robot.Component.text.TextSet import TextSet
 from RoboControl.Robot.Component.text.protocol.Msg_textFragment import Msg_textFragment
 from RoboControl.Robot.Device.Generic.DataHub.DataHubAquisator import DataHubAquisator
 from RoboControl.Robot.Device.Generic.DataHub.DataHubProtocol import DataHubProtocol, MSG_TEXT_FRAGMENT
-from RoboControl.Robot.Device.Protocol.DeviceProtocol import DeviceProtocol
-from RoboControl.Robot.Device.Protocol.Msg_pingResponse import Msg_pingResponse
+from RoboControl.Robot.Device.DeviceProtocol import DeviceProtocol, Msg_pingResponse
 from RoboControl.Robot.Device.RobotDevice import RobotDevice
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 

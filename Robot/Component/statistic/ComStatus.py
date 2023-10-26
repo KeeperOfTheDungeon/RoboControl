@@ -1,9 +1,8 @@
-from RoboControl.Robot.AbstractRobot.AbstractListener import ComStatusListener
 from RoboControl.Robot.Component.statistic.DeviceStatus import DeviceStatus
 
 
 class ComStatus(DeviceStatus):
-    _status_listener: list[ComStatusListener]
+    _status_listener = list()
 
     def __init__(self):
         super().__init__()

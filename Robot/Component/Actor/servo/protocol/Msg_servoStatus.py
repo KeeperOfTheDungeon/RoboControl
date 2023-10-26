@@ -3,7 +3,7 @@ from typing import Union, List
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Com.RemoteParameter import RemoteParameterUint16
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.RemoteData import RemoteMessage
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus
 # from RoboControl.Robot.Component.generic.luxSensor.protocol.RemoteParameterLuxValue import RemoteParameterLuxValue

@@ -5,7 +5,7 @@ from RoboControl.Com.PacketLogger.filter.DataPacketFilterRule import DataPacketF
 from RoboControl.Com.PacketLogger.filter.FilterRuleDataPacketType import FilterRuleDataPacketType
 from RoboControl.Com.PacketLogger.filter.FilterRuleDevice import FilterRuleSource, FilterRuleDestination
 from RoboControl.Com.PacketLogger.filter.FilterRuleDirection import FilterRuleDirection
-from RoboControl.Com.Remote.RemoteDataPacket import DataPacketType
+from RoboControl.Com.RemoteDataPacket import DataPacketType
 
 
 class DataPacketFilter:

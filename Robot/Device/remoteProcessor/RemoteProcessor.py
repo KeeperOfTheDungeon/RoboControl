@@ -1,7 +1,4 @@
-from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.RemoteException import RemoteException
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteCommand, RemoteMessage, RemoteStream, RemoteException
 
 # WIP check if this merged right
 

@@ -1,12 +1,11 @@
-from RoboControl.Robot.AbstractRobot.AbstractListener import LuxSensorListener
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
-from RoboControl.Robot.Component.Sensor.luxSensor.protocol.Cmd_getLux import Cmd_getLux
+from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensorProtocol import Cmd_getLux
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboControl.Robot.Value.lux.LuxValue import LuxValue
 
 
 class LuxSensor(Sensor):
-    _sensor_listener: list[LuxSensorListener]
+    _sensor_listener = list()
 
     def __init__(self, meta_data):
         super().__init__(meta_data)

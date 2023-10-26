@@ -2,7 +2,7 @@ from typing import Union
 
 from RoboControl.Com.RemoteParameter import RemoteParameterUint24
 from RoboControl.Com.RemoteParameter import RemoteParameterUint8
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.RemoteData import RemoteMessage
 
 SENSOR_INDEX = 0
 SENSOR_VALUE = 1

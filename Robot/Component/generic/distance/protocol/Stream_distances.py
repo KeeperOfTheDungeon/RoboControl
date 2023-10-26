@@ -1,5 +1,5 @@
 from RoboControl.Com.RemoteParameter import RemoteParameterUint24
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteStream
 
 
 class Stream_distances(RemoteStream):

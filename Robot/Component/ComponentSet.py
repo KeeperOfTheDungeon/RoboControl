@@ -1,7 +1,6 @@
 from typing import Optional, List, Union
 
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteMessage, RemoteStream
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 from RoboControl.Robot.Component.RobotComponent import RobotComponent

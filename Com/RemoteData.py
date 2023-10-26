@@ -1,4 +1,6 @@
 from typing import List
+from RoboControl.Com.RemoteDataPacket import RemoteCommandDataPacket, RemoteExceptionDataPacket, RemoteMessageDataPacket, RemoteNegativeAckDataPacket, RemoteStreamDataPacket
+from RoboControl.Com.RemoteDataPacket import RemotePositiveAckDataPacket
 
 from RoboControl.Com.RemoteParameter import RemoteParameter
 
@@ -112,3 +114,72 @@ class RemoteData:
     def get_parameter_list(self) -> List[RemoteParameter]:
         return self._parameter_list
 
+class RemoteCommand(RemoteData):
+    _type_name: str = "command"
+
+    def get_data_packet(self) -> RemoteCommandDataPacket:
+        data_packet = RemoteCommandDataPacket(self.get_destination_address(), self.get_source_address(), self.get_id())
+        return self.make_data_packet(data_packet)
+
+    @staticmethod
+    def get_command(*args, **kwargs):
+        raise ValueError("You are trying to create a generic RemoteCommand!")
+
+
+class RemoteMessage(RemoteData):
+    _type_name: str = "message"
+
+    def get_data_packet(self) -> RemoteMessageDataPacket:
+        data_packet = RemoteMessageDataPacket(self.get_destination_address(), self.get_source_address(), self.get_id())
+        return self.make_data_packet(data_packet)
+    
+
+class RemoteStream(RemoteData):
+    _type_name: str = "stream"
+
+    def set_data(self, *args, **kwargs):
+        raise ValueError("WIP")
+
+    def get_data_packet(self) -> RemoteStreamDataPacket:
+        packet = RemoteStreamDataPacket(self._destination_address, self._source_address, self._id)
+        return self.make_data_packet(packet)
+
+    def make_parameter(self, index: int) -> RemoteParameter:
+        raise ValueError("Not implemented: make_parameter")
+
+    def parse_data_packet_data_dynamic(self, data_packet: "RemoteDataPacket") -> None:
+        cursor, param_index = 0, 0
+        data_buffer = data_packet.get_payload()
+        while cursor <= (len(data_buffer) - 1):
+            parameter = self.make_parameter(param_index)
+            if param_index >= len(self._parameter_list):
+                logging.warning(f"Ignoring parameter {param_index} as there are only {len(self._parameter_list)}: {data_buffer}")
+            else:
+                self._parameter_list[param_index] = parameter
+            cursor += parameter.parse_from_buffer(data_buffer, cursor)
+            param_index += 1
+
+
+
+class RemoteException(RemoteData):
+    _type_name: str = "exception"
+
+    def get_data_packet(self) -> RemoteExceptionDataPacket:
+        packet = RemoteExceptionDataPacket(self._destination_address, self._source_address, self._id)
+        return self.make_data_packet(packet)
+    
+
+class RemoteNegativeAck(RemoteData):
+    _type_name: str = "fail"
+
+    def get_data_packet(self) -> RemoteNegativeAckDataPacket:
+        packet = RemoteNegativeAckDataPacket(self._destination_address, self._source_address, self._id)
+        return self.make_data_packet(packet)
+
+    
+class RemotePositiveAck(RemoteData):
+    _type_name: str = "ok"
+
+    def get_data_packet(self) -> RemotePositiveAckDataPacket:
+        packet = RemotePositiveAckDataPacket(self._destination_address, self._source_address, self._id)
+        return self.make_data_packet(packet)

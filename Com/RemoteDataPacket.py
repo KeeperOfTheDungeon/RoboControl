@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional
 
-from RoboControl.Com.Remote.RemoteData import RemoteData
+
 from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
 
 
@@ -33,9 +33,8 @@ class RemoteDataPacket:
 
         self.data: bytearray = bytearray(data_size) if data_size else bytearray()
 
-        self._remote_data: Optional["RemoteData"] = None
-        # self._reply: int = reply  # default =? 0
-        # self._data_buffer: ByteBuffer
+        self._remote_data  = None
+ 
         self._type = override_type or self._type
 
     def set_source_address(self, source_address: int):
@@ -124,10 +123,10 @@ class RemoteDataPacket:
     def get_parameters_as_string(self, description: bool) -> str:
         return self._remote_data.get_parameters_as_string(description) if self.has_remote_data() else ""
 
-    def set_remote_data(self, remote_data: RemoteData) -> None:
+    def set_remote_data(self, remote_data) -> None:
         self._remote_data = remote_data
 
-    def get_remote_data(self) -> RemoteData:
+    def get_remote_data(self):
         return self._remote_data
 
     def get_data_size(self) -> int:
@@ -159,3 +158,33 @@ class RemoteDataPacket:
 
     def get_payload(self):
         return self.get_remote_data().get_payload()
+    
+
+class RemoteCommandDataPacket(RemoteDataPacket):
+    _type_name: str = "remote command"
+    _type: DataPacketType = DataPacketType.COMMAND
+
+
+class RemoteMessageDataPacket(RemoteDataPacket):
+    _type_name: str = "remote message"
+    _type: DataPacketType = DataPacketType.MESSAGE
+
+
+class RemoteStreamDataPacket(RemoteDataPacket):
+	_type_name: str = "remote stream data"
+	_type: DataPacketType = DataPacketType.STREAM
+
+
+class RemoteExceptionDataPacket(RemoteDataPacket):
+    _type_name: str = "remote exception"
+    _type: DataPacketType = DataPacketType.EXCEPTION
+
+
+class RemotePositiveAckDataPacket(RemoteDataPacket):
+    _type_name: str = "remote ok"
+    _type: DataPacketType = DataPacketType.OK
+
+
+class RemoteNegativeAckDataPacket(RemoteDataPacket):
+    _type_name: str = "remote fail"
+    _type: DataPacketType = DataPacketType.FAIL

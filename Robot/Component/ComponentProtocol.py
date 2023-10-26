@@ -1,8 +1,6 @@
 from typing import List
 
-from RoboControl.Robot.Component.protocol.Cmd_getComponentSettings import Cmd_getComponentSettings
-from RoboControl.Robot.Component.protocol.Cmd_loadComponentDefaults import Cmd_loadComponentDefaults
-from RoboControl.Robot.Component.protocol.Cmd_saveComponentDefaults import Cmd_saveComponentDefaults
+from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_loadComponentDefaults, Cmd_getComponentSettings, Cmd_loadComponentDefaults, Cmd_saveComponentDefaults
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 
 

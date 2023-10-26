@@ -1,7 +1,6 @@
 from typing import List
 
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteMessage, RemoteStream
 from RoboControl.Robot.Component.Actor.servo.Servo import Servo
 from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Stream_servoRawAnalogPosition import \
     Stream_servoRawAnalogPosition

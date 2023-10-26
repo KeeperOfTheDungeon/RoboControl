@@ -1,12 +1,12 @@
 from typing import Optional
 
 from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
-from RoboControl.Com.Remote.RemoteData import RemoteData
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Com.RemoteData import RemoteData
+from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteDataInput import RemoteDataInput
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Com.ComStatistic import ComStatistic
-from RoboControl.Robot.AbstractRobot.AbstractListener import DataPacketReceiver
+
 
 REMOTE_CHANEL_ID: int = 1
 REMOTE_NODE_ID: int = 1
@@ -24,7 +24,7 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
         self._data_output: RemoteDataOutput = RemoteDataOutput(self.statistic)
         self._data_input: RemoteDataInput = RemoteDataInput(self.statistic)
 
-    def connect(self, data_packet_receiver: DataPacketReceiver) -> bool:
+    def connect(self, data_packet_receiver) -> bool:
         self._data_input.add_listener(data_packet_receiver)
 
     def disconnect(self) -> None:

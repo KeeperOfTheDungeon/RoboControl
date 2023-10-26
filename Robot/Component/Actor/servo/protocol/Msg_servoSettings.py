@@ -1,9 +1,8 @@
 from typing import List, Union
 
 from Devices.LegController import LegControllerProtocol
-from RoboControl.Com.RemoteParameter import RemoteParameterUint8
-from RoboControl.Com.RemoteParameter import RemoteParameterUint16
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8, RemoteParameterUint16
+from RoboControl.Com.RemoteData import RemoteMessage
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoFlags import RemoteParameterServoFlags
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus

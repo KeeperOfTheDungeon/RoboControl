@@ -1,6 +1,6 @@
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.RemoteParameter import RemoteParameterUint32
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteStream
 
 
 class Stream_totalConsumption(RemoteStream):

@@ -1,8 +1,7 @@
 from typing import List
 
 from Devices.LegController import LegControllerProtocol
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteStream
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus
 
 

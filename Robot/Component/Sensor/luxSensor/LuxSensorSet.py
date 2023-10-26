@@ -1,10 +1,9 @@
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteMessage
+from RoboControl.Com.RemoteData import RemoteStream
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensor import LuxSensor
-from RoboControl.Robot.Component.Sensor.luxSensor.protocol.Msg_lux import Msg_lux
-from RoboControl.Robot.Component.Sensor.luxSensor.protocol.Stream_lux import Stream_lux
+from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensorProtocol import Msg_lux, Stream_lux
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 
 
@@ -21,7 +20,7 @@ class LuxSensorSet(ComponentSet, list[LuxSensor]):
     def get_message_processors(self):
         msg_list = super().get_message_processors()
         if self._msg_lux != 0:
-            msg_list.append(RemoteProcessor(Msg_lux.get_command(self._msg_lux), self))
+            msg_list.append(RemoteProcessor(Msg_lux.get_command(self._msg_lux,0,0), self))
         return msg_list
 
     def get_stream_processors(self):

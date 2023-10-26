@@ -2,8 +2,7 @@ from typing import List, Union
 
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.RemoteParameter import RemoteParameterUint16
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteStream
 from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
 
 
@@ -13,7 +12,7 @@ class Stream_servoRawAnalogPosition(RemoteStream):
     def __init__(self, id: int = LegControllerProtocol.STREAM_SERVO_RAW_ANALOG_VALUES):
         super().__init__(id, "servoAnalogRawPositions", "actual analog positions")
 
-    def set_data(self, destinations: List[float]) -> None:
+    def set_data(self, destinations) :
         for index, position in enumerate(destinations):
             parameter = RemoteParameterUint16(
                 f"position {index}",
@@ -22,7 +21,7 @@ class Stream_servoRawAnalogPosition(RemoteStream):
             parameter.set_value(position)
             self._parameter_list.append(parameter)
 
-    def parse_data_packet_data(self, data_packet: RemoteDataPacket) -> None:
+    def parse_data_packet_data(self, data_packet):
         data_buffer: bytearray = data_packet.get_data()
         data_index = 0
         for index, _ in enumerate(data_buffer):

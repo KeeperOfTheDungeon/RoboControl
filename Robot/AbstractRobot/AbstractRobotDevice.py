@@ -1,11 +1,10 @@
 # import copy
 from typing import Optional
 
-from RoboControl.Com.Remote.RemoteData import RemoteData
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Com.RemoteData import RemoteData
+from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
-from RoboControl.Robot.AbstractRobot.AbstractListener import DataPacketReceiver, CpuStatusListener, ComStatusListener
 from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
 from RoboControl.Robot.AbstractRobot.RemotePacketHandler import RemotePacketHandler
 from RoboControl.Robot.AbstractRobot.Config.ComponentConfig import ComponentConfig
@@ -17,9 +16,7 @@ from RoboControl.Robot.Device.remoteProcessor.RemoteDecoder import RemoteDecoder
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
 
 
-class AbstractRobotDevice(
-    AbstractComponent, DataPacketReceiver, RemoteDecoder, RemotePacketHandler
-):
+class AbstractRobotDevice():
     _name = "AbstractRobotDevice"
     _type_name = "?"
     _transmitter: RemoteDataOutput  # RemoteDataTransmitter
@@ -32,11 +29,17 @@ class AbstractRobotDevice(
         RemotePacketHandler.__init__(self)
         self._id: int = component_config.get_id()
 
+        self._command_processor_list = list()
+        self._message_processor_list = list()
+        self._stream_processor_list = list()
+
         self._component_list: list[RobotComponent] = []
         self._component_set_list: list[ComponentSet] = []
 
         self._com_status = ComStatus()
         self._cpu_status = CpuStatus()
+
+
 
     def set_transmitter(self, transmitter: RemoteDataOutput) -> None:
         self._transmitter = transmitter
@@ -71,19 +74,19 @@ class AbstractRobotDevice(
                 return component
         return None
 
-    def add_cpu_status_listener(self, listener: CpuStatusListener) -> None:
+    def add_cpu_status_listener(self, listener) -> None:
         self._cpu_status.add_status_listener(listener)
 
-    def remove_cpu_status_listener(self, listener: CpuStatusListener) -> None:
+    def remove_cpu_status_listener(self, listener) -> None:
         self._cpu_status.remove_status_listener(listener)
 
     def get_cpu_status(self) -> CpuStatus:
         return self._cpu_status
 
-    def add_com_status_listener(self, listener: ComStatusListener) -> None:
+    def add_com_status_listener(self, listener) -> None:
         self._com_status.add_status_listener(listener)
 
-    def remove_com_status_listener(self, listener: ComStatusListener) -> None:
+    def remove_com_status_listener(self, listener) -> None:
         self._com_status.remove_status_listener(listener)
 
     def get_com_status(self) -> ComStatus:

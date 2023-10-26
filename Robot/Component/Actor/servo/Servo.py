@@ -1,7 +1,6 @@
 from typing import Type, List
 
-from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Robot.AbstractRobot.AbstractListener import ServoSetupListener, ServoDataListener
+from RoboControl.Com.RemoteData import RemoteCommand
 from RoboControl.Robot.Component.Actor.Actor import Actor
 from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Cmd_calibrateServo import Cmd_calibrateServo
 from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Cmd_positionFeedbackOff import \
@@ -33,8 +32,8 @@ from RoboControl.Robot.Value.servo.ServoVelocityValue import ServoVelocityValue
 
 
 class Servo(Actor):
-    _setup_listener: list[ServoSetupListener]
-    _sensor_listener: list[ServoDataListener]
+    _setup_listener = list()
+    _sensor_listener: list() 
 
     def __init__(self, meta_data):
         super().__init__(meta_data)

@@ -1,15 +1,12 @@
 from abc import ABC, abstractmethod
 
-from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.RemoteData import RemoteData
-from RoboControl.Com.Remote.RemoteException import RemoteException
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteCommand ,RemoteMessage, RemoteStream,  RemoteException
+
 
 
 class RemoteDecoder(ABC):
     @abstractmethod
-    def decode(self, remote_data: RemoteData) -> bool:
+    def decode(self, remote_data) -> bool:
         pass
 
     @abstractmethod

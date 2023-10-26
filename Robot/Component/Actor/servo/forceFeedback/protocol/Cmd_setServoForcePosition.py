@@ -1,7 +1,7 @@
 from typing import Union
 
 from RoboControl.Com.RemoteParameter import RemoteParameterUint16
-from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
+from RoboControl.Com.RemoteData import RemoteCommand
 from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 
 INDEX_SERVO = 0

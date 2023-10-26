@@ -1,9 +1,8 @@
 from typing import Union
 
 from Devices.LegController import LegControllerProtocol
-from RoboControl.Com.RemoteParameter import RemoteParameterUint32
-from RoboControl.Com.RemoteParameter import RemoteParameterUint8
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.RemoteParameter import RemoteParameterUint32, RemoteParameterUint8
+from RoboControl.Com.RemoteData import RemoteMessage
 
 SENSOR_INDEX = 0
 SENSOR_CURRENT = 1

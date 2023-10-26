@@ -1,4 +1,4 @@
-from RoboControl.Robot.AbstractRobot.AbstractListener import ComponentValueChangeListener
+
 
 
 class ComponentValue:
@@ -16,7 +16,7 @@ class ComponentValue:
         self._valid: bool = False
 
         self._notifyAllways: bool = True
-        self._value_changed_listener_list: list[ComponentValueChangeListener] = list()  # this.listeners
+        self._value_changed_listener_list = list()  # this.listeners
 
     def set_name(self, name: str):
         self._name = name

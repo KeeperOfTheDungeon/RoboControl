@@ -1,7 +1,7 @@
 from typing import List
 
 from Devices.LegSensors import LegSensorsProtocol
-from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
+from RoboControl.Com.RemoteData import RemoteCommand
 from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 
 

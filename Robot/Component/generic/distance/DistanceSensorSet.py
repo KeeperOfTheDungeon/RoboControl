@@ -1,5 +1,4 @@
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteMessage, RemoteStream
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.generic.distance.DistanceSensor import DistanceSensor
 from RoboControl.Robot.Component.generic.distance.protocol.Msg_distance import Msg_distance

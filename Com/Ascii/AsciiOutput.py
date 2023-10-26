@@ -3,12 +3,12 @@ import traceback
 from serial import Serial
 
 from RoboControl.Com.ComStatistic import ComStatistic
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteDataOutput import RemoteDataOutput
 from RoboControl.Com.Ascii import DataPacketAscii
-from RoboControl.Com.Remote.RemoteCommandDataPacket import RemoteCommandDataPacket
-from RoboControl.Com.Remote.RemoteMessageDataPacket import RemoteMessageDataPacket
-from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
+from RoboControl.Com.RemoteDataPacket import RemoteCommandDataPacket
+from RoboControl.Com.RemoteDataPacket import RemoteMessageDataPacket
+from RoboControl.Com.RemoteDataPacket import RemoteStreamDataPacket
 
 
 class AsciiOutput(RemoteDataOutput):

@@ -1,7 +1,7 @@
 from typing import TypeAlias
 
 from RoboControl.Com.ComStatistic import ComStatistic
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
 
 Byte: TypeAlias = int
 

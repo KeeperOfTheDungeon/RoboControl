@@ -1,5 +1,3 @@
-from RoboControl.Robot.AbstractRobot.AbstractListener import CurrentSensorListener, CurrentSensorChangeNotifier, \
-    CurrentSensorSetupChangeNotifier
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.generic.currentSensor.protocol.Cmd_getActualCurrentDrain import \
     Cmd_getActualCurrentDrain
@@ -15,13 +13,9 @@ from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboControl.Robot.Value.current.CurrentValue import CurrentValue
 
 
-class CurrentSensor(
-    Sensor,
-    CurrentSensorChangeNotifier,
-    CurrentSensorSetupChangeNotifier
-):
-    _sensor_listener: list[CurrentSensorListener]
-    _setup_listener: list[CurrentSensorSetupChangeNotifier]
+class CurrentSensor(Sensor):
+    _sensor_listener = list()
+    _setup_listener =  list()
 
     def __init__(self, meta_data):
         super().__init__(meta_data)
@@ -38,15 +32,15 @@ class CurrentSensor(
         self._total = CurrentValue({**meta_data, "name": meta_data["name"] + " total current"})
         self._max = CurrentValue({**meta_data, "name": meta_data["name"] + " max current"})
 
-    def get_actual(self) -> CurrentValue:
+    def get_actual(self):
         return self._actual
 
     get_value = get_actual
 
-    def get_actual_value(self) -> float:
+    def get_actual_value(self):
         return self._actual.get_value()
 
-    def set_actual(self, value: int) -> None:
+    def set_actual(self, value: int):
         self._actual.set_value(value)
         for listener in self._sensor_listener:
             listener.current_value_changed()
@@ -54,10 +48,10 @@ class CurrentSensor(
     def get_max(self) -> CurrentValue:
         return self._max
 
-    def get_max_value(self) -> float:
+    def get_max_value(self):
         return self._max.get_value()
 
-    def set_max(self, value: int) -> None:
+    def set_max(self, value: int):
         self._max.set_value(value)
         for listener in self._sensor_listener:
             listener.current_value_changed()
@@ -68,7 +62,7 @@ class CurrentSensor(
     def get_total_value(self) -> float:
         return self._total.get_value()
 
-    def set_total(self, value: float) -> None:
+    def set_total(self, value: float):
         self._total.set_value(value)
         for listener in self._sensor_listener:
             listener.current_value_changed()
@@ -103,7 +97,7 @@ class CurrentSensor(
         """ "get size of measurement window , the real size is 10 * windowSize" """
         return self._window_size
 
-    def set_window_size(self, window_size: int) -> None:
+    def set_window_size(self, window_size):
         self._window_size = window_size
         for listener in self._setup_listener:
             listener.current_window_size_changed(self)
@@ -112,12 +106,12 @@ class CurrentSensor(
         """ "get current threshold, threshold is the minimum level value for current sensing" """
         return self._threshold
 
-    def set_threshold(self, threshold: int) -> None:
+    def set_threshold(self, threshold):
         self._threshold = threshold
         for listener in self._setup_listener:
             listener.current_threshold_changed(self)
 
-    def get_data_values(self) -> list[ComponentValue]:
+    def get_data_values(self):
         return [
             self._actual,
             self._total,

@@ -2,15 +2,9 @@
 import traceback
 from typing import Optional
 
-from RoboControl.Com.Remote.RemoteCommand import RemoteCommand
-from RoboControl.Com.Remote.RemoteCommandDataPacket import RemoteCommandDataPacket
-from RoboControl.Com.Remote.RemoteData import RemoteData
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
-from RoboControl.Com.Remote.RemoteExceptionDataPacket import RemoteExceptionDataPacket
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
-from RoboControl.Com.Remote.RemoteMessageDataPacket import RemoteMessageDataPacket
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
-from RoboControl.Com.Remote.RemoteStreamDataPacket import RemoteStreamDataPacket
+from RoboControl.Com.RemoteData import RemoteData, RemoteCommand, RemoteMessage, RemoteStream
+from RoboControl.Com.RemoteDataPacket import RemoteDataPacket, RemoteCommandDataPacket, RemoteExceptionDataPacket, RemoteMessageDataPacket, RemoteStreamDataPacket
+
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
 from RoboControl.Robot.Device.remoteProcessor.RemoteProcessorList import RemoteProcessorList
 

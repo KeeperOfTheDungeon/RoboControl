@@ -1,6 +1,6 @@
 from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacket
 from RoboControl.Com.PacketLogger.filter.DataPacketFilterRule import DataPacketFilterRule
-from RoboControl.Com.Remote.RemoteDataPacket import DataPacketType
+from RoboControl.Com.RemoteDataPacket import DataPacketType
 
 
 class FilterRuleDataPacketType(DataPacketFilterRule):

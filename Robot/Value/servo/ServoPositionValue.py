@@ -1,13 +1,12 @@
 import math
 
-from RoboControl.Robot.AbstractRobot.AbstractListener import ComponentValueChangeListener
 from RoboControl.Robot.Math.Radiant import Radiant
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboControl.Robot.Value.RadiantValue import RadiantValue
 
 
 # WIP This isn't used anywhere in the Java project
-class ServoPositionValue(RadiantValue, ComponentValueChangeListener):  # ServoAngleValue
+class ServoPositionValue(RadiantValue):  # ServoAngleValue
     _is_at_max: bool = False
     _is_at_min: bool = False
 

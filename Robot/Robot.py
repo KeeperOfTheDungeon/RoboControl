@@ -1,5 +1,4 @@
 from RoboControl.Com.Connection.Connection import Connection
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot.AbstractRobot import AbstractRobot
 from RoboControl.Robot.Device.Generic.DataHub.DataHub import DataHub
 
@@ -54,7 +53,7 @@ class Robot(AbstractRobot):
             pass  # FIXME DataHub has no .on_disconnected
         super().on_disconnected()
 
-    def receive(self, data_packet: RemoteDataPacket) -> None:
+    def receive(self, data_packet) :
         source = data_packet.get_source_address()
         device = self.get_device_on_id(source)
 

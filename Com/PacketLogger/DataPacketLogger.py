@@ -5,7 +5,7 @@ from RoboControl.Com.Connection import Connection
 from RoboControl.Com.PacketLogger.LoggedDataPacket import LoggedDataPacket, DisplayFormat_e, DisplayDataWidth_e, \
     LoggedDataPacketType
 from RoboControl.Com.PacketLogger.filter.DataPacketFilter import DataPacketFilter
-from RoboControl.Com.Remote.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
 from RoboControl.Com.PacketLogger.TableModel import TableModel, Column, TimestampColumn, PacketColumn, Row
 

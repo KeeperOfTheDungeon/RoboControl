@@ -1,4 +1,4 @@
-from RoboControl.Com.Remote.RemoteMessage import RemoteMessage
+from RoboControl.Com.RemoteData import RemoteMessage
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.text.Text import Text
 from RoboControl.Robot.Component.text.protocol.Msg_textFragment import Msg_textFragment

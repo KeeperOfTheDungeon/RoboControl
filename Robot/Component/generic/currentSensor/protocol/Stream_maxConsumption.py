@@ -1,7 +1,7 @@
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.RemoteParameter import RemoteParameterUint16
 from RoboControl.Com.RemoteParameter import RemoteParameterUint32
-from RoboControl.Com.Remote.RemoteStream import RemoteStream
+from RoboControl.Com.RemoteData import RemoteStream
 
 
 # This used to be RemoteParameterUint16 but that looked wrong

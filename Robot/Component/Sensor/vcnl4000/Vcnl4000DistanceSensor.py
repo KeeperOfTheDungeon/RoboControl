@@ -1,6 +1,5 @@
 from copy import deepcopy
 
-from RoboControl.Robot.AbstractRobot.AbstractListener import DistanceSetupListener
 from RoboControl.Robot.Component.Sensor.vcnl4000.DistanceTable import DistanceTable
 from RoboControl.Robot.Component.generic.distance.DistanceSensor import DistanceSensor
 
@@ -14,7 +13,7 @@ VCNL4000_MAX_GRANULARITY = 10.0
 
 
 class Vcnl4000DistanceSensor(DistanceSensor):
-    _setup_listener: list[DistanceSetupListener]
+    _setup_listener = list()
 
     def __init__(self, meta_data):
         meta_data["beam_width"] = VCNL4000_BEAM_WIDTH

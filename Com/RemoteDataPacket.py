@@ -1,4 +1,4 @@
-#import datetime
+import datetime
 
 #from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
 
@@ -141,17 +141,17 @@ class RemoteDataPacket:
         res += f"\n\tremote_data: " + str(self._remote_data).split("\n")[0].strip()
         return res
 
-    def get_bit(self, position: int, bit: int) -> bool:
+    def get_bit(self, position: int, bit: int) :
         bit_mask = (1 << bit)
         return (self.data[position] & bit_mask) > 0
 
     # def get_data_buffer(self) -> bytebuffer:
     #    return bytebuffer(self.data)
 
-    def has_remote_data(self) -> bool:
+    def has_remote_data(self) :
         return self._remote_data is not None
 
-    def get_timestamp(self) -> datetime.datetime:
+    def get_timestamp(self) :
         return self._timestamp
 
     def get_payload(self):

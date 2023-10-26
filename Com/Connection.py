@@ -1,7 +1,7 @@
-#from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
+from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.RemoteData import RemoteData
 from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
-#from RoboControl.Com.ComStatistic import ComStatistic
+from RoboControl.Com.ComStatistic import ComStatistic
 
 
 REMOTE_CHANEL_ID: int = 1
@@ -11,7 +11,7 @@ REMOTE_NODE_ID: int = 1
 class RemoteDataInput:
     _listener_list  = list()
 
-    def __init__(self, statistic: ComStatistic):
+    def __init__(self, statistic):
         self.statistic = statistic
         self.running = False
         # self.set_daemon(True)
@@ -53,7 +53,7 @@ class RemoteDataOutput:
     _is_remote = False
     _is_running = False
 
-    def __init__(self, statistic: ComStatistic):
+    def __init__(self, statistic):
         self.statistic = statistic
 
     def run(self):

@@ -9,8 +9,7 @@ from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
 from RoboControl.Robot.AbstractRobot.Config.ComponentConfig import ComponentConfig
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
-from RoboControl.Robot.Component.statistic.ComStatus import ComStatus
-from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
+from RoboControl.Robot.Device.DeviceStartus import ComStatus, CpuStatus
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessorList
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
 
@@ -57,18 +56,18 @@ class AbstractRobotDevice():
     def get_component_count(self):
         return len(self._component_list)
 
-    def get_component(self, index: int) -> Optional[RobotComponent]:
+    def get_component(self, index):
         if index >= self.get_component_count():
             return None
         return self._component_list[index]
 
-    def find_component_on_name(self, name: str) -> Optional[RobotComponent]:
+    def find_component_on_name(self, name: str):
         for component in self._component_list:
             if component.get_component_name() == name:
                 return component
         return None
 
-    def find_component_on_global_id(self, global_id: int) -> Optional[RobotComponent]:
+    def find_component_on_global_id(self, global_id):
         for component in self._component_list:
             if component.get_global_id() == global_id:
                 return component

@@ -20,11 +20,10 @@ from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
 class RobotDevice(
-    AbstractRobotDevice,  # ControlInterface
-):
+    AbstractRobotDevice,):
     def __init__(self, component_config: DeviceConfig):
         super().__init__(component_config)
-        self._aquisators: List[DataAquisator] = DeviceAquisators.get_data_aquisators()
+        self._aquisators = DeviceAquisators.get_data_aquisators()
         self._event_listener = list()
         self.build()
 
@@ -100,54 +99,54 @@ class RobotDevice(
         for listener in self._event_listener:
             listener.ping_received(self)
 
-    def remote_start_stream(self, index: int, period: int) -> bool:
+    def remote_start_stream(self, index: int, period: int):
         cmd = Cmd_startStreamData.get_command(
             DeviceProtocol.CMD_START_STREAM_DATA,
             new_type=index, period=period
         )
         return self.send_data(cmd)
 
-    def remote_stop_stream(self, index: int) -> bool:
+    def remote_stop_stream(self, index: int):
         cmd = Cmd_stopStreamData.get_command(index)
         return self.send_data(cmd)
 
-    def remote_clear_streams(self) -> bool:
+    def remote_clear_streams(self):
         cmd = Cmd_clearAllDataStreams.get_command()
         return self.send_data(cmd)
 
-    def remote_pause_streams(self) -> bool:
+    def remote_pause_streams(self):
         cmd = Cmd_pauseAllDataStreams.get_command()
         return self.send_data(cmd)
 
-    def remote_continue_streams(self) -> bool:
+    def remote_continue_streams(self):
         cmd = Cmd_continueAllDataStreams.get_command()
         return self.send_data(cmd)
 
-    def remote_save_streams(self) -> bool:
+    def remote_save_streams(self):
         cmd = Cmd_saveDataStreams.get_command()
         return self.send_data(cmd)
 
-    def remote_load_streams(self) -> bool:
+    def remote_load_streams(self):
         cmd = Cmd_loadDataStreams.get_command()
         return self.send_data(cmd)
 
-    def remote_ping_device(self) -> bool:
+    def remote_ping_device(self):
         cmd = Cmd_ping.get_command()
         return self.send_data(cmd)
 
-    def remote_get_next_error(self) -> bool:
+    def remote_get_next_error(self):
         cmd = Cmd_getNextError.get_command()
         return self.send_data(cmd)
 
-    def remote_get_error_count(self) -> bool:
+    def remote_get_error_count(self):
         cmd = Cmd_getErrorCount.get_command()
         return self.send_data(cmd)
 
-    def remote_clear_com_statistics(self) -> bool:
+    def remote_clear_com_statistics(self):
         cmd = Cmd_clearComStatistics.get_command()
         return self.send_data(cmd)
 
-    def remote_clear_cpu_statistics(self) -> bool:
+    def remote_clear_cpu_statistics(self):
         cmd = Cmd_clearCpuStatistics.get_command()
         return self.send_data(cmd)
 

@@ -1,8 +1,8 @@
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
-from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_getComponentSettings
-from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_getComponentValue
-from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_loadComponentDefaults
-from RoboControl.Robot.Component.protocol.ComponentProtocol import Cmd_saveComponentDefaults
+from RoboControl.Robot.Component.ComponentProtocol import Cmd_getComponentSettings
+from RoboControl.Robot.Component.ComponentProtocol import Cmd_getComponentValue
+from RoboControl.Robot.Component.ComponentProtocol import Cmd_loadComponentDefaults
+from RoboControl.Robot.Component.ComponentProtocol import Cmd_saveComponentDefaults
 
 
 class RobotComponent(AbstractComponent):

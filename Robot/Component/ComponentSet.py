@@ -1,24 +1,19 @@
-from RoboControl.Com.RemoteData import RemoteMessage, RemoteStream
-from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
-from RoboControl.Robot.Component.RobotComponent import RobotComponent
-
-
 class ComponentSet(list):
-    """ "Basis class for a list of device components of same type" """
+
 
     _transmitter = None
 
     def __init__(self, components):
         super().__init__(components)
 
-    def get_component_on_global_id(self, id: int) -> Optional[AbstractComponent]:
+    def get_component_on_global_id(self, id):
         """ "search for an component with given id" """
         for component in self:
             if component.get_global_id() == id:
                 return component
         return None
 
-    def get_component_on_local_id(self, id: int) -> Optional[RobotComponent]:
+    def get_component_on_local_id(self, id):
         """ "find component with given id in this set" """
         for component in self:
             if component.get_local_id() == id:
@@ -37,7 +32,7 @@ class ComponentSet(list):
     def get_stream_processors(self):
         return list()
 
-    def get_ids(self) -> List[int]:
+    def get_ids(self):
         ids = []
         for index, component in enumerate(self):
             ids[index] = component.get_global_id()

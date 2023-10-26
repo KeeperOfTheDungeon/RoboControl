@@ -1,5 +1,4 @@
 # import copy
-from typing import Optional
 
 
 from RoboControl.Com.RemoteData import RemoteData

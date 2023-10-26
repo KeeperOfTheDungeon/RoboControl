@@ -1,11 +1,9 @@
-from typing import Optional, List, Union
-
 from RoboControl.Com.RemoteData import RemoteMessage, RemoteStream
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 
 
-class ComponentSet(list, List[Union[RobotComponent, AbstractComponent]]):
+class ComponentSet(list):
     """ "Basis class for a list of device components of same type" """
 
     _transmitter = None

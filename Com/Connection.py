@@ -1,16 +1,11 @@
-from typing import Optional
-
-from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
+#from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.RemoteData import RemoteData
 from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
-from RoboControl.Com.ComStatistic import ComStatistic
+#from RoboControl.Com.ComStatistic import ComStatistic
 
 
 REMOTE_CHANEL_ID: int = 1
 REMOTE_NODE_ID: int = 1
-
-
-
 
 
 class RemoteDataInput:

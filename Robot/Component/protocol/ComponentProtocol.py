@@ -1,4 +1,4 @@
-from typing import List
+
 
 from RoboControl.Com.RemoteData import RemoteCommand
 from RoboControl.Com.RemoteParameter import RemoteParameterUint8

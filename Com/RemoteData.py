@@ -1,13 +1,7 @@
-from typing import List
 from RoboControl.Com.RemoteDataPacket import RemoteCommandDataPacket, RemoteExceptionDataPacket, RemoteMessageDataPacket, RemoteNegativeAckDataPacket, RemoteStreamDataPacket
 from RoboControl.Com.RemoteDataPacket import RemotePositiveAckDataPacket
 
 from RoboControl.Com.RemoteParameter import RemoteParameter
-
-from logger import getLogger
-
-logger = getLogger(__name__)
-
 
 # noinspection PyShadowingBuiltins
 class RemoteData:

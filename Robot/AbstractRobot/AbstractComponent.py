@@ -1,10 +1,5 @@
-from typing import List, TypeAlias, Union
-
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
-from RoboView.Robot.Viewer.RobotSettings import RobotSettings
-
-RemoteDataTransmitter: TypeAlias = Union["Connection"]
-
+#from RoboView.Robot.Viewer.RobotSettings import RobotSettings
 
 class AbstractComponent:
     def __init__(self, meta_data):

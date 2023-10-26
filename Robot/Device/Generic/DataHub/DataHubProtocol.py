@@ -1,7 +1,7 @@
 from RoboControl.Com.Connection import Connection
 from RoboControl.Robot.Device.DeviceProtocol import DeviceProtocol
 from RoboControl.Robot.Device.DeviceProtocol import Msg_nodeType
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 MSG_NODE_TYPE = 0x2
 CMD_GET_NODE_TYPE = 0x5

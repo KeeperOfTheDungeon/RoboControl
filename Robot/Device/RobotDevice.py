@@ -2,6 +2,7 @@ from typing import List
 
 from RoboControl.Com.RemoteData import RemoteData, RemoteMessage, RemoteStream
 from RoboControl.Com.Connection import RemoteDataOutput
+
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
 from RoboControl.Robot.AbstractRobot.Config.ComponentConfig import ComponentConfig
 from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
@@ -15,7 +16,7 @@ from RoboControl.Robot.Device.DeviceProtocol import Cmd_stopStreamData, Msg_ping
 
 from RoboControl.Robot.Device.control.DataAquisator import DataAquisator
 from RoboControl.Robot.Device.control.DeviceAquisators import DeviceAquisators
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
 class RobotDevice(
@@ -95,6 +96,7 @@ class RobotDevice(
 
     # noinspection PyMethodMayBeStatic
     def process_ping_response(self,  Msg_pingResponse):
+        print("got ping")
         for listener in self._event_listener:
             listener.ping_received(self)
 
@@ -243,3 +245,5 @@ class RobotDevice(
     def add_streams(self) -> None:
         self.add_stream_processor(Stream_comStatistics(DeviceProtocol.STREAM_COM_STATISTICS), self)
         self.add_stream_processor(Stream_cpuStatistics(DeviceProtocol.STREAM_CPU_STATISTICS), self)
+
+

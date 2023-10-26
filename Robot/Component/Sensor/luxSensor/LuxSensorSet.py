@@ -4,7 +4,7 @@ from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensor import LuxSensor
 from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensorProtocol import Msg_lux, Stream_lux
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
 class LuxSensorSet(ComponentSet, list[LuxSensor]):

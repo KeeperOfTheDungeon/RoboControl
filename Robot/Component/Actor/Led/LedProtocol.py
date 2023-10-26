@@ -3,12 +3,11 @@ from typing import List
 from RoboControl.Robot.Component.Actor.ActorProtocol import ActorProtocol
 from RoboControl.Robot.Component.Actor.Led.protocol.Cmd_getLedBrightness import Cmd_getLedBrightness
 from RoboControl.Robot.Component.Actor.Led.protocol.Cmd_setLedBrightness import Cmd_setLedBrightness
-from RoboControl.Robot.Device.remoteProcessor.RemoteDecoder import RemoteDecoder
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
 class LedProtocol(ActorProtocol):
-    def get_command_processors(self, remote_decoder: RemoteDecoder) -> List[RemoteProcessor]:
+    def get_command_processors(self, remote_decoder) -> List[RemoteProcessor]:
         """ "get led command processors"
         @:param "remoteDecoder barometric sensor set"
         @:return "commands processors for barometric sensor"
@@ -21,7 +20,7 @@ class LedProtocol(ActorProtocol):
             commands.append(cmd)
         return commands
 
-    def get_stream_processors(self, remote_decoder: RemoteDecoder) -> List[RemoteProcessor]:
+    def get_stream_processors(self, remote_decoder) -> List[RemoteProcessor]:
         """ "get led stream processors"
         @:param "remoteDecoder led set"
         @:return "stream processors for led"
@@ -30,7 +29,7 @@ class LedProtocol(ActorProtocol):
         # commands.append( Stream_barometricPressures(self.streamValuesId, sensor) )
         return commands
 
-    def get_message_processors(self, remote_decoder: RemoteDecoder) -> List[RemoteProcessor]:
+    def get_message_processors(self, remote_decoder) -> List[RemoteProcessor]:
         """ "get led message processors"
         @:param "remoteDecoder led set"
         @:return "message processors for led"

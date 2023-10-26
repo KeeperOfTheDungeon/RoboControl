@@ -7,15 +7,15 @@ from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
 
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
-from RoboControl.Robot.AbstractRobot.RemotePacketHandler import RemotePacketHandler
 from RoboControl.Robot.AbstractRobot.Config.ComponentConfig import ComponentConfig
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.statistic.ComStatus import ComStatus
 from RoboControl.Robot.Component.statistic.CpuStatus import CpuStatus
-from RoboControl.Robot.Device.remoteProcessor.RemoteDecoder import RemoteDecoder
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessorList
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
 
+from RoboControl.Com.RemoteDataPacket import RemoteCommandDataPacket, RemoteExceptionDataPacket, RemoteMessageDataPacket, RemoteStreamDataPacket
 
 class AbstractRobotDevice():
     _name = "AbstractRobotDevice"
@@ -27,12 +27,12 @@ class AbstractRobotDevice():
             "name": component_config.get_name(),
             "global_id": component_config.get_id()  # FIXME is this right?
         })
-        RemotePacketHandler.__init__(self)
+     
         self._id: int = component_config.get_id()
 
-        self._command_processor_list = list()
-        self._message_processor_list = list()
-        self._stream_processor_list = list()
+        self._command_processor_list = RemoteProcessorList()
+        self._message_processor_list = RemoteProcessorList()
+        self._stream_processor_list = RemoteProcessorList()
 
         self._component_list: list[RobotComponent] = []
         self._component_set_list: list[ComponentSet] = []
@@ -134,3 +134,30 @@ class AbstractRobotDevice():
 
     def receive(self, data_packet: RemoteDataPacket) -> None:
         return self.parse_data_packet(data_packet)
+
+
+
+    def _find_processor(self, data_packet, remote_id: int):
+        if isinstance(data_packet, RemoteCommandDataPacket):
+            # print ("ARD : Command Prozessor", processor)
+            return self._command_processor_list.find_on_id(remote_id)
+        elif isinstance(data_packet, RemoteMessageDataPacket):
+            return self._message_processor_list.find_on_id(remote_id)
+        elif isinstance(data_packet, RemoteStreamDataPacket):
+            return self._stream_processor_list.find_on_id(remote_id)
+        elif isinstance(data_packet, RemoteExceptionDataPacket):
+            return self._exception_processor_list.find_on_id(remote_id)
+        print("unsuported data packet type")
+        return None
+
+    def parse_data_packet(self, data_packet):
+        remote_id = data_packet.get_command()
+        processor = self._find_processor(data_packet, remote_id)
+        if processor is not None:
+            remote_data = processor.get_remote_data()
+            remote_data.parse_data_packet(data_packet)
+            data_packet.set_remote_data(remote_data)
+            processor.execute(remote_data)
+            return remote_data
+
+        return None

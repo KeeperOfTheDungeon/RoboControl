@@ -4,9 +4,10 @@ import serial.tools.list_ports
 from serial import Serial
 from serial.tools.list_ports_common import ListPortInfo
 
-from RoboControl.Com.Ascii.AsciiInput import AsciiInput
-from RoboControl.Com.Ascii.AsciiOutput import AsciiOutput
+
+
 from RoboControl.Com.Connection import Connection
+from RoboControl.Com.Connection_ASCII import AsciiInput,AsciiOutput
 
 
 # from RoboControl.Com.Ascii.DataPacketAscii import DataPacketAscii
@@ -23,7 +24,7 @@ class SerialConnection(Connection):
         # FIXME this isn't really optional is it
         self._serial_stream: Optional[Serial] = None  # commPort
 
-    def connect(self, data_packet_receiver) -> bool:
+    def connect(self, data_packet_receiver):
         """ "connect to serial interface" """
 
         # try { portIdentifier = CommPortIdentifier.getPortIdentifier(comPortName);

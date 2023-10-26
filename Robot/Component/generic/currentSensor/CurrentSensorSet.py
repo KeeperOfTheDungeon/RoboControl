@@ -8,7 +8,7 @@ from RoboControl.Robot.Component.generic.currentSensor.protocol.Msg_totalCurrent
 from RoboControl.Robot.Component.generic.currentSensor.protocol.Stream_actualConsumption import Stream_actualConsumption
 from RoboControl.Robot.Component.generic.currentSensor.protocol.Stream_maxConsumption import Stream_maxConsumption
 from RoboControl.Robot.Component.generic.currentSensor.protocol.Stream_totalConsumption import Stream_totalConsumption
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
 class CurrentSensorSet(ComponentSet):

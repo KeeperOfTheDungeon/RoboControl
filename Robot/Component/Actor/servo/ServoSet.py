@@ -14,7 +14,7 @@ from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosDestinations 
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosPositions import Stream_servosPositions
 from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosStatus import Stream_servosStatus
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoSettings import Msg_servoSettings
 
 

@@ -3,7 +3,7 @@ from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.generic.distance.DistanceSensor import DistanceSensor
 from RoboControl.Robot.Component.generic.distance.protocol.Msg_distance import Msg_distance
 from RoboControl.Robot.Component.generic.distance.protocol.Stream_distances import Stream_distances
-from RoboControl.Robot.Device.remoteProcessor.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
 class DistanceSensorSet(ComponentSet):

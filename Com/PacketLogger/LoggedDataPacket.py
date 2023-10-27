@@ -40,7 +40,7 @@ class LoggedDataPacket:
         return self._data_packet.get_source_address()
 
     def get_command(self) -> int:
-        return self._data_packet.get_command()
+        return self._data_packet.get_id()
 
     def get_command_name(self) -> str:
         remote_data = self._data_packet.get_remote_data()

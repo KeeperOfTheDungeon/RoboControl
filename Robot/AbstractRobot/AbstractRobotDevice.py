@@ -104,7 +104,7 @@ class AbstractRobotDevice():
             res += component.get_control_values()
         return res
 
-    def get_control_clients(self) -> "list[ControlClient]":
+    def get_control_clients(self):
         res = []
         for component in self._component_list:
             res += component.get_control_clients()
@@ -148,9 +148,11 @@ class AbstractRobotDevice():
             return self._exception_processor_list.find_on_id(remote_id)
         print("unsuported data packet type")
         return None
+    
+
 
     def parse_data_packet(self, data_packet):
-        print(data_packet)
+        print("ard: ",data_packet)
         remote_id = data_packet.get_id()
         processor = self._find_processor(data_packet, remote_id)
         if processor is not None:

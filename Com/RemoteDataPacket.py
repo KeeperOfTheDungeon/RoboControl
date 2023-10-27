@@ -28,7 +28,7 @@ class RemoteDataPacket:
     ):
         self._destination_address = destination_address  # default =? 0
         self._source_address = source_address  # default =? 0
-        self._command = command  # default =? 0
+        self._id = command  # default =? 0
         self._timestamp = datetime.datetime.now()
 
         self.data: bytearray = bytearray(data_size) if data_size else bytearray()
@@ -117,8 +117,8 @@ class RemoteDataPacket:
     def get_type_name(self) -> str:
         return self._type_name
 
-    def get_command(self) -> int:
-        return self._command
+    def get_id(self) -> int:
+        return self._id
 
     def get_parameters_as_string(self, description: bool) -> str:
         return self._remote_data.get_parameters_as_string(description) if self.has_remote_data() else ""
@@ -137,7 +137,7 @@ class RemoteDataPacket:
 
     def __str__(self) -> str:
         # return "null" if self._type is None else str(self._type)
-        res = f"RemoteDataPacket({self._command})"
+        res = f"RemoteDataPacket({self._id})"
         res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
         #res += f"\n\tdata: {render_data(self, DisplayDataWidth_e.WIDTH_8, True)}" #dont work with pico
         res += f"\n\tremote_data: " + str(self._remote_data).split("\n")[0].strip()

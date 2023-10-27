@@ -150,7 +150,8 @@ class AbstractRobotDevice():
         return None
 
     def parse_data_packet(self, data_packet):
-        remote_id = data_packet.get_command()
+        print(data_packet)
+        remote_id = data_packet.get_id()
         processor = self._find_processor(data_packet, remote_id)
         if processor is not None:
             remote_data = processor.get_remote_data()

@@ -351,7 +351,7 @@ class AsciiInput(RemoteDataInput):
             if not self.running:
                 break
 
-            self.statistic.count_up_recived_chars()
+            self.statistic.count_up_recived_chars(1)
 
             token = self._serial_input.read(1)
 
@@ -365,7 +365,7 @@ class AsciiInput(RemoteDataInput):
 
             if DataPacketAscii.is_end_token(token):
                 if not receiving_packet:
-                    self.statistic.count_up_error_packets()
+                    self.statistic.count_up_error_packets(1)
                     continue
                 remote_data = ascii_data_packet.decode()
                 # data_packet_buffer = copy(data_packet._data_buffer)

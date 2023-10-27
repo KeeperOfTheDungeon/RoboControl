@@ -1,5 +1,3 @@
-from typing import List
-
 from RoboControl.Com.RemoteData import RemoteData, RemoteMessage, RemoteStream
 from RoboControl.Com.Connection import RemoteDataOutput
 
@@ -19,7 +17,7 @@ from RoboControl.Robot.Device.control.DeviceAquisators import DeviceAquisators
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
-class RobotDevice(    AbstractRobotDevice,):
+class RobotDevice(AbstractRobotDevice):
 
     def __init__(self, component_config: DeviceConfig):
         super().__init__(component_config)
@@ -31,6 +29,7 @@ class RobotDevice(    AbstractRobotDevice,):
         self.build_protocol()
 
     def build_protocol(self):
+        super().build_protocol()
         self.add_commands()
         self.add_messages()
         self.add_streams()

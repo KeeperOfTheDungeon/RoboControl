@@ -160,3 +160,6 @@ class AbstractRobotDevice():
             return remote_data
 
         return None
+    
+    def build_protocol(self):
+        pass

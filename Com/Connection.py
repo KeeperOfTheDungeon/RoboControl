@@ -1,4 +1,4 @@
-from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
+#from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Com.RemoteData import RemoteData
 from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.ComStatistic import ComStatistic
@@ -85,7 +85,7 @@ class RemoteDataOutput:
 
 
 class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
-    _data_packet_logger: DataPacketLogger
+    _data_packet_logger = None #: DataPacketLogger
 
     def __init__(self, name: str = ""):
         self.device_id = REMOTE_CHANEL_ID
@@ -118,7 +118,7 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
         else:
             remote_data.set_destination_address(self.device_id)
   
-        data_packet: Optional[RemoteDataPacket] = remote_data.get_data_packet()
+        data_packet= remote_data.get_data_packet()
         
         if data_packet is None:
             raise ValueError(f"Incompatible remote_data type ({type(remote_data)}): {remote_data}")

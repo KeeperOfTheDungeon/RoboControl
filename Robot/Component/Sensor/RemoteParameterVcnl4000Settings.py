@@ -1,7 +1,5 @@
 from RoboControl.Com.RemoteParameter import RemoteParameter
-from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000AveragingModes import Vcnl4000AveragingModes
-from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000FrequencyModes import Vcnl4000FrequencyModes
-from RoboControl.Robot.Component.Sensor.vcnl4000.Vcnl4000IrCurrent import Vcnl4000IrCurrent
+
 
 BYTE_SIZE = 2
 
@@ -19,31 +17,26 @@ AUTO_OFFSET_INDEX = 12
 
 
 class RemoteParameterVcnl4000Settings(RemoteParameter):
-    _ir_current: Vcnl4000IrCurrent
-    _averaging_mode: Vcnl4000AveragingModes
-    _proximity_frequency: Vcnl4000FrequencyModes
-    _auto_conversion: bool
-    _auto_compensation: bool
 
     def __init__(self):
         super().__init__("Vcnl4000 parameters", "Vcnl4000 parameters", BYTE_SIZE)
 
-    def get_ir_current(self) -> Vcnl4000IrCurrent:
+    def get_ir_current(self):
         return self._ir_current
 
-    def set_ir_current(self, ir_current: Vcnl4000IrCurrent):
+    def set_ir_current(self, ir_currentt):
         self._ir_current = ir_current
 
-    def get_averaging_mode(self) -> Vcnl4000AveragingModes:
+    def get_averaging_mode(self):
         return self._averaging_mode
 
-    def set_averaging_mode(self, averaging_mode: Vcnl4000AveragingModes):
+    def set_averaging_mode(self, averaging_mode):
         self._averaging_mode = averaging_mode
 
-    def get_proximity_frequency(self) -> Vcnl4000FrequencyModes:
+    def get_proximity_frequency(self):
         return self._proximity_frequency
 
-    def set_proximity_frequency(self, proximity_frequency: Vcnl4000FrequencyModes):
+    def set_proximity_frequency(self, proximity_frequency):
         self._proximity_frequency = proximity_frequency
 
     def get_auto_conversion(self) -> bool:
@@ -72,7 +65,7 @@ class RemoteParameterVcnl4000Settings(RemoteParameter):
         data_value &= 0xffff
         data_buffer.put_char(data_value)
 
-    def parse_from_buffer(self, data_buffer, index: int) -> int:
+    def parse_from_buffer(self, data_buffer, index):
         data_value = data_buffer.get_char(index)
         value = data_value >> IC_CURRENT_INDEX
         masked_value = value & IC_CURRENT_MASK
@@ -100,7 +93,7 @@ class RemoteParameterVcnl4000Settings(RemoteParameter):
 
         return self.get_byte_size()
 
-    def get_as_string(self, description: bool) -> str:
+    def get_as_string(self, description):
         infos = []
         if description:
             infos.append(self._name)
@@ -116,3 +109,5 @@ class RemoteParameterVcnl4000Settings(RemoteParameter):
             infos.append(f"{self._auto_conversion}")
             infos.append(f"{self._auto_compensation}")
         return ", ".join(infos)
+
+

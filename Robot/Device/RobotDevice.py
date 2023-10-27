@@ -94,7 +94,7 @@ class RobotDevice(AbstractRobotDevice):
             component.on_disconnected()
 
     def process_ping_command(self, remote_command):
-        # print("******************got ping command************************")
+        print("******************got ping command************************")
         msg = Msg_pingResponse.get_command(DeviceProtocol.MSG_PING_RESPONSE)
         self.send_data(msg)
 
@@ -155,11 +155,11 @@ class RobotDevice(AbstractRobotDevice):
         cmd = Cmd_clearCpuStatistics.get_command()
         return self.send_data(cmd)
 
-
-
+   
 
     def decode_command(self, remote_command):
         if isinstance(remote_command, Cmd_ping):
+            self.process_ping_command(remote_command)
             return True
 
     def decode_message(self, remote_message: RemoteMessage) -> bool:
@@ -167,6 +167,7 @@ class RobotDevice(AbstractRobotDevice):
             self.process_ping_response(remote_message)
             return True
         return False
+
 
     def decode_stream(self, remote_stream_data):
         if isinstance(remote_stream_data, Stream_cpuStatistics):

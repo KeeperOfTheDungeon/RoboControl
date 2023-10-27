@@ -14,15 +14,18 @@ class Led(Actor):
         self._cmd_setBrightness = protocol["cmd_setBrightness"]
         self._cmd_getValue = protocol["cmd_getValue"]
 
+
+
     def remote_set_brightness(self, brightness: float) -> bool:
-        if self._component_protocol is None:
-            return False
+        cmd = Cmd_setLedBrightness.get_command(self._cmd_setBrightness, self._local_id, brightness )
+        return self.send_data(cmd)
+
+
+    def remote_set_brightness(self, brightness: float) -> bool:
         cmd = Cmd_setLedBrightness.get_command(self._cmd_setBrightness, self._local_id, brightness )
         return self.send_data(cmd)
 
     def remote_get_value(self) -> bool:
-        if self._component_protocol is None:
-            return False
         cmd = Cmd_getLedBrightness.get_command(self._cmd_getValue, self._local_id)
         return self.send_data(cmd)
 

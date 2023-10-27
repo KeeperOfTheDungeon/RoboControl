@@ -44,7 +44,7 @@ class Cmd_getComponentSettings(RemoteCommand):
     INDEX_TYPE = 0
 
     def __init__(self, id):
-        super().__init__(id, "getComponentSettings", "get components active settings")
+        super().__init__(id,  "get components active settings")
         self._parameter_list.append(RemoteParameterUint8("index", "component index"))
 
     def set_index(self, index):
@@ -66,7 +66,7 @@ class Cmd_getComponentValue(RemoteCommand):
 	_index = 0
 
 	def __init__(self, id):
-		super().__init__(id, "getComponentValue","get component value")
+		super().__init__(id, "get component value")
 		self._parameter_list.append(RemoteParameterUint8("index","component index"))
 		pass
 
@@ -89,7 +89,7 @@ class Cmd_loadComponentDefaults(RemoteCommand):
 	_index = 0
 
 	def __init__(self, id):
-		super().__init__(id, "loadComponentDefaults","load components defaults from non volatile memory")
+		super().__init__(id, "load components defaults from non volatile memory")
 		self._parameter_list.append(RemoteParameterUint8("index","component index"))
 
 		pass
@@ -114,7 +114,7 @@ class Cmd_saveComponentDefaults(RemoteCommand):
 	_index = 0
 
 	def __init__(self, id):
-		super().__init__(id, "saveComponentDefaults","save components defaults to non volatile memory")
+		super().__init__(id, "save components defaults to non volatile memory")
 		self._parameter_list.append(RemoteParameterUint8("index","component index"))
 
 		pass

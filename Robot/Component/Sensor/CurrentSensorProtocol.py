@@ -120,7 +120,7 @@ class Msg_currentSettings(RemoteMessage):
     INDEX_THRESHOLD = 2
 
     def __init__(self, id):
-        super().__init__(id, "Msg_maxCurrentDrain", "maximal current drain measured by this sensor")
+        super().__init__(id,  "maximal current drain measured by this sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
         self._parameter_list.append(RemoteParameterUint8("window size", "current sensor data window size"))
         self._parameter_list.append(RemoteParameterUint16("threshold", "current sensor threshold"))
@@ -146,7 +146,7 @@ class Msg_maxCurrentDrain(RemoteMessage):
     SENSOR_CURRENT = 1
 
     def __init__(self, id):
-        super().__init__(id, "Msg_maxCurrentDrain", "maximal current drain measured by this sensor")
+        super().__init__(id,  "maximal current drain measured by this sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "current sensor index"))
         self._parameter_list.append(RemoteParameterUint16("drain", "maximal current drain measured by this sensor"))
 
@@ -167,7 +167,7 @@ class Msg_measuredCurrent(RemoteMessage):
     INDEX_DRAIN = 1
 
     def __init__(self, id):
-        super().__init__(id, "currentDrain", "measured current drain by this sensor")
+        super().__init__(id, "measured current drain by this sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "current sensor index"))
         self._parameter_list.append(RemoteParameterUint16("drain", "measured current drain by this sensor"))
 
@@ -203,7 +203,7 @@ class Msg_totalCurrentDrain(RemoteMessage):
     SENSOR_CURRENT = 1
 
     def __init__(self, id):
-        super().__init__(id, "Msg_totalCurrentDrain", "total current amount measured by this sensor")
+        super().__init__(id, "total current amount measured by this sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "current sensor index"))
         self._parameter_list.append(RemoteParameterUint32("drain", "total current amount measured by this sensor"))
 
@@ -226,7 +226,6 @@ class Stream_actualConsumption(RemoteStream):
     def __init__(self, id):
         super().__init__(
             id,
-            "actualConsumption",
             "measured current values from device size, size/count is device dependent"
         )
 
@@ -270,7 +269,6 @@ class Stream_maxConsumption(RemoteStream):
     def __init__(self, id):
         super().__init__(
             id,
-            "maxConsumptions",
             "measured max current values from device size, size/count is device dependent"
         )
 
@@ -313,7 +311,6 @@ class Stream_totalConsumption(RemoteStream):
     def __init__(self, id):
         super().__init__(
             id,
-            "totalConsumptions",
             "measured total current values from device size, size/count is device dependent"
         )
 

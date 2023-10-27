@@ -1,6 +1,6 @@
 from RoboControl.Com.RemoteData import RemoteCommand, RemoteMessage, RemoteStream
 from RoboControl.Com.RemoteParameter import RemoteParameterUint16, RemoteParameterUint8
-from RoboControl.Robot.Component.Actor.servo.RemoteParameterServo import RemoteParameterServoFlags, RemoteParameterServoStatus, RemoteParameterServoVelocity, RemoteParameterServoPosition
+from RoboControl.Robot.Component.Actor.RemoteParameterServo import RemoteParameterServoFlags, RemoteParameterServoStatus, RemoteParameterServoVelocity, RemoteParameterServoPosition
 
 
 INDEX_SERVO = 0
@@ -9,7 +9,7 @@ class Cmd_getServoPosition(RemoteCommand):
    
 
     def __init__(self, id):
-        super().__init__(id, "getServoPosition", "getPosition of a servo")
+        super().__init__(id,  "getPosition of a servo")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
 
     def set_index(self, index: int) -> None:
@@ -31,7 +31,7 @@ class Cmd_getServoPosition(RemoteCommand):
 class Cmd_getServoSpeed(RemoteCommand):
  
     def __init__(self, id):
-        super().__init__(id, "getServoSpeed", "get speed of a servo")
+        super().__init__(id,  "get speed of a servo")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
 
     def set_index(self, index: int) -> None:
@@ -54,7 +54,7 @@ class Cmd_getServoSpeed(RemoteCommand):
 class Cmd_getServoStatus(RemoteCommand):
 
     def __init__(self, id):
-        super().__init__(id, "getServoStatus", "get status of a servo")
+        super().__init__(id,  "get status of a servo")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
 
     def set_index(self, index: int) -> None:
@@ -79,7 +79,7 @@ class Cmd_moveServoTo(RemoteCommand):
     INDEX_POSITION = 1
 
     def __init__(self, id):
-        super().__init__(id, "cmd_moveServoTo", "move servo to given position")
+        super().__init__(id,  "move servo to given position")
 
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("position", "servo position"))
@@ -116,7 +116,7 @@ class Cmd_moveServoToAtSpeed(RemoteCommand):
     INDEX_VELOCITY = 2
 
     def __init__(self, id):
-        super().__init__(id, "cmd_moveServoToAtSpeed", "move servo to given position at given speed")
+        super().__init__(id,  "move servo to given position at given speed")
 
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("position", "servo position"))
@@ -157,7 +157,7 @@ class Cmd_servoMove(RemoteCommand):
     INDEX_VELOCITY = 1
 
     def __init__(self, id):
-        super().__init__(id, "cmd_servoMove", "move servo at given velocity")
+        super().__init__(id,  "move servo at given velocity")
 
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoVelocity("velocity", "velocity of this movement"))
@@ -187,7 +187,7 @@ class Cmd_servoMove(RemoteCommand):
 class Cmd_servoOff(RemoteCommand):
 
     def __init__(self, id):
-        super().__init__(id, "cmd_servoOff", "switch servo off")
+        super().__init__(id,  "switch servo off")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
 
     def set_index(self, index):
@@ -210,7 +210,7 @@ class Cmd_servoOn(RemoteCommand):
     INDEX_SERVO = 0
 
     def __init__(self, id):
-        super().__init__(id, "cmd_servoOn", "switch servo on")
+        super().__init__(id,  "switch servo on")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
 
     def set_index(self, index):
@@ -230,7 +230,7 @@ class Cmd_servoOn(RemoteCommand):
 class Stream_servosDestinations(RemoteStream):
    
     def __init__(self, id):
-        super().__init__(id, "servoDestinations", "servo destinations")
+        super().__init__(id, "servo destinations")
 
     @staticmethod
     def get_command(id: int, values):
@@ -268,7 +268,7 @@ class Cmd_setServoPosition(RemoteCommand):
 
     def __init__(self, id):
         super().__init__(
-            id, "cmd_setServoPosition",
+            id, 
             "set servo position, if received, servo try to reach this position at full speed"
         )
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
@@ -306,7 +306,7 @@ class Cmd_setServoSettings(RemoteCommand):
     INDEX_FLAGS = 5
    
     def __init__(self, id):
-        super().__init__(id, "cmd_setServoSettings", "set settings for a servo")
+        super().__init__(id,  "set settings for a servo")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("min range", "servo min range"))
         self._parameter_list.append(RemoteParameterServoPosition("max range", "servo max range"))
@@ -356,7 +356,7 @@ class Cmd_setServoSpeed(RemoteCommand):
     
     def __init__(self, id):
         super().__init__(
-            id, "cmd_setServoSpeed",
+            id, 
             "set servos actual speed"
         )
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
@@ -389,7 +389,7 @@ class Msg_servoPosition(RemoteMessage):
     INDEX_POSITION = 1
 
     def __init__(self, id):
-        super().__init__(id, "servoPosition", "actual servo position")
+        super().__init__(id,  "actual servo position")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("position", "servo position"))
 
@@ -423,7 +423,7 @@ class Msg_servoSettings(RemoteMessage):
     INDEX_FLAGS = 5
 
     def __init__(self, id):
-        super().__init__(id, "servoSettings", "actual servo settings")
+        super().__init__(id,  "actual servo settings")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoPosition("min range", "servo min range"))
         self._parameter_list.append(RemoteParameterServoPosition("max range", "servo max range"))
@@ -486,7 +486,7 @@ class Msg_servoSpeed(RemoteMessage):
     INDEX_SPEED = 1
 
     def __init__(self, id):
-        super().__init__(id, "msg_servoSpeed", "actual servo speed")
+        super().__init__(id,  "actual servo speed")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterUint16("speed", "servo speed"))
 
@@ -517,7 +517,7 @@ class Msg_servoStatus(RemoteMessage):
     INDEX_STATUS = 1
 
     def __init__(self, id):
-        super().__init__(id, "msg_servoStatus", "actual servo status")
+        super().__init__(id,  "actual servo status")
         self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
         self._parameter_list.append(RemoteParameterServoStatus("status", "servo status"))
 
@@ -559,7 +559,7 @@ class Msg_servoStatus(RemoteMessage):
 class Stream_servosPositions(RemoteStream):
 
     def __init__(self, id):
-        super().__init__(id, "servoPositions", "actual servo positions")
+        super().__init__(id,  "actual servo positions")
 
     @staticmethod
     def get_command(id, values = None):
@@ -593,7 +593,7 @@ class Stream_servosPositions(RemoteStream):
 class Stream_servosStatus(RemoteStream):
     
     def __init__(self, id):
-        super().__init__(id, "servosStatus", "status from servos")
+        super().__init__(id,  "status from servos")
 
     def is_on(self, index: int):
         if index < self.get_parameter_count():

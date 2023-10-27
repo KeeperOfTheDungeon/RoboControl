@@ -1,13 +1,11 @@
 from typing import List
 
 from RoboControl.Com.RemoteData import RemoteMessage, RemoteStream
-from RoboControl.Robot.Component.Actor.servo.RemoteParameterServo import RemoteParameterServoStatus
-from RoboControl.Robot.Component.Actor.servo.Servo import Servo
-from RoboControl.Robot.Component.Actor.servo.ServoProtocol import Msg_servoPosition, Msg_servoSettings, Msg_servoSpeed, Msg_servoStatus, Stream_servosDestinations, Stream_servosPositions, Stream_servosStatus
-from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Stream_servoRawAnalogPosition import \
-    Stream_servoRawAnalogPosition
-from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Msg_servoForceThreshold import \
-    Msg_servoForceThreshold
+from RoboControl.Robot.Component.Actor.RemoteParameterServo import RemoteParameterServoStatus
+from RoboControl.Robot.Component.Actor.Servo import Servo
+from RoboControl.Robot.Component.Actor.ServoFfProtocol import Msg_servoForceThreshold, Stream_servoRawAnalogPosition
+from RoboControl.Robot.Component.Actor.ServoProtocol import Msg_servoPosition, Msg_servoSettings, Msg_servoSpeed, Msg_servoStatus, Stream_servosDestinations, Stream_servosPositions, Stream_servosStatus
+
 
 
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
@@ -110,7 +108,7 @@ class ServoSet(ComponentSet, List[Servo]):
             return
         servo.set_speed(remote_data.get_speed())
 
-    def process_servo_force_threshold(self, remote_data: Msg_servoForceThreshold) -> None:
+    def process_servo_force_threshold(self, remote_data) -> None:
         """ "decode servo force threshold message and sets the new force threshold value in servo component" """
         servo: Servo = self.get_component_on_local_id(remote_data.get_index())
         if servo is None:
@@ -151,7 +149,7 @@ class ServoSet(ComponentSet, List[Servo]):
             return
         servo.set_position(servo_position.get_position())
 
-    def process_servos_raw_analog_values(self, raw_analog_values: Stream_servoRawAnalogPosition) -> None:
+    def process_servos_raw_analog_values(self, raw_analog_values) -> None:
         for index in range(raw_analog_values.get_parameter_count()):
             servo: Servo = self.get_component_on_local_id(index)
             if servo is None:

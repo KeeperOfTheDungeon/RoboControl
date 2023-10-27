@@ -27,7 +27,7 @@ class Msg_lux(RemoteMessage):
     INDEX_LUX = 1
 
     def __init__(self, id: int):
-        super().__init__(id, "luxValue", "actual lux value measured by a light sensor")
+        super().__init__(id,  "actual lux value measured by a light sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
         self._parameter_list.append(RemoteParameterLuxValue("distance", "light value in lux"))
 
@@ -52,7 +52,7 @@ class Msg_lux(RemoteMessage):
 class Stream_lux(RemoteStream):
 
     def __init__(self, id: int):
-        super().__init__(id, "luxValues", "actual measured light in lux")
+        super().__init__(id,  "actual measured light in lux")
 
     @staticmethod
     def get_command(id: int, values):

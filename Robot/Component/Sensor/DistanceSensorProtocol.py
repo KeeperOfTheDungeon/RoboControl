@@ -25,7 +25,7 @@ class Msg_distance(RemoteMessage):
     SENSOR_VALUE = 1
 
     def __init__(self, id: int):
-        super().__init__(id, "distance", "actual distance measured by an distance sensor")
+        super().__init__(id,  "actual distance measured by an distance sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
         self._parameter_list.append(RemoteParameterUint24("distance", "distance value in mm"))
 
@@ -54,7 +54,7 @@ class Stream_distances(RemoteStream):
     _parameter_list: list[RemoteParameterUint24]
 
     def __init__(self, id):
-        super().__init__(id, "distances", "actual distances measured by distance sensors")
+        super().__init__(id,  "actual distances measured by distance sensors")
 
     @staticmethod
     def get_command(id: int, values):

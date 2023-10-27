@@ -8,8 +8,8 @@ class RemoteData:
     _type_name: str = "generic"
     _description: str = "generic remote data"
 
-    def __init__(self, id: int, name: str, description: str):
-        self._name = name
+    def __init__(self, id: int, description: str):
+        #self._name = name
         self._description = description
 
         self._id = id
@@ -83,7 +83,7 @@ class RemoteData:
     def __str__(self) -> str:
         res = f"RemoteData"
         res += f"\n\tClass({self.__class__.__name__})"
-        res += f"\n\tName({self._name})"
+       # res += f"\n\tName({self._name})"
         res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
         res += f"\n\t(id) {self._id}"
         res += f"\n\tpayload: " + ",".join([str(b) for b in self._payload])
@@ -91,7 +91,7 @@ class RemoteData:
         return res
 
     def get_name(self) -> str:
-        return self._name
+        return self.__class__.__name__
 
     def get_description(self) -> str:
         return self._description

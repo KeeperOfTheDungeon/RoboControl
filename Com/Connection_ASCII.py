@@ -55,15 +55,15 @@ class DataPacketAscii:
         message_type = self._data_buffer[index]
         remote_data = None
         if message_type == COMMAND_START_TOKEN_STR:
-            remote_data = RemoteCommand(0, "", "")
+            remote_data = RemoteCommand(0,  "")
         elif message_type == MESSAGE_START_TOKEN_STR:
-            remote_data = RemoteMessage(0, "", "")
+            remote_data = RemoteMessage(0,  "")
         elif message_type == STREAM_START_TOKEN_STR:
-            remote_data = RemoteStream(0, "", "")
+            remote_data = RemoteStream(0,  "")
         elif message_type == OK_START_TOKEN_STR:
-            remote_data = RemotePositiveAck(0, "", "")
+            remote_data = RemotePositiveAck(0,  "")
         elif message_type == FAIL_START_TOKEN_STR:
-            remote_data = RemoteNegativeAck(0, "", "")
+            remote_data = RemoteNegativeAck(0,  "")
         if remote_data:
             if parsed_remote_data := self.do_decode(remote_data):
                 return parsed_remote_data

@@ -45,7 +45,7 @@ class Cmd_getLedBrightness(RemoteCommand):
     _index = 0
 
     def __init__(self, id):
-        super().__init__(id, "getLedBrightness", "get brightness of a LED")
+        super().__init__(id, "get brightness of a LED")
         self._parameter_list.append(RemoteParameterUint8("index", "LED index"))
 
     def set_index(self, index):
@@ -71,7 +71,7 @@ class Cmd_setLedBrightness(RemoteCommand):
     _parameter_list = list()
 
     def __init__(self, id):
-        super().__init__(id, "setLedBrightness", "set brightness of a LED")
+        super().__init__(id, "set brightness of a LED")
         self._parameter_list.append(RemoteParameterUint8("index", "LED index"))
         self._parameter_list.append(RemoteParameterUint8("brightness", "LED brightness"))
 
@@ -107,7 +107,7 @@ class Cmd_setLedColor(RemoteCommand):
     _parameter_list = list()
 
     def __init__(self, id):
-        super().__init__(id, "setLedColor", "set color of an RGB LED")
+        super().__init__(id,  "set color of an RGB LED")
         self._parameter_list.append(RemoteParameterUint8("index", "LED index"))
    #     self._parameter_list.append(RemoteParameterHsvColor("color", "LED color"))
 
@@ -132,35 +132,3 @@ class Cmd_setLedColor(RemoteCommand):
             cmd.set_data(index, color)
         return cmd
     
-
-class Cmd_setLedColor(RemoteCommand):
-
-    INDEX_LED = 0
-    INDEX_COLOR = 1
-
-    _parameter_list = list()
-
-    def __init__(self, id):
-        super().__init__(id, "setLedColor", "set color of an RGB LED")
-        self._parameter_list.append(RemoteParameterUint8("index", "LED index"))
-        self._parameter_list.append(RemoteParameterHsvColor("color", "LED color"))
-
-    def set_index(self, index):
-        self._parameter_list[Cmd_setLedColor.INDEX_LED].set_value(index)
-
-    def get_index(self):
-        return self._parameter_list[Cmd_setLedColor.INDEX_LED].get_value()
-
-    def set_data(self, index: int, color) -> None:
-        self._parameter_list[Cmd_setLedColor.INDEX_LED].set_value(index)
-        self._parameter_list[Cmd_setLedColor.INDEX_COLOR].set_value(color)
-
-    def get_color(self):
-        return self._parameter_list[Cmd_setLedColor.INDEX_COLOR].get_color()
-
-    @staticmethod
-    def get_command(id, index: int = None, color = None):
-        cmd = Cmd_setLedColor(id)
-        if None not in [index, color]:
-            cmd.set_data(index, color)
-        return cmd

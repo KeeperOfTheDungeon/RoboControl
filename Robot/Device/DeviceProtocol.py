@@ -50,7 +50,7 @@ class Cmd_ping(RemoteCommand):
     INDEX_TTL = 0
 
     def __init__(self, id: int):
-        super().__init__(id, "ping", " send ping")
+        super().__init__(id, " send ping")
         self._parameter_list.append(RemoteParameterUint8("ttl", "time to live"))
 
     def set_ttl(self, ttl):
@@ -67,7 +67,7 @@ class Cmd_ping(RemoteCommand):
 class Cmd_getNodeId(RemoteCommand):
 
     def __init__(self, id):
-        super().__init__(id, "getNodeId", "get destinations node id")
+        super().__init__(id,  "get destinations node id")
 
     @staticmethod
     def get_command(id: int):
@@ -249,7 +249,7 @@ class Msg_pingResponse(RemoteMessage):
     _parameter_list = list()
 
     def __init__(self, id: int = DeviceProtocol.MSG_PING_RESPONSE):
-        super().__init__(id, "pingResponse", "response to a ping command")
+        super().__init__(id,  "response to a ping command")
         self._parameter_list.append(RemoteParameterUint8("ttl", "time to live"))
 
     @staticmethod
@@ -303,7 +303,7 @@ class Stream_comStatistics(RemoteStream):
 
 
     def __init__(self, id):
-        super().__init__(id, "comStatus", "status of the com system")
+        super().__init__(id,  "status of the com system")
 
         self._parameter_list.append(RemoteParameterUint32("transmitted", "number of transmitted messages"))
         self._parameter_list.append(RemoteParameterUint32("received", "number of recived messages thrue this device"))
@@ -356,7 +356,7 @@ class Stream_cpuStatistics(RemoteStream):
     _parameter_list = list()
 
     def __init__(self, id: int):
-        super().__init__(id, "cpuStatus", "status of the cpu containing values for min max and last cycle duration")
+        super().__init__(id,  "status of the cpu containing values for min max and last cycle duration")
 
         self._parameter_list.append(RemoteParameterUint8("min", "min load of the device cpu"))
         self._parameter_list.append(RemoteParameterUint8("max", "max load of the device cpu"))

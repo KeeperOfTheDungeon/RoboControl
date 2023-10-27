@@ -15,7 +15,7 @@ class Msg_textFragment(RemoteMessage):
     _parameter_list: List[Union[RemoteParameterUint8, RemoteParameterUint16]]
 
     def __init__(self, id: int = DataHubProtocol.MSG_TEXT_FRAGMENT):
-        super().__init__(id, "textFragment", "message containing fragment of a text")
+        super().__init__(id, "message containing fragment of a text")
         self._parameter_list.append(RemoteParameterUint8("index", "text index"))
         self._parameter_list.append(RemoteParameterUint16("char index", "index of the first char in message"))
 

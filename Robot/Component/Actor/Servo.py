@@ -2,25 +2,13 @@ from typing import Type, List
 
 from RoboControl.Com.RemoteData import RemoteCommand
 from RoboControl.Robot.Component.Actor.Actor import Actor
-from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Cmd_calibrateServo import Cmd_calibrateServo
-from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Cmd_positionFeedbackOff import \
-    Cmd_positionFeedbackOff
-from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Cmd_positionFeedbackOn import Cmd_positionFeedbackOn
-from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Stream_servoRawAnalogPosition import Stream_servoRawAnalogPosition
-from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_forceFeedbackOff import Cmd_forceFeedbackOff
-from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_forceFeedbackOn import Cmd_forceFeedbackOn
-from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_getServoForceThreshold import \
-    Cmd_getServoForceThreshold
-from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_setServoForcePosition import \
-    Cmd_setServoForcePosition
-from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Cmd_setServoForceThreshold import \
-    Cmd_setServoForceThreshold
-from RoboControl.Robot.Component.Actor.servo.ServoProtocol import Cmd_getServoPosition, Cmd_getServoSpeed, Cmd_getServoStatus, Msg_servoPosition, Msg_servoSettings, Msg_servoSpeed, Stream_servosDestinations, Stream_servosPositions, Stream_servosStatus
+from RoboControl.Robot.Component.Actor.RemoteParameterServo import RemoteParameterServoStatus
+from RoboControl.Robot.Component.Actor.ServoFfProtocol import Cmd_calibrateServo, Cmd_forceFeedbackOff, Cmd_forceFeedbackOn, Cmd_getServoForceThreshold, Cmd_positionFeedbackOff, Cmd_positionFeedbackOn, Cmd_setServoForcePosition, Cmd_setServoForceThreshold, Msg_servoForceThreshold, Stream_servoRawAnalogPosition
+from RoboControl.Robot.Component.Actor.ServoProtocol import Cmd_getServoPosition, Cmd_getServoSpeed, Cmd_getServoStatus, Cmd_moveServoTo, Cmd_moveServoToAtSpeed, Cmd_servoMove, Cmd_servoOff, Cmd_servoOn, Cmd_setServoPosition, Cmd_setServoSettings, Cmd_setServoSpeed, Msg_servoPosition, Msg_servoSettings, Msg_servoSpeed, Msg_servoStatus, Stream_servosDestinations, Stream_servosPositions, Stream_servosStatus
 
-from RoboControl.Robot.Component.Actor.servo.ServoProtocol import Cmd_moveServoTo, Cmd_moveServoToAtSpeed,  Cmd_servoMove, \
-     Cmd_servoOff, Cmd_servoOn,Cmd_setServoPosition, Cmd_setServoSettings, Cmd_setServoSpeed
-from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Msg_servoForceThreshold import Msg_servoForceThreshold
+
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboControl.Robot.Value.ServoValue import ServoDestinationValue
 from RoboControl.Robot.Value.ServoValue import ServoPositionValue, ServoVelocityValue
@@ -60,7 +48,14 @@ class Servo(Actor):
         self._position_control = ServoPositionValue(meta_data)
         self._position_control.add_listener(self)
 
-        self.component_protocol = meta_data["protocol"]
+        protocol = meta_data.get("protocol")
+        self._cmd_getServoSpeed = protocol["cmd_getServoSpeed"]
+        self._cmd_setServoSpeed = protocol["cmd_setServoSpeed"]
+        self._cmd_servoOn = protocol["cmd_servoOn"]
+        self._cmd_servoOff = protocol["cmd_servoOff"]
+        self._cmd_getServoStatus = protocol["cmd_getServoStatus"]
+        self._cmd_getServoPosition = protocol["cmd_getServoPosition"]
+        self._cmd_setServoPosition =  protocol["cmd_setServoPosition"]
 
     def set_servo_setup(self, min_range: float, max_range: float, offset: int, scale: int, reverse: bool) -> None:
         self._position.set_range(min_range, max_range)
@@ -224,100 +219,85 @@ class Servo(Actor):
     def is_stalling(self) -> bool:
         return self._is_stalling
 
-    def _get_command(self, protocol_class: Type[RemoteCommand], protocol_key: str, *args) -> RemoteCommand:
-        if self.component_protocol is None:
-            return None
-        cmd_id = self.component_protocol[protocol_key]
-        return protocol_class.get_command(
-            cmd_id,
-            # 1 << self._local_id,  # FIXME this is different from the java source?
-            self._local_id,
-            *args
-        )
-
+ 
     def remote_servo_on(self) -> bool:
-        cmd = self._get_command(Cmd_servoOn, "cmd_servoOn")
+        cmd = Cmd_servoOn.get_command(self._cmd_servoOn)
         return self.send_data(cmd)
 
     def remote_servo_off(self) -> bool:
-        cmd = self._get_command(Cmd_servoOff, "cmd_servoOff")
+        cmd = Cmd_servoOff.get_command(self._cmd_servoOff)
         return self.send_data(cmd)
 
     def remote_get_servo_position(self) -> bool:
-        cmd = self._get_command(Cmd_getServoPosition, "cmd_getServoPosition")
+        cmd = Cmd_getServoPosition.get_command(self._cmd_getServoPosition)
         return self.send_data(cmd)
 
     def remote_get_servo_speed(self) -> bool:
-        cmd = self._get_command(Cmd_getServoSpeed, "cmd_getServoSpeed")
-        return self.send_data(cmd)
-
-    def remote_get_servo_force_threshold(self) -> bool:
-        cmd = self._get_command(Cmd_getServoForceThreshold, "cmd_getServoForceThreshold")
-        return self.send_data(cmd)
-
-    def remote_get_servo_status(self) -> bool:
-        cmd = self._get_command(Cmd_getServoStatus, "cmd_getServoStatus")
-        return self.send_data(cmd)
-
-    def remote_calibrate_servo(self):
-        cmd = self._get_command(Cmd_calibrateServo, "cmd_calibrateServo")
-        return self.send_data(cmd)
-
-    def remote_move_servo(self, velocity: float) -> bool:
-        cmd = self._get_command(Cmd_servoMove, "cmd_servoMove", velocity)
-        return self.send_data(cmd)
-
-    def remote_move_servo_to(self, position: float) -> bool:
-        cmd = self._get_command(Cmd_moveServoTo, "cmd_moveServoTo", position)
-        return self.send_data(cmd)
-
-    def remote_move_servo_to_at_speed(self, position: float, speed: float) -> bool:
-        cmd = self._get_command(Cmd_moveServoToAtSpeed, "cmd_moveServoTo", position, speed)
-        return self.send_data(cmd)
-
-    def remote_set_servo_position(self, position: float) -> bool:
-        cmd = self._get_command(Cmd_setServoPosition, "cmd_setServoPosition", position)
+        cmd = Cmd_getServoSpeed.get_command(self._cmd_getServoSpeed)
         return self.send_data(cmd)
 
     def remote_set_servo_speed(self, speed: float) -> bool:
-        cmd = self._get_command(Cmd_setServoSpeed, "cmd_setServoSpeed", speed)
+        cmd = Cmd_setServoSpeed.get_command(self._cmd_setServoSpeed, speed)
         return self.send_data(cmd)
 
+    def remote_get_servo_force_threshold(self) -> bool:
+        cmd = Cmd_getServoForceThreshold.get_command()
+        return self.send_data(cmd)
+
+    def remote_get_servo_status(self) -> bool:
+        cmd = Cmd_getServoStatus.get_command(self._cmd_getServoStatus)
+        return self.send_data(cmd)
+
+    def remote_calibrate_servo(self):
+        cmd = Cmd_calibrateServo.get_command()
+        return self.send_data(cmd)
+
+    def remote_move_servo(self, velocity: float) -> bool:
+        cmd = Cmd_servoMove.get_command(velocity)
+        return self.send_data(cmd)
+
+    def remote_move_servo_to(self, position: float) -> bool:
+        cmd = Cmd_moveServoTo.get_command(position)
+        return self.send_data(cmd)
+
+    def remote_move_servo_to_at_speed(self, position: float, speed: float) -> bool:
+        cmd = Cmd_moveServoToAtSpeed.get_command(position, speed)
+        return self.send_data(cmd)
+
+    def remote_set_servo_position(self, position: float) -> bool:
+        cmd = Cmd_setServoPosition.get_command(self._cmd_setServoPosition, position)
+        return self.send_data(cmd)
+
+
+
     def remote_set_servo_force_threshold(self, value: int) -> bool:
-        cmd = self._get_command(
-            Cmd_setServoForceThreshold, "cmd_setServoForceThreshold", value
-        )
+        cmd = self.Cmd_setServoForceThreshold(value)
         return self.send_data(cmd)
 
     def remote_set_servo_force_position(self, value: int) -> bool:
-        cmd = self._get_command(
-            Cmd_setServoForcePosition, "cmd_setServoForcePosition", value
-        )
+        cmd = Cmd_setServoForcePosition.get_command(value)
         return self.send_data(cmd)
 
     def remote_set_servo_defaults(
             self, min_range: float, max_range: float, offset: int, scale: int, inverse: bool
     ) -> bool:
-        cmd = self._get_command(
-            Cmd_setServoSettings, "cmd_setServoSettings",
-            min_range, max_range, offset, scale, inverse
-        )
+        cmd = Cmd_setServoSettings.get_command(min_range, max_range, offset, scale, inverse)
         return self.send_data(cmd)
 
     def remote_force_feedback_is_on(self) -> bool:
-        cmd = self._get_command(Cmd_forceFeedbackOn, "cmd_forceFeedbackOn")
+        cmd = Cmd_forceFeedbackOn.get_command()
         return self.send_data(cmd)
 
     def remote_force_feedback_is_off(self) -> bool:
-        cmd = self._get_command(Cmd_forceFeedbackOff, "cmd_forceFeedbackOff")
+        cmd = Cmd_forceFeedbackOff.get_command()
         return self.send_data(cmd)
 
     def remote_position_feedback_is_on(self) -> bool:
-        cmd = self._get_command(Cmd_positionFeedbackOn, "cmd_positionFeedbackOn")
+        cmd = Cmd_positionFeedbackOn.get_command()
         return self.send_data(cmd)
 
     def remote_position_feedback_is_off(self) -> bool:
-        cmd = self._get_command(Cmd_positionFeedbackOff, "cmd_positionFeedbackOff")
+        cmd = Cmd_positionFeedbackOff.get_command()
         return self.send_data(cmd)
 
     def get_servo_value(self) -> ServoPositionValue:

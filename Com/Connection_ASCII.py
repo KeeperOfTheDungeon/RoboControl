@@ -68,12 +68,12 @@ class DataPacketAscii:
             if parsed_remote_data := self.do_decode(remote_data):
                 return parsed_remote_data
 
-        self.error("UNSYNC")
+        print("UNSYNC")
         return RemoteData(0, "", "")
 
     def get_byte(self, offset: int, length: int = SIZE_PARAM):
         if offset + length >= len(self._data_buffer):
-            self.error(f"Data Buffer is too small to parse bytes {offset}-{offset + length}")
+            print(f"Data Buffer is too small to parse bytes {offset}-{offset + length}")
             return None
         return int(self._data_buffer[offset:offset + length], 8 * SIZE_PARAM)
 
@@ -82,7 +82,7 @@ class DataPacketAscii:
         content_size = len(self._data_buffer) - 2  # minus start & end tokens
         raw_payload_size = content_size - OFFSET_PAYLOAD
         if content_size < (OFFSET_ID + SIZE_PARAM):
-            self.error("Data Buffer is too small to parse the command id.", remote_data=remote_data)
+            print("Data Buffer is too small to parse the command id.", remote_data)
             return None
         remote_data.set_destination_address(self.get_byte(OFFSET_DESTINATION))
         remote_data.set_source_address(self.get_byte(OFFSET_SOURCE))
@@ -375,7 +375,7 @@ class AsciiInput(RemoteDataInput):
                 data_packet = remote_data.get_data_packet()
                 self.deliver_packet(data_packet)
 
-                self.statistic.count_up_recived_packets()
+                self.statistic.count_up_recived_packets(1)
                 receiving_packet = False
                 ascii_data_packet = DataPacketAscii()
 

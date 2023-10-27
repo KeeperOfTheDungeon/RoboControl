@@ -1,4 +1,4 @@
-#import datetime
+import datetime
 
 #from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
 
@@ -27,7 +27,7 @@ class RemoteDataPacket:
         self._destination_address = destination_address  # default =? 0
         self._source_address = source_address  # default =? 0
         self._command = command  # default =? 0
-        #self._timestamp = datetime.datetime.now()
+        self._timestamp = datetime.datetime.now()
 
         self.data: bytearray = bytearray(data_size) if data_size else bytearray()
 

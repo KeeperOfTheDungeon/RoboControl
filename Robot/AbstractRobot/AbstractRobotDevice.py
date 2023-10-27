@@ -137,8 +137,8 @@ class AbstractRobotDevice():
 
 
     def _find_processor(self, data_packet, remote_id: int):
+        print("find prozessor")
         if isinstance(data_packet, RemoteCommandDataPacket):
-            # print ("ARD : Command Prozessor", processor)
             return self._command_processor_list.find_on_id(remote_id)
         elif isinstance(data_packet, RemoteMessageDataPacket):
             return self._message_processor_list.find_on_id(remote_id)
@@ -160,8 +160,9 @@ class AbstractRobotDevice():
             remote_data.parse_data_packet(data_packet)
             data_packet.set_remote_data(remote_data)
             processor.execute(remote_data)
+            print("executed")
             return remote_data
-
+        print("not executed")
         return None
     
     def build_protocol(self):

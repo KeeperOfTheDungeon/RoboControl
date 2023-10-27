@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 from RoboControl.Robot.Component.Sensor.vcnl4000.DistanceTable import DistanceTable
-from RoboControl.Robot.Component.generic.distance.DistanceSensor import DistanceSensor
+from RoboControl.Robot.Component.Sensor.DistanceSensor import DistanceSensor
 
 DISTANCE_DATA_DEEPTH = 8
 

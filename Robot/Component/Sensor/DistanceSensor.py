@@ -1,9 +1,29 @@
-from RoboControl.Com.RemoteData import RemoteMessage, RemoteStream
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
-from RoboControl.Robot.Component.generic.distance.DistanceSensor import DistanceSensor
-from RoboControl.Robot.Component.generic.distance.protocol.Msg_distance import Msg_distance
-from RoboControl.Robot.Component.generic.distance.protocol.Stream_distances import Stream_distances
+from RoboControl.Robot.Component.Sensor.DistanceSensorProtocol import Cmd_getDistance, Msg_distance, Stream_distances
+from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Value.distance.DistanceValue import DistanceValue
+
+
+class DistanceSensor(Sensor):
+
+    def __init__(self, meta_data):
+        super().__init__(meta_data)
+        self._distance_value = DistanceValue(meta_data)
+
+    def get_distance_value(self):
+        return self._distance_value
+
+    def get_distance(self):
+        self._distance_value.get_milimeters()
+
+    def set_distance(self, value):
+        self._distance_value.set_value(value)
+
+    def remote_get_distance(self):
+        cmd = Cmd_getDistance.get_command(self._cmd_get_value, self._local_id)
+        self.send_data(cmd)
+
 
 
 class DistanceSensorSet(ComponentSet):
@@ -49,14 +69,14 @@ class DistanceSensorSet(ComponentSet):
         if sensor is not None:
             sensor.set_distance(remote_data.get_distance())
 
-    def decode_stream(self, remote_data: RemoteStream) -> bool:
+    def decode_stream(self, remote_data):
         if isinstance(remote_data, Stream_distances):
             self.process_sensor_distances(remote_data)
         else:
             super().decode_stream(remote_data)
         return False
 
-    def decode_message(self, remote_data: RemoteMessage) -> bool:
+    def decode_message(self, remote_data) :
         if isinstance(remote_data, Msg_distance):
             self.process_sensor_distance(remote_data)
         else:

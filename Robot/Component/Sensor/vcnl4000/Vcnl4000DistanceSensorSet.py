@@ -1,4 +1,4 @@
-from RoboControl.Robot.Component.generic.distance.DistanceSensorSet import DistanceSensorSet
+from RoboControl.Robot.Component.Sensor.DistanceSensor import DistanceSensorSet
 
 
 class Vcnl4000DistanceSensorSet(DistanceSensorSet):

@@ -1,13 +1,39 @@
-from RoboControl.Com.RemoteData import RemoteMessage
-from RoboControl.Com.RemoteData import RemoteStream
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
-from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensor import LuxSensor
-from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensorProtocol import Msg_lux, Stream_lux
+from RoboControl.Robot.Component.Sensor.LuxSensorProtocol import Cmd_getLux, Msg_lux, Stream_lux
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
+from RoboControl.Robot.Value.ComponentValue import ComponentValue
+from RoboControl.Robot.Value.lux.LuxValue import LuxValue
 
 
-class LuxSensorSet(ComponentSet, list[LuxSensor]):
+class LuxSensor(Sensor):
+    _sensor_listener = list()
+
+    def __init__(self, meta_data):
+        super().__init__(meta_data)
+        self._lux_value = LuxValue(meta_data)  # ,10000)
+
+    def get_lux_value(self) -> LuxValue:
+        return self._lux_value
+
+    def get_lux(self) -> float:
+        return self.get_lux_value().get_value()
+
+    def set_lux(self, lux: float) -> None:
+        self._lux_value.set_value(lux)
+        for listener in self._sensor_listener:
+            listener.lux_value_changed(self)
+
+    def remote_get_value(self):
+        cmd = Cmd_getLux.get_command(self._cmd_get_value, self._local_id)
+        self.send_data(cmd)
+
+    def get_data_values(self) -> list[ComponentValue]:
+        return [self.get_lux_value()]
+
+
+
+class LuxSensorSet(ComponentSet):
     def __init__(self, components, protocol):
         super().__init__(components)
         self._msg_lux = protocol['msg_lux']
@@ -49,27 +75,27 @@ class LuxSensorSet(ComponentSet, list[LuxSensor]):
         # noinspection PyTypeChecker
         return super().get_component_on_local_id(id)
 
-    def process_lux(self, remote_data: Msg_lux) -> None:
+    def process_lux(self, remote_data):
         index = remote_data.get_index()
         sensor = self.get_component_on_local_id(index)
         if sensor is not None:
             sensor.set_lux(remote_data.get_lux_value())
 
-    def process_lux_values(self, remote_data: Stream_lux) -> None:
+    def process_lux_values(self, remote_data: Stream_lux):
         for index in range(remote_data.get_parameter_count()):
             sensor = self.get_component_on_local_id(index)
             if sensor is not None:
                 value = remote_data.get_lux_value(index)
                 sensor.set_lux(value)
 
-    def decode_message(self, remote_data: RemoteMessage) -> bool:
+    def decode_message(self, remote_data):
         if isinstance(remote_data, Msg_lux):
             self.process_lux(remote_data)
         else:
             super().decode_message(remote_data)
         return False  # why always False
 
-    def decode_stream(self, remote_data: RemoteStream) -> bool:
+    def decode_stream(self, remote_data):
         if isinstance(remote_data, Stream_lux):
             self.process_lux_values(remote_data)
         else:

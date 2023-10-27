@@ -1,22 +1,19 @@
 from RoboControl.Com.RemoteData import RemoteCommand, RemoteMessage, RemoteStream
 from RoboControl.Com.RemoteParameter import RemoteParameterUint8
-from RoboControl.Robot.Component.Sensor.luxSensor.RemoteParameterLuxValue import RemoteParameterLuxValue
+from RoboControl.Robot.Component.Sensor.RemoteParameterLuxValue import RemoteParameterLuxValue
 
 
-
+INDEX_SENSOR = 0
 
 class Cmd_getLux(RemoteCommand):
 
-    INDEX_SENSOR = 0
-
-    _parameter_list: list[RemoteParameterUint8]
 
     def __init__(self, id: int):
         super().__init__(id, "Cmd_getLux", "get measured lux value from a light sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
 
     def set_index(self, index: int) -> None:
-        self._parameter_list[Cmd_getLux.INDEX_SENSOR].set_value(index)
+        self._parameter_list[INDEX_SENSOR].set_value(index)
 
     @staticmethod
     def get_command(id: int, local_id: int):
@@ -27,10 +24,7 @@ class Cmd_getLux(RemoteCommand):
 
 class Msg_lux(RemoteMessage):
 
-    INDEX_SENSOR = 0
     INDEX_LUX = 1
-
-    _parameter_list = list()
 
     def __init__(self, id: int):
         super().__init__(id, "luxValue", "actual lux value measured by a light sensor")
@@ -45,18 +39,17 @@ class Msg_lux(RemoteMessage):
         return cmd
 
     def get_index(self) -> int:
-        return self._parameter_list[Msg_lux.INDEX_SENSOR].get_value()
+        return self._parameter_list[INDEX_SENSOR].get_value()
 
     def get_lux_value(self) -> float:
         return self._parameter_list[Msg_lux.INDEX_LUX].get_value()
 
     def set_data(self, index: int, value: float) -> None:
-        self._parameter_list[Msg_lux.INDEX_SENSOR].set_value(index)
+        self._parameter_list[INDEX_SENSOR].set_value(index)
         self._parameter_list[Msg_lux.INDEX_LUX].set_value(value)
 
 
 class Stream_lux(RemoteStream):
-    _parameter_list: list[RemoteParameterLuxValue]
 
     def __init__(self, id: int):
         super().__init__(id, "luxValues", "actual measured light in lux")

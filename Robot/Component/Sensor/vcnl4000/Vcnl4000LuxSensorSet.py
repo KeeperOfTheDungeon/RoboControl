@@ -1,4 +1,4 @@
-from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensorSet import LuxSensorSet
+from RoboControl.Robot.Component.Sensor.LuxSensor import LuxSensorSet
 
 
 class Vcnl4000LuxSensorSet(LuxSensorSet):

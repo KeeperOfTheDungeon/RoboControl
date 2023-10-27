@@ -1,4 +1,4 @@
-from RoboControl.Robot.Component.Sensor.luxSensor.LuxSensor import LuxSensor
+from RoboControl.Robot.Component.Sensor.LuxSensor import LuxSensor
 
 VCNL4000_MAX_RANGE = 16383.5
 VCNL4000_MIN_RANGE = 0.0

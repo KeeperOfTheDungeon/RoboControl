@@ -3,7 +3,8 @@ from typing import List, Union
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.RemoteParameter import RemoteParameterUint16
 from RoboControl.Com.RemoteData import RemoteStream
-from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
+from RoboControl.Robot.Component.Actor.servo.RemoteParameterServo import RemoteParameterServoPosition
+
 
 
 class Stream_servoRawAnalogPosition(RemoteStream):

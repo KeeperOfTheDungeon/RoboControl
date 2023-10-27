@@ -184,7 +184,7 @@ class Cmd_startStreamData(RemoteCommand):
         return self._parameter_list[self._period_index].get_value()
 
     @staticmethod
-    def get_command(id: int, new_type: int = None, period: int = None) -> "Cmd_startStreamData":
+    def get_command(id: int, new_type: int = None, period: int = None):
         cmd = Cmd_startStreamData(id)
         if new_type:
             cmd.set_type(new_type)

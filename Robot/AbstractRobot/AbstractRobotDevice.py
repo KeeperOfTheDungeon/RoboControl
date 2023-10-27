@@ -3,10 +3,11 @@
 
 from RoboControl.Com.RemoteData import RemoteData
 from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
+from RoboControl.Robot.AbstractRobot import DeviceConfig
 
-from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
-from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
-from RoboControl.Robot.AbstractRobot.Config.ComponentConfig import ComponentConfig
+from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent, AbstractComponentList
+
+
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Device.DeviceStartus import ComStatus, CpuStatus
@@ -32,7 +33,7 @@ class AbstractRobotDevice():
         self._message_processor_list = RemoteProcessorList()
         self._stream_processor_list = RemoteProcessorList()
 
-        self._component_list: list[RobotComponent] = []
+        self._component_list = AbstractComponentList()
         self._component_set_list: list[ComponentSet] = []
 
         self._com_status = ComStatus()

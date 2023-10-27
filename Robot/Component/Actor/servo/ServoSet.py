@@ -1,21 +1,18 @@
 from typing import List
 
 from RoboControl.Com.RemoteData import RemoteMessage, RemoteStream
+from RoboControl.Robot.Component.Actor.servo.RemoteParameterServo import RemoteParameterServoStatus
 from RoboControl.Robot.Component.Actor.servo.Servo import Servo
+from RoboControl.Robot.Component.Actor.servo.ServoProtocol import Msg_servoPosition, Msg_servoSettings, Msg_servoSpeed, Msg_servoStatus, Stream_servosDestinations, Stream_servosPositions, Stream_servosStatus
 from RoboControl.Robot.Component.Actor.servo.feedbackServo.protocol.Stream_servoRawAnalogPosition import \
     Stream_servoRawAnalogPosition
 from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Msg_servoForceThreshold import \
     Msg_servoForceThreshold
-from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoPosition import Msg_servoPosition
-from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoSpeed import Msg_servoSpeed
-from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoStatus import Msg_servoStatus
-from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoStatus import RemoteParameterServoStatus
-from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosDestinations import Stream_servosDestinations
-from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosPositions import Stream_servosPositions
-from RoboControl.Robot.Component.Actor.servo.protocol.Stream_servosStatus import Stream_servosStatus
+
+
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
-from RoboControl.Robot.Component.Actor.servo.protocol.Msg_servoSettings import Msg_servoSettings
+
 
 
 class ServoSet(ComponentSet, List[Servo]):

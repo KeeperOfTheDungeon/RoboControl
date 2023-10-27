@@ -4,8 +4,8 @@ from RoboControl.Com.RemoteData import RemoteData, RemoteMessage, RemoteStream
 from RoboControl.Com.Connection import RemoteDataOutput
 
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
-from RoboControl.Robot.AbstractRobot.Config.ComponentConfig import ComponentConfig
-from RoboControl.Robot.AbstractRobot.Config.DeviceConfig import DeviceConfig
+from RoboControl.Robot.AbstractRobot.ComponentConfig import ComponentConfig
+from RoboControl.Robot.AbstractRobot.DeviceConfig import DeviceConfig
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Device.DeviceProtocol import DeviceProtocol
@@ -19,8 +19,8 @@ from RoboControl.Robot.Device.control.DeviceAquisators import DeviceAquisators
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
-class RobotDevice(
-    AbstractRobotDevice,):
+class RobotDevice(    AbstractRobotDevice,):
+
     def __init__(self, component_config: DeviceConfig):
         super().__init__(component_config)
         self._aquisators = DeviceAquisators.get_data_aquisators()

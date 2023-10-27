@@ -15,12 +15,17 @@ class DataHub(RobotDevice):
     ID = 0
     _texts: TextSet
 
-    def __init__(self, component_config):
-        super().__init__(component_config)  # super(DataHub.NAME, DataHub.ID)
-        self._aquisators = DataHubAquisator.get_data_aquisators()
+
+
+    def build(self):
         self._protocol = DataHubProtocol(self)
+
+        self._aquisators = DataHubAquisator.get_data_aquisators()
+
         self.add_texts([])  # WIP
+
         self.build_protocol()
+
 
     def build_protocol(self):
         super().build_protocol()

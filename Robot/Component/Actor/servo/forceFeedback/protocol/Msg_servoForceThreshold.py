@@ -3,7 +3,8 @@ from typing import Union, List
 from Devices.LegController import LegControllerProtocol
 from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 from RoboControl.Com.RemoteData import RemoteMessage
-from RoboControl.Robot.Component.Actor.servo.protocol.RemoteParameterServoPosition import RemoteParameterServoPosition
+from RoboControl.Robot.Component.Actor.servo.RemoteParameterServo import RemoteParameterServoPosition
+
 
 INDEX_SERVO = 0
 INDEX_SPEED = 1

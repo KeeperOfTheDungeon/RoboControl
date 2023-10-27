@@ -22,9 +22,8 @@ from RoboControl.Robot.Component.Actor.servo.ServoProtocol import Cmd_moveServoT
 from RoboControl.Robot.Component.Actor.servo.forceFeedback.protocol.Msg_servoForceThreshold import Msg_servoForceThreshold
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
-from RoboControl.Robot.Value.servo.ServoDestinationValue import ServoDestinationValue
-from RoboControl.Robot.Value.servo.ServoPositionValue import ServoPositionValue
-from RoboControl.Robot.Value.servo.ServoVelocityValue import ServoVelocityValue
+from RoboControl.Robot.Value.ServoValue import ServoDestinationValue
+from RoboControl.Robot.Value.ServoValue import ServoPositionValue, ServoVelocityValue
 
 
 class Servo(Actor):

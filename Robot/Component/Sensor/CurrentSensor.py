@@ -2,7 +2,7 @@ from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.Sensor.CurrentSensorProtocol import Cmd_getActualCurrentDrain, Cmd_getMaximalCurrentDrain, Cmd_getTotalCurrentDrain, Cmd_resetMaximalCurrentDrain, Cmd_resetTotalCurrentDrain, Cmd_setCurrentSettings, Msg_currentSettings, Msg_maxCurrentDrain, Msg_measuredCurrent, Msg_totalCurrentDrain, Stream_actualConsumption, Stream_maxConsumption, Stream_totalConsumption
 from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
-from RoboControl.Robot.Value.current.CurrentValue import CurrentValue
+from RoboControl.Robot.Value.ComponentValue import CurrentValue
 
 
 class CurrentSensor(Sensor):

@@ -3,7 +3,7 @@ from RoboControl.Robot.Component.Actor.Actor import Actor
 from RoboControl.Robot.Component.Actor.LedProtocol import Cmd_getLedBrightness, Cmd_setLedBrightness
 
 
-from RoboControl.Robot.Value.BrightnessValue import BrightnessValue
+from RoboControl.Robot.Value.ComponentValue import BrightnessValue
 
 
 class Led(Actor):

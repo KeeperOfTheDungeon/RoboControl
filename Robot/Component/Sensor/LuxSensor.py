@@ -3,7 +3,7 @@ from RoboControl.Robot.Component.Sensor.Sensor import Sensor
 from RoboControl.Robot.Component.Sensor.LuxSensorProtocol import Cmd_getLux, Msg_lux, Stream_lux
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
-from RoboControl.Robot.Value.lux.LuxValue import LuxValue
+from RoboControl.Robot.Value.ComponentValue import LuxValue
 
 
 class LuxSensor(Sensor):

@@ -114,12 +114,7 @@ class RemoteCommand(RemoteData):
     def get_data_packet(self) -> RemoteCommandDataPacket:
         data_packet = RemoteCommandDataPacket(self.get_destination_address(), self.get_source_address(), self.get_id())
         return self.make_data_packet(data_packet)
-
-    @staticmethod
-    def get_command(*args, **kwargs):
-        raise ValueError("You are trying to create a generic RemoteCommand!")
-
-
+ 
 class RemoteMessage(RemoteData):
     _type_name: str = "message"
 

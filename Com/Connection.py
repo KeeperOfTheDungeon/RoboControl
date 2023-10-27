@@ -102,21 +102,21 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
     def disconnect(self):
         self._data_input.running = False
 
-    def is_remote(self):
-        return self._data_output.get_remote()
+   # def is_remote(self):
+  #      return self._data_output.get_remote()
 
-    def set_remote(self):
-        self._data_output.set_remote()
+  #  def set_remote(self):
+  #      self._data_output.set_remote()
 
     def transmitt(self, remote_data: RemoteData):
         # print("c : Transmitt")
         if self._data_output is None:
             print("Can't transmit as _data_output isn't set.")
             return False
-        if self.is_remote():
-            remote_data.set_source_address(self.device_id)
-        else:
-            remote_data.set_destination_address(self.device_id)
+      #  if self.is_remote():
+      #      remote_data.set_source_address(self.device_id)
+      #  else:
+      #      remote_data.set_destination_address(self.device_id)
   
         data_packet= remote_data.get_data_packet()
         

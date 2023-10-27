@@ -33,7 +33,7 @@ class Robot(AbstractRobot):
     def connect(self, connection: Connection) -> None:
         """ "connect to remote device over given connection" """
         super().connect(connection)
-        connection.set_remote()
+        #connection.set_remote()
 
     def on_connected(self) -> None:
         """ "called when robot gets connected to remote device , load all setup data;" """

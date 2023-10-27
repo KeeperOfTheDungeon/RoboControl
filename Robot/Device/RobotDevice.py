@@ -63,12 +63,18 @@ class RobotDevice(AbstractRobotDevice):
     def get_aquisators(self) -> list[DataAquisator]:
         return self._aquisators
 
+    REMOTE_CHANEL_ID: int = 1
+
     def send_data(self, data: RemoteData) -> bool:
-        # print("ARD: send Data", data_packet)
+
+        # if remote send wit remote id
+        data.set_source_address(RobotDevice.REMOTE_CHANEL_ID)
         data.set_destination_address(self.get_id())
         if self._transmitter is None:
             return False
         return self._transmitter.transmitt(data)
+
+
 
     def load_setup(self) -> None:
         for component in self._component_list:

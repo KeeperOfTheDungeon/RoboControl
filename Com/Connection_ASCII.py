@@ -69,7 +69,7 @@ class DataPacketAscii:
                 return parsed_remote_data
 
         print("UNSYNC")
-        return RemoteData(0, "", "")
+        return RemoteData(0, "")
 
     def get_byte(self, offset: int, length: int = SIZE_PARAM):
         if offset + length >= len(self._data_buffer):

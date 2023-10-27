@@ -1,6 +1,6 @@
 import datetime
 
-from RoboControl.Com.PacketLogger.LoggedDataPacket import DisplayDataWidth_e, render_data
+#from RoboControl.Com.PacketLogger.LoggedDataPacket import DisplayDataWidth_e, render_data
 
 #from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
 
@@ -139,7 +139,7 @@ class RemoteDataPacket:
         # return "null" if self._type is None else str(self._type)
         res = f"RemoteDataPacket({self._command})"
         res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
-        res += f"\n\tdata: {render_data(self, DisplayDataWidth_e.WIDTH_8, True)}"
+        #res += f"\n\tdata: {render_data(self, DisplayDataWidth_e.WIDTH_8, True)}" #dont work with pico
         res += f"\n\tremote_data: " + str(self._remote_data).split("\n")[0].strip()
         return res
 

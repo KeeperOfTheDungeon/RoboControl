@@ -57,6 +57,8 @@ class Servo(Actor):
         self._cmd_getServoPosition = protocol["cmd_getServoPosition"]
         self._cmd_setServoPosition =  protocol["cmd_setServoPosition"]
 
+        
+
     def set_servo_setup(self, min_range: float, max_range: float, offset: int, scale: int, reverse: bool) -> None:
         self._position.set_range(min_range, max_range)
         self._offset = offset

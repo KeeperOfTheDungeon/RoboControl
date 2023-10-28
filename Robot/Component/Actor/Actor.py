@@ -1,5 +1,3 @@
-from abc import abstractmethod
-from typing import List
 
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Value.ComponentValue import ComponentValue
@@ -11,7 +9,6 @@ class Actor(RobotComponent):
     def __init__(self, meta_data):
         super().__init__(meta_data)
 
-    @abstractmethod
     def remote_get_value(self) -> bool:
         pass
 

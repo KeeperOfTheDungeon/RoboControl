@@ -167,6 +167,9 @@ class RobotDevice(AbstractRobotDevice):
         if isinstance(remote_command, Cmd_ping):
             self.process_ping_command(remote_command)
             return True
+        if isinstance(remote_command, Cmd_getNodeId):
+            self.process_get_nodeId_command(remote_command)
+            return True
 
     def decode_message(self, remote_message: RemoteMessage) -> bool:
         if isinstance(remote_message, Msg_pingResponse):
@@ -231,6 +234,7 @@ class RobotDevice(AbstractRobotDevice):
 
     def add_commands(self):
         self.add_command_processor(Cmd_ping(DeviceProtocol.CMD_PING), self)
+        self.add_command_processor(Cmd_ping(DeviceProtocol.Cmd_getNodeId), self)
         self.add_stream_control()
 
     def add_stream_control(self):

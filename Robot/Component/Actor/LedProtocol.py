@@ -1,4 +1,3 @@
-from typing import List
 from RoboControl.Com.RemoteData import RemoteCommand
 from RoboControl.Com.RemoteParameter import RemoteParameterUint8
 
@@ -7,11 +6,12 @@ from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
 class LedProtocol(ActorProtocol):
-    def get_command_processors(self, remote_decoder) -> List[RemoteProcessor]:
+    def get_command_processors(self, remote_decoder):
         """ "get led command processors"
         @:param "remoteDecoder barometric sensor set"
         @:return "commands processors for barometric sensor"
         """
+        print("get command processor in protocol")
         commands = super().get_command_processors(remote_decoder)
         for cmd in [
             RemoteProcessor(Cmd_setLedBrightness(self._cmd_set_value_id), remote_decoder),

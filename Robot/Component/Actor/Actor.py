@@ -15,5 +15,5 @@ class Actor(RobotComponent):
     def get_control_value(self) -> ComponentValue:
         return self._control_value
 
-    def get_control_values(self) -> List[ComponentValue]:
+    def get_control_values(self):
         return [self._control_value]

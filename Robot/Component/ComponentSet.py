@@ -52,6 +52,10 @@ class ComponentSet(list):
         for component in self:
             component.set_transmitter(self._transmitter)
 
+
+    def decode_command(self, remote_command):
+        return False
+ 
     def decode_message(self, remote_data):
         return False
 

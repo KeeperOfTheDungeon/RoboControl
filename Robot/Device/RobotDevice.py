@@ -6,7 +6,7 @@ from RoboControl.Robot.AbstractRobot.ComponentConfig import ComponentConfig
 from RoboControl.Robot.AbstractRobot.DeviceConfig import DeviceConfig
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
-from RoboControl.Robot.Device.DeviceProtocol import DeviceProtocol
+from RoboControl.Robot.Device.DeviceProtocol import DeviceProtocol, Msg_nodeType
 from RoboControl.Robot.Device.DeviceProtocol import Cmd_clearAllDataStreams, Cmd_clearComStatistics, Cmd_clearCpuStatistics, Cmd_continueAllDataStreams
 from RoboControl.Robot.Device.DeviceProtocol import Cmd_getErrorCount, Cmd_getNextError, Cmd_getNodeId, Cmd_loadDataStreams, Cmd_pauseAllDataStreams
 from RoboControl.Robot.Device.DeviceProtocol import Cmd_ping, Cmd_saveDataStreams, Cmd_startStreamData
@@ -97,6 +97,12 @@ class RobotDevice(AbstractRobotDevice):
         print("******************got ping command************************")
         msg = Msg_pingResponse.get_command(DeviceProtocol.MSG_PING_RESPONSE)
         self.send_data(msg)
+
+    def process_get_nodeId_command(self, remote_command):
+        print("******************got get Node ID command************************")
+        msg = Msg_nodeType.get_command(DeviceProtocol.MSG_NODE_TYPE)
+        self.send_data(msg)
+
 
     # noinspection PyMethodMayBeStatic
     def process_ping_response(self,  Msg_pingResponse):

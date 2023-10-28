@@ -27,7 +27,8 @@ class DeviceProtocol:
     CMD_SAVE_STREAMS = 0x15
     CMD_LOAD_STREAMS = 0x16
 
-    MSG_PING_RESPONSE = 0x01
+    MSG_PING_RESPONSE   = 0x01
+    MSG_NODE_TYPE       = 0x02
 
     MSG_COM_STATUS = 0x03
     MSG_CPU_STATUS = 0x04

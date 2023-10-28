@@ -55,8 +55,11 @@ class LedSet(ComponentSet):
 
     def decode_command(self, remote_command):
         if isinstance(remote_command, Cmd_setLedBrightness):
-            print("got brightness") #self.process_ping_command(remote_command)
+            index = remote_command.get_index()
+            brightness = remote_command.get_brightness()
+            self.set_brightness(index,brightness)
             return True
+            
         if isinstance(remote_command, Cmd_getLedBrightness):
             print("get Valuuueee") #self.process_ping_command(remote_command)
             return True

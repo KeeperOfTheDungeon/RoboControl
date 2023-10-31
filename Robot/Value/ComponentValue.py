@@ -157,6 +157,17 @@ class RadiantValue(ComponentValue):
         return Radiant.convert_radiant_to_degree(self._value)
     
 
+
+class LightValue(ComponentValue):
+
+    def __init__(self, meta_data):
+        meta_data["type_name"] = "light"
+        meta_data["description"] = "light"
+        super().__init__(meta_data)
+
+
+
+
 class LuxValue(ComponentValue):
 
     def __init__(self, meta_data):

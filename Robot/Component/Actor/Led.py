@@ -9,12 +9,13 @@ from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 class Led(Actor):
     def __init__(self, meta_data):
         super().__init__(meta_data)
-        print("Add a led")
         self._brightness_value = BrightnessValue(meta_data)
         protocol = meta_data.get("protocol")
         self._cmd_setBrightness = protocol["cmd_setBrightness"]
         self._cmd_getBrightness = protocol["cmd_getBrightness"]
 
+    def set_brightness(self, brightness):
+         self._brightness_value.set_value(brightness)
 
 
     def remote_set_brightness(self, brightness: float) -> bool:

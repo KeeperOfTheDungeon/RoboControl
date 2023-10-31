@@ -1,9 +1,6 @@
-# import copy
-
-
 from RoboControl.Com.RemoteData import RemoteData
 from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
-from RoboControl.Robot.AbstractRobot import DeviceConfig
+
 
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent, AbstractComponentList
 
@@ -17,17 +14,12 @@ from RoboControl.Robot.Value.ComponentValue import ComponentValue
 from RoboControl.Com.RemoteDataPacket import RemoteCommandDataPacket, RemoteExceptionDataPacket, RemoteMessageDataPacket, RemoteStreamDataPacket
 
 class AbstractRobotDevice():
-    _name = "AbstractRobotDevice"
     _type_name = "?"
     _transmitter = None  # RemoteDataTransmitter
 
-    def __init__(self, component_config: DeviceConfig):
-        AbstractComponent.__init__(self, {
-            "name": component_config.get_name(),
-            "global_id": component_config.get_id()  # FIXME is this right?
-        })
-     
-        self._id: int = component_config.get_id()
+    def __init__(self, device_meta_data):
+        self._name = device_meta_data["DeviceName"]
+        self._id = device_meta_data["DeviceId"]
 
         self._command_processor_list = RemoteProcessorList()
         self._message_processor_list = RemoteProcessorList()

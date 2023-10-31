@@ -3,7 +3,6 @@ from RoboControl.Com.Connection import RemoteDataOutput
 
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
 from RoboControl.Robot.AbstractRobot.ComponentConfig import ComponentConfig
-from RoboControl.Robot.AbstractRobot.DeviceConfig import DeviceConfig
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Device.DeviceProtocol import DeviceProtocol, Msg_nodeType
@@ -19,8 +18,8 @@ from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 class RobotDevice(AbstractRobotDevice):
 
-    def __init__(self, component_config: DeviceConfig):
-        super().__init__(component_config)
+    def __init__(self, device_meta_data):
+        super().__init__(device_meta_data)
         self._aquisators = DeviceAquisators.get_data_aquisators()
         self._event_listener = list()
         self.build()

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from RoboControl.Com.Connection import Connection
 from RoboControl.Com.PacketLogger.DataPacketLogger import DataPacketLogger
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent

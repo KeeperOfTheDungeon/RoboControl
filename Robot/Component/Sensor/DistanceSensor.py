@@ -15,7 +15,7 @@ class DistanceSensor(Sensor):
         return self._distance_value
 
     def get_distance(self):
-        self._distance_value.get_milimeters()
+        self._distance_value.get_millimeters()
 
     def set_distance(self, value):
         self._distance_value.set_value(value)
@@ -23,7 +23,6 @@ class DistanceSensor(Sensor):
     def remote_get_distance(self):
         cmd = Cmd_getDistance.get_command(self._cmd_get_value, self._local_id)
         self.send_data(cmd)
-
 
 
 class DistanceSensorSet(ComponentSet):
@@ -76,7 +75,7 @@ class DistanceSensorSet(ComponentSet):
             super().decode_stream(remote_data)
         return False
 
-    def decode_message(self, remote_data) :
+    def decode_message(self, remote_data):
         if isinstance(remote_data, Msg_distance):
             self.process_sensor_distance(remote_data)
         else:

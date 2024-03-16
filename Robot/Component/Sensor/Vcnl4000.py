@@ -5,9 +5,6 @@ from RoboControl.Robot.Component.Sensor.DistanceSensor import DistanceSensor, Di
 from RoboControl.Robot.Component.Sensor.LuxSensor import LuxSensor, LuxSensorSet
 
 
-
-
-
 class Vcnl4000(RobotComponent):
     _max_range = 0
     _min_range = 0

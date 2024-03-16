@@ -1,9 +1,8 @@
 from RoboControl.Com.RemoteData import RemoteCommand, RemoteMessage
 from RoboControl.Com.RemoteParameter import RemoteParameterUint16, RemoteParameterUint8
 from RoboControl.Robot.Component.Sensor.RemoteParameterVcnl4000Settings import RemoteParameterVcnl4000Settings
-from RoboControl.Robot.Component.Sensor.Vcnl4000 import Vcnl4000FrequencyModes
-
-
+from RoboControl.Robot.Component.Sensor.Vcnl4000 import Vcnl4000FrequencyModes, Vcnl4000DistanceSensor, DistanceTable, \
+    Vcnl4000DistanceSensorSet
 
 INDEX_SENSOR = 0
 
@@ -240,7 +239,7 @@ class Msg_vcnl4000Settings(RemoteMessage):
     def get_ir_current(self):
         return self._parameter_list[Msg_vcnl4000Settings.INDEX_PARAMETERS].get_ir_current()
 
-    def get_averaging_mode(self)s:
+    def get_averaging_mode(self):
         return self._parameter_list[Msg_vcnl4000Settings.INDEX_PARAMETERS].get_averaging_mode()
 
     def get_proximity_frequency(self):

@@ -2,9 +2,9 @@ from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.Actor.Actor import Actor
 from RoboControl.Robot.Component.Actor.LedProtocol import Cmd_getLedBrightness, Cmd_setLedBrightness
 
-
 from RoboControl.Robot.Value.ComponentValue import BrightnessValue
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
+
 
 class Led(Actor):
     def __init__(self, meta_data):
@@ -15,13 +15,11 @@ class Led(Actor):
         self._cmd_getBrightness = protocol["cmd_getBrightness"]
 
     def set_brightness(self, brightness):
-         self._brightness_value.set_value(brightness)
-
+        self._brightness_value.set_value(brightness)
 
     def remote_set_brightness(self, brightness: float) -> bool:
-        cmd = Cmd_setLedBrightness.get_command(self._cmd_setBrightness, self._local_id, brightness )
+        cmd = Cmd_setLedBrightness.get_command(self._cmd_setBrightness, self._local_id, brightness)
         return self.send_data(cmd)
-
 
     def remote_get_brightness(self) -> bool:
         cmd = Cmd_getLedBrightness.get_command(self._cmd_getValue, self._cmd_getBrightness)
@@ -36,9 +34,6 @@ class LedSet(ComponentSet):
         )
         self._cmd_setBrightness = protocol["cmd_setBrightness"]
         self._cmd_getBrightness = protocol["cmd_getBrightness"]
-
-
-    
 
     def get_command_processors(self):
         command_list = super().get_command_processors()
@@ -58,10 +53,9 @@ class LedSet(ComponentSet):
         if isinstance(remote_command, Cmd_setLedBrightness):
             index = remote_command.get_index()
             brightness = remote_command.get_brightness()
-            self.set_brightness(index,brightness)
-            return True
-            
-        if isinstance(remote_command, Cmd_getLedBrightness):
-            print("get Valuuueee") #self.process_ping_command(remote_command)
+            self.set_brightness(index, brightness)
             return True
 
+        if isinstance(remote_command, Cmd_getLedBrightness):
+            print("get Valuuueee")  # self.process_ping_command(remote_command)
+            return True

@@ -1,6 +1,3 @@
-
-
-
 import sys
 
 from RoboControl.Robot.Math.Radiant import Radiant
@@ -117,14 +114,14 @@ class ComponentValue:
 
 
 class BrightnessValue(ComponentValue):
-	
-		def __init__(self, meta_data):
-			meta_data["type_name"] = "brightness"
-			meta_data["description"] = "brightness"
-			meta_data["max_range"] = 1.0
-			meta_data["min_range"] = 0.0
-			super().__init__(meta_data)
-               
+
+    def __init__(self, meta_data):
+        meta_data["type_name"] = "brightness"
+        meta_data["description"] = "brightness"
+        meta_data["max_range"] = 1.0
+        meta_data["min_range"] = 0.0
+        super().__init__(meta_data)
+
 
 class FloatValue(ComponentValue):
     def __init__(self, meta_data):
@@ -155,7 +152,6 @@ class FloatValue(ComponentValue):
 class RadiantValue(ComponentValue):
     def get_value_as_degree(self):
         return Radiant.convert_radiant_to_degree(self._value)
-    
 
 
 class LightValue(ComponentValue):
@@ -166,8 +162,6 @@ class LightValue(ComponentValue):
         super().__init__(meta_data)
 
 
-
-
 class LuxValue(ComponentValue):
 
     def __init__(self, meta_data):
@@ -176,14 +170,33 @@ class LuxValue(ComponentValue):
         super().__init__(meta_data)
 
 
+class TemperatureValue(ComponentValue):
+
+    def __init__(self, meta_data):
+        meta_data["type_name"] = "temperature"
+        meta_data["description"] = "temperature"
+        meta_data["max_range"] = 100.0
+        meta_data["min_range"] = -100.0
+        super().__init__(meta_data)
+
+    def get_temperature(self):
+        return self._value
+
+    def set_temperature(self, temperature):
+        self._value = temperature
+        return
+
 
 class DistanceValue(ComponentValue):
     def __init__(self, meta_data):
         meta_data["type_name"] = "distance"
         meta_data["description"] = "distance value"
         super().__init__(meta_data)
-        self._beamWidth = meta_data["beam_width"]
-        self._granularity = meta_data["granularity"]
+
+        if "beam_width" in meta_data:
+            self._beamWidth = meta_data["beam_width"]
+        if "granularity" in meta_data:
+            self._granularity = meta_data["granularity"]
 
     def get_granularity(self):
         return self._granularity
@@ -209,12 +222,12 @@ class DistanceValue(ComponentValue):
     def get_distance_range(self):
         return self._max_range
 
-    def get_milimeters(self):
+    def get_millimeters(self):
         return self._value
 
     def get_beam_width(self):
         return self._beamWidth
-    
+
 
 class CurrentValue(ComponentValue):
     def __init__(self, meta_data):

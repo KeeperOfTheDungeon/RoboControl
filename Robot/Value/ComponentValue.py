@@ -42,9 +42,15 @@ class ComponentValue:
 
     def get_min_range(self) -> float:
         return self._min_range
+    
+    def set_min_range(self, min_range: float) -> None:
+        self._min_range = min_range
 
     def get_max_range(self) -> float:
         return self._max_range
+    
+    def set_max_range(self, max_range: float) -> None:
+        self._max_range = max_range
 
     def set_overflow_value(self) -> None:
         self._value = self._max_range

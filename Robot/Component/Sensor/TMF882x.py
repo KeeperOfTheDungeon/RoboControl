@@ -1,8 +1,10 @@
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.Sensor.DistanceSensor import DistanceSensorSet, DistanceSensor
+from RoboControl.Robot.Component.Sensor.DistanceSensorProtocol import Cmd_getDistance
 
 from RoboControl.Robot.Component.Sensor.TemperatureSensor import TemperatureSensor, TemperatureSensorSet
+from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
 
 
 class TMF882x(RobotComponent):
@@ -45,10 +47,10 @@ class TMF882xSet(ComponentSet):
 
         super().__init__(self.tmf882x_sensors)
 
-        protocol["cmd_getValue"] = protocol["cmd_getTemperature"]
+        self._cmd_getTemperature = protocol["cmd_getTemperature"] = protocol["cmd_getValue"]
         self._temperature_sensor_set = TMF882xTemperatureSensorSet(self.temperature_sensors, protocol)
 
-        protocol["cmd_getValue"] = protocol["cmd_getDistance"]
+        self._cmd_getDistance = protocol["cmd_getDistance"] = protocol["cmd_getValue"]
         self._distance_sensor_set = TMF882xDistanceSensorSet(self.distance_sensors, protocol)
 
     def get_distance_sensors(self):
@@ -59,6 +61,7 @@ class TMF882xSet(ComponentSet):
 
     def get_command_processors(self):
         command_list = super().get_command_processors()
+        command_list.append(RemoteProcessor(Cmd_getDistance(self._cmd_getDistance), self))
         command_list.extend(self._distance_sensor_set.get_command_processors())
         command_list.extend(self._temperature_sensor_set.get_command_processors())
         return command_list
@@ -78,6 +81,14 @@ class TMF882xSet(ComponentSet):
     def get_component_on_local_id(self, index: int) -> TMF882x:
         return super().get_component_on_local_id(index)
 
+    def decode_command(self, remote_command):
+        if isinstance(remote_command, Cmd_getDistance):
+            cmd: Cmd_getDistance = remote_command
+            print("TMF8821: ", cmd.get_parameters_as_string(True))
+            index = cmd.get_index().get_value()
+            print("TMF8821: ", index)
+            return True
+
 
 class TMF882xDistanceSensor(DistanceSensor):
     TMF882x_MAX_RANGE = 5000.0
@@ -88,6 +99,7 @@ class TMF882xDistanceSensor(DistanceSensor):
     def __init__(self, meta_data):
         meta_data["min_range"] = TMF882xDistanceSensor.TMF882x_MIN_RANGE
         meta_data["max_range"] = TMF882xDistanceSensor.TMF882x_MAX_RANGE
+        meta_data["protocol"]["cmd_getValue"] = meta_data["protocol"]["cmd_getTemperature"]
         super().__init__(meta_data)
 
 

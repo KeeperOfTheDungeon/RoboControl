@@ -144,7 +144,9 @@ class AbstractRobotDevice():
 
 
     def parse_data_packet(self, data_packet):
-        print("ard: ",data_packet)
+        #TODO remove debugging stuff
+        print("ard: ", data_packet)
+        print("Data packet: ", data_packet.__dict__)
         remote_id = data_packet.get_id()
         processor = self._find_processor(data_packet, remote_id)
         if processor is not None:

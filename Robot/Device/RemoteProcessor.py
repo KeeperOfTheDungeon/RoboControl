@@ -1,5 +1,6 @@
 from RoboControl.Com.RemoteData import RemoteCommand, RemoteMessage, RemoteStream, RemoteException
 
+
 # WIP check if this merged right
 
 class RemoteProcessor:
@@ -20,6 +21,12 @@ class RemoteProcessor:
         return self._remote_data.get_id()
 
     def execute(self, remote_data):
+
+        remote_dict = remote_data.__dict__
+        print(remote_dict)
+        for parameter in remote_dict["_parameter_list"]:
+            print(parameter.get_as_string(True))
+
         if self._remote_processor is None:
             return
         if callable(self._remote_processor):
@@ -36,11 +43,12 @@ class RemoteProcessor:
         # elif isinstance(remote_data, RemoteAlert):
         #     self._remote_processor.decode_exception(remote_data)
 
+
 class RemoteProcessorList(list):
     def find_on_id(self, id):
-        # print("RPL : looking for id - ",id)
+        print("RPL : looking for id - ", id)
         for processor in self:
-            # print("RPL : ",processor, " id : ", processor.get_remote_id())
+            print("RPL : ", processor, " id : ", processor.get_remote_id())
             if processor.has_remote_id(id):
                 return processor
         return None

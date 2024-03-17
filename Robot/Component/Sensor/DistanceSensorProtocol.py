@@ -7,11 +7,14 @@ INDEX_SENSOR = 0
 class Cmd_getDistance(RemoteCommand):
 
     def __init__(self, id):
-        super().__init__(id, "Cmd_getDistance", "get measured distance from a distance sensor")
+        super().__init__(id, "Cmd_getDistance")
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
 
     def set_index(self, index):
         self._parameter_list[INDEX_SENSOR].set_value(index)
+
+    def get_index(self):
+        self._parameter_list[INDEX_SENSOR].get_value()
 
     @staticmethod
     def get_command(id: int, local_id):

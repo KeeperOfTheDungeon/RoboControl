@@ -262,11 +262,11 @@ class Cmd_setServoForceThreshold(RemoteCommand):
     @staticmethod
     def get_command(
             id: int,
-            index: int = None, position: int = None
+            index: int = None, value: int = None
     ):
         cmd = Cmd_setServoForceThreshold(id)
-        if None not in [index, position]:
-            cmd.set_data(index, position)
+        if None not in [index, value]:
+            cmd.set_data(index, value)
         return cmd
     
 

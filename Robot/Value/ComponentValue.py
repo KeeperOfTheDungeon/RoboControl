@@ -203,12 +203,20 @@ class DistanceValue(ComponentValue):
             self._beamWidth = meta_data["beam_width"]
         if "granularity" in meta_data:
             self._granularity = meta_data["granularity"]
+        if "confidence" in meta_data:
+            self._confidence = meta_data["confidence"]
 
     def get_granularity(self):
         return self._granularity
 
     def set_granularity(self, granularity):
         self._granularity = granularity
+
+    def set_confidence(self, confidence):
+        self._confidence = confidence
+
+    def get_confidence(self):
+        return self._confidence
 
     def set_overflow_value(self):
         self._value = 0

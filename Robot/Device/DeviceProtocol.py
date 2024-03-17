@@ -2,10 +2,7 @@ from RoboControl.Com.RemoteParameter import RemoteParameterUint8, RemoteParamete
 from RoboControl.Com.RemoteData import RemoteCommand, RemoteMessage, RemoteStream
 
 
-
-
 class DeviceProtocol:
-
     CMD_PING = 0x03
 
     CMD_GET_NODE_ID = 0x05
@@ -27,8 +24,8 @@ class DeviceProtocol:
     CMD_SAVE_STREAMS = 0x15
     CMD_LOAD_STREAMS = 0x16
 
-    MSG_PING_RESPONSE   = 0x01
-    MSG_NODE_TYPE       = 0x02
+    MSG_PING_RESPONSE = 0x01
+    MSG_NODE_TYPE = 0x02
 
     MSG_COM_STATUS = 0x03
     MSG_CPU_STATUS = 0x04
@@ -45,9 +42,7 @@ class DeviceProtocol:
         self._stream_list = []
 
 
-
 class Cmd_ping(RemoteCommand):
-
     INDEX_TTL = 0
 
     def __init__(self, id: int):
@@ -64,18 +59,16 @@ class Cmd_ping(RemoteCommand):
         return cmd
 
 
-
 class Cmd_getNodeId(RemoteCommand):
 
     def __init__(self, id):
-        super().__init__(id,  "get destinations node id")
+        super().__init__(id, "get destinations node id")
 
     @staticmethod
     def get_command(id: int):
         cmd = Cmd_getNodeId(id)
         cmd.set_id(DeviceProtocol.CMD_GET_NODE_ID)
         return cmd
-    
 
 
 class Cmd_setDeviceState(RemoteCommand):
@@ -100,7 +93,7 @@ class Cmd_setDeviceState(RemoteCommand):
 
     def get_type(self) -> int:
         return self._parameter_list[Cmd_setDeviceState.INDEX_TYPE].get_value()
-    
+
 
 class Cmd_clearComStatistics(RemoteCommand):
 
@@ -110,7 +103,7 @@ class Cmd_clearComStatistics(RemoteCommand):
     @staticmethod
     def get_command():
         return Cmd_clearComStatistics()
-    
+
 
 class Cmd_clearCpuStatistics(RemoteCommand):
 
@@ -120,7 +113,6 @@ class Cmd_clearCpuStatistics(RemoteCommand):
     @staticmethod
     def get_command():
         return Cmd_clearCpuStatistics()
-    
 
 
 class Cmd_clearAllDataStreams(RemoteCommand):
@@ -131,7 +123,7 @@ class Cmd_clearAllDataStreams(RemoteCommand):
     @staticmethod
     def get_command():
         return Cmd_clearAllDataStreams()
-    
+
 
 class Cmd_continueAllDataStreams(RemoteCommand):
 
@@ -141,7 +133,7 @@ class Cmd_continueAllDataStreams(RemoteCommand):
     @staticmethod
     def get_command():
         return Cmd_continueAllDataStreams()
-    
+
 
 class Cmd_loadDataStreams(RemoteCommand):
     def __init__(self, id: int = DeviceProtocol.CMD_LOAD_STREAMS):
@@ -150,7 +142,7 @@ class Cmd_loadDataStreams(RemoteCommand):
     @staticmethod
     def get_command():
         return Cmd_loadDataStreams()
-    
+
 
 class Cmd_saveDataStreams(RemoteCommand):
 
@@ -160,7 +152,7 @@ class Cmd_saveDataStreams(RemoteCommand):
     @staticmethod
     def get_command(id: int = DeviceProtocol.CMD_SAVE_STREAMS):
         return Cmd_saveDataStreams(id)
-    
+
 
 class Cmd_startStreamData(RemoteCommand):
     _parameter_list = list()
@@ -192,7 +184,6 @@ class Cmd_startStreamData(RemoteCommand):
         if period:
             cmd.set_period(period)
         return cmd
-    
 
 
 class Cmd_stopStreamData(RemoteCommand):
@@ -210,7 +201,7 @@ class Cmd_stopStreamData(RemoteCommand):
         cmd = Cmd_stopStreamData()
         cmd.set_type(new_type)
         return cmd
-    
+
 
 class Cmd_pauseAllDataStreams(RemoteCommand):
     def __init__(self, id: int = DeviceProtocol.CMD_PAUSE_ALL_DATA_STREAMS):
@@ -219,7 +210,6 @@ class Cmd_pauseAllDataStreams(RemoteCommand):
     @staticmethod
     def get_command():
         return Cmd_pauseAllDataStreams()
-    
 
 
 class Cmd_getErrorCount(RemoteCommand):
@@ -233,6 +223,7 @@ class Cmd_getErrorCount(RemoteCommand):
         cmd.set_id(DeviceProtocol.CMD_GET_ERROR_COUNT)
         return cmd
 
+
 class Cmd_getNextError(RemoteCommand):
 
     def __init__(self, id: int = DeviceProtocol.CMD_GET_NEXT_ERROR):
@@ -241,16 +232,15 @@ class Cmd_getNextError(RemoteCommand):
     @staticmethod
     def get_command():
         return Cmd_getNextError()
-    
+
 
 class Msg_pingResponse(RemoteMessage):
-
     INDEX_TTL = 0
 
     _parameter_list = list()
 
     def __init__(self, id: int = DeviceProtocol.MSG_PING_RESPONSE):
-        super().__init__(id,  "response to a ping command")
+        super().__init__(id, "response to a ping command")
         self._parameter_list.append(RemoteParameterUint8("ttl", "time to live"))
 
     @staticmethod
@@ -267,9 +257,7 @@ class Msg_pingResponse(RemoteMessage):
         self._parameter_list[Msg_pingResponse.INDEX_TTL].set_value(node_type)
 
 
-
 class Msg_nodeType(RemoteMessage):
-
     NODE_TYPE = 0
 
     _parameter_list = list()
@@ -302,9 +290,8 @@ class Stream_comStatistics(RemoteStream):
     INDEX_LOST_UNDELIVERABLE = 4
     INDEX_COM_STATUS = 5
 
-
     def __init__(self, id):
-        super().__init__(id,  "status of the com system")
+        super().__init__(id, "status of the com system")
 
         self._parameter_list.append(RemoteParameterUint32("transmitted", "number of transmitted messages"))
         self._parameter_list.append(RemoteParameterUint32("received", "number of recived messages thrue this device"))
@@ -339,16 +326,16 @@ class Stream_comStatistics(RemoteStream):
     @staticmethod
     def get_command(
             id: int,
-            transmitted: int = None, received: int = None, invalid: int = None, lost: int = None, status: int = None, undeliverable: int = None
+            transmitted: int = None, received: int = None, invalid: int = None, lost: int = None, status: int = None,
+            undeliverable: int = None
     ):
         cmd = Stream_comStatistics(id)
         if transmitted and received and invalid and lost and status and undeliverable:
             cmd.set_data(transmitted, received, invalid, lost, status, undeliverable)
         return cmd
-    
+
 
 class Stream_cpuStatistics(RemoteStream):
-   
     INDEX_MIN_CPU_LOAD = 0
     INDEX_ACTUAL_CPU_LOAD = 1
     INDEX_MAX_CPU_LOAD = 2
@@ -357,7 +344,7 @@ class Stream_cpuStatistics(RemoteStream):
     _parameter_list = list()
 
     def __init__(self, id: int):
-        super().__init__(id,  "status of the cpu containing values for min max and last cycle duration")
+        super().__init__(id, "status of the cpu containing values for min max and last cycle duration")
 
         self._parameter_list.append(RemoteParameterUint8("min", "min load of the device cpu"))
         self._parameter_list.append(RemoteParameterUint8("max", "max load of the device cpu"))

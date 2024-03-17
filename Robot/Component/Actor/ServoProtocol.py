@@ -382,6 +382,47 @@ class Cmd_setServoSpeed(RemoteCommand):
             cmd.set_speed(speed)
         return cmd
 
+class Cmd_saveServoDefaults(RemoteCommand):
+    def __init__(self, id):
+        super().__init__(
+            id, 
+            "save servo defaults"
+        )
+        self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
+
+    def set_index(self, index):
+        self._parameter_list[INDEX_SERVO].set_value(index)
+
+    def get_index(self):
+        return self._parameter_list[INDEX_SERVO].get_value()
+
+
+    @staticmethod
+    def get_command(id, local_id):
+        cmd = Cmd_saveServoDefaults(id)
+        cmd.set_index(local_id)
+        return cmd
+    
+class Cmd_loadServoDefaults(RemoteCommand):
+    def __init__(self, id):
+        super().__init__(
+            id, 
+            "load servo defaults"
+        )
+        self._parameter_list.append(RemoteParameterUint8("index", "servo index"))
+
+    def set_index(self, index):
+        self._parameter_list[INDEX_SERVO].set_value(index)
+
+    def get_index(self):
+        return self._parameter_list[INDEX_SERVO].get_value()
+
+
+    @staticmethod
+    def get_command(id, local_id):
+        cmd = Cmd_loadServoDefaults(id)
+        cmd.set_index(local_id)
+        return cmd
 
 
 class Msg_servoPosition(RemoteMessage):
@@ -396,7 +437,7 @@ class Msg_servoPosition(RemoteMessage):
     @staticmethod
     def get_command(
             id: int,
-            index: int = None, position: int = None,
+            index, position
     ):
         cmd = Msg_servoPosition(id)
         if None not in [index, position]:
@@ -504,11 +545,11 @@ class Msg_servoSpeed(RemoteMessage):
         return self._parameter_list[INDEX_SERVO].get_value()
 
     def get_speed(self):
-        return self._parameter_list[Msg_servoSpeed.INDEX_SPEED].get_value()
+        return self._parameter_list[INDEX_SPEED].get_value()
 
     def set_data(self, index, speed):
         self._parameter_list[INDEX_SERVO].set_value(index)
-        self._parameter_list[Msg_servoSpeed.INDEX_SPEED].set_value(speed)
+        self._parameter_list[INDEX_SPEED].set_value(speed)
 
 
     

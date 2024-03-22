@@ -1,4 +1,3 @@
-from PicoControl.Com.tmf8821.tmf8821_app import TMF8821MeasureResults
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.Sensor.DistanceSensor import DistanceSensorSet, DistanceSensor
@@ -131,8 +130,6 @@ class TMF882xDistanceSensor(DistanceSensor):
     def remote_msg_distance(self):
         cmd = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance(), self.get_confidence())
         self.device_send_data(cmd)
-
-
 
 
 

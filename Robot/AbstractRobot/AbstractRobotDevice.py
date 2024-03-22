@@ -126,7 +126,6 @@ class AbstractRobotDevice():
         return self.parse_data_packet(data_packet)
 
 
-
     def _find_processor(self, data_packet, remote_id: int):
         print("find prozessor")
         if isinstance(data_packet, RemoteCommandDataPacket):
@@ -143,7 +142,6 @@ class AbstractRobotDevice():
 
 
     def parse_data_packet(self, data_packet):
-        #TODO remove debugging stuff
         print("ard: ", data_packet)
         print("Data packet: ", data_packet.__dict__)
         remote_id = data_packet.get_id()

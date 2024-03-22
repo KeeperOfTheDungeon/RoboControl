@@ -10,6 +10,8 @@ class DistanceSensor(Sensor):
     def __init__(self, meta_data):
         super().__init__(meta_data)
         self._distance_value = DistanceValue(meta_data)
+        self._msg_distance = meta_data["protocol"]["msg_distance"]
+
 
     def get_distance_value(self):
         return self._distance_value
@@ -23,6 +25,10 @@ class DistanceSensor(Sensor):
     def remote_get_distance(self):
         cmd = Cmd_getDistance.get_command(self._cmd_get_value, self._local_id)
         self.send_data(cmd)
+
+    def remote_msg_distance(self):
+        msg = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance())
+        self.device_send_data(msg)
 
 
 class DistanceSensorSet(ComponentSet):

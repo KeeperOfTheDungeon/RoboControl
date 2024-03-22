@@ -1,9 +1,9 @@
-from PicoControl.com.tmf8821.tmf8821_app import TMF8821MeasureResults
+from PicoControl.Com.tmf8821.tmf8821_app import TMF8821MeasureResults
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.Sensor.DistanceSensor import DistanceSensorSet, DistanceSensor
-from RoboControl.Robot.Component.Sensor.TMF882xProtocol import Msg_distance
-from RoboControl.Robot.Component.Sensor.DistanceSensorProtocol import Cmd_getDistance
+from RoboControl.Robot.Component.Sensor.TMF882xProtocol import Msg_distance as TMF_Msg_distance
+from RoboControl.Robot.Component.Sensor.DistanceSensorProtocol import Cmd_getDistance, Msg_distance
 
 from RoboControl.Robot.Component.Sensor.TemperatureSensor import TemperatureSensor, TemperatureSensorSet
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessor
@@ -50,9 +50,13 @@ class TMF882xSet(ComponentSet):
         super().__init__(self.tmf882x_sensors)
 
         self._cmd_getTemperature = protocol["cmd_getTemperature"] = protocol["cmd_getValue"]
+        self._msg_distance = protocol["msg_temperature"]
+
         self._temperature_sensor_set = TMF882xTemperatureSensorSet(self.temperature_sensors, protocol)
 
         self._cmd_getDistance = protocol["cmd_getDistance"] = protocol["cmd_getValue"]
+        self._msg_distance = protocol["msg_Value"] = protocol["msg_distance"]
+
         self._distance_sensor_set = TMF882xDistanceSensorSet(self.distance_sensors, protocol)
 
     def get_distance_sensors(self):
@@ -70,6 +74,7 @@ class TMF882xSet(ComponentSet):
 
     def get_message_processors(self):
         msg_list = super().get_message_processors()
+        msg_list.append(RemoteProcessor(Msg_distance(self._msg_distance), self))
         msg_list.extend(self._temperature_sensor_set.get_message_processors())
         msg_list.extend(self._distance_sensor_set.get_message_processors())
         return msg_list
@@ -82,12 +87,6 @@ class TMF882xSet(ComponentSet):
 
     def get_component_on_local_id(self, index: int) -> TMF882x:
         return super().get_component_on_local_id(index)
-
-    def decode_command(self, remote_command):
-        if isinstance(remote_command, Cmd_getDistance):
-            cmd: Cmd_getDistance = remote_command
-            print("TMF8821: ", cmd.get_parameter_list()[0])
-            return True
 
 
 class TMF882xDistanceSensor(DistanceSensor):
@@ -105,11 +104,8 @@ class TMF882xDistanceSensor(DistanceSensor):
         super().__init__(meta_data)
 
     def set_distance(self, value):
-        if isinstance(value, TMF8821MeasureResults):
-            super().set_distance(value.distanceInMm)
-            self.set_confidence(value.confidence)
-        else:
-            super().set_distance(value)
+        super().set_distance(value.distanceInMm)
+        self.set_confidence(value.confidence)
 
     def set_confidence(self, value):
         self._distance_value.set_confidence(value)
@@ -118,7 +114,7 @@ class TMF882xDistanceSensor(DistanceSensor):
         return self._distance_value.get_confidence()
 
     def Msg_distance(self):
-        cmd = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance(), self.get_confidence())
+        cmd = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance())
         self.send_data(cmd)
 
 

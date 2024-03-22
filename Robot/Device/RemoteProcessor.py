@@ -22,10 +22,10 @@ class RemoteProcessor:
 
     def execute(self, remote_data):
 
-        remote_dict = remote_data.__dict__
-        print(remote_dict)
-        for parameter in remote_dict["_parameter_list"]:
-            print(parameter.get_as_string(True))
+        #remote_dict = remote_data.__dict__
+        #print(remote_dict)
+        #for parameter in remote_dict["_parameter_list"]:
+            #print(parameter.get_as_string(True))
 
         if self._remote_processor is None:
             return
@@ -46,9 +46,9 @@ class RemoteProcessor:
 
 class RemoteProcessorList(list):
     def find_on_id(self, id):
-        print("RPL : looking for id - ", id)
+        #print("RPL : looking for id - ", id)
         for processor in self:
-            print("RPL : ", processor, " id : ", processor.get_remote_id())
+            #print("RPL : ", processor, " id : ", processor.get_remote_id())
             if processor.has_remote_id(id):
                 return processor
         return None

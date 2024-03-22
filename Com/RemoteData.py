@@ -3,6 +3,7 @@ from RoboControl.Com.RemoteDataPacket import RemotePositiveAckDataPacket
 
 from RoboControl.Com.RemoteParameter import RemoteParameter
 
+
 # noinspection PyShadowingBuiltins
 class RemoteData:
     _type_name: str = "generic"
@@ -16,7 +17,7 @@ class RemoteData:
         self._destination_address = 0
         self._source_address = 0
 
-        self._parameter_list = list()
+        self._parameter_list: list[RemoteParameter] = list()
         self._payload = bytearray()
 
     def set_id(self, id: int) -> None:
@@ -54,6 +55,7 @@ class RemoteData:
         data_packet.set_remote_data(self)
         message_data = bytearray(self.get_payload_size())
         for parameter in self._parameter_list:
+            print(parameter)
             message_data.extend(parameter.get_as_buffer())
         data_packet.set_data(message_data)
         return data_packet

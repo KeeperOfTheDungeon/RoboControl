@@ -2,9 +2,8 @@ from RoboControl.Com.RemoteData import RemoteData, RemoteMessage, RemoteStream
 from RoboControl.Com.Connection import RemoteDataOutput
 
 from RoboControl.Robot.AbstractRobot.AbstractRobotDevice import AbstractRobotDevice
-from RoboControl.Robot.AbstractRobot.ComponentConfig import ComponentConfig
+from RoboControl.Robot.Component import RobotComponent
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
-from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Device.DeviceProtocol import DeviceProtocol, Msg_nodeType
 from RoboControl.Robot.Device.DeviceProtocol import Cmd_clearAllDataStreams, Cmd_clearComStatistics, \
     Cmd_clearCpuStatistics, Cmd_continueAllDataStreams

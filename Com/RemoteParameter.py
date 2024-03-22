@@ -56,6 +56,12 @@ class RemoteParameterInt(RemoteParameter):
 
     def to_string(self) -> str:
         return self._name + str(self._value)
+
+    def get_as_buffer(self):
+        buffer = bytearray(self._byte_size)
+        buffer[0] = self._value
+
+        return buffer
     
 class RemoteParameterInt8(RemoteParameterInt):
 
@@ -107,6 +113,12 @@ class RemoteParameterInt16(RemoteParameterInt):
 
         self._value -= 0x8000
         return self._byte_size
+
+    def get_as_buffer(self):
+        buffer = bytearray(self._byte_size)
+        buffer[0] = self._value
+
+        return buffer
     
 class RemoteParameterUint16(RemoteParameterInt):
 
@@ -121,6 +133,12 @@ class RemoteParameterUint16(RemoteParameterInt):
         self._value = data_buffer[index] << 8
         self._value |= data_buffer[index + 1]
         return self._byte_size
+
+    def get_as_buffer(self):
+        buffer = bytearray(self._byte_size)
+        buffer[0] = self._value
+
+        return buffer
     
 class RemoteParameterInt24(RemoteParameterInt):
 
@@ -137,6 +155,12 @@ class RemoteParameterInt24(RemoteParameterInt):
 
         self._value -= 0x800000
         return self._byte_size
+
+    def get_as_buffer(self):
+        buffer = bytearray(self._byte_size)
+        buffer[0] = self._value
+
+        return buffer
     
 
 class RemoteParameterUint24(RemoteParameterInt):
@@ -153,6 +177,12 @@ class RemoteParameterUint24(RemoteParameterInt):
         self._value |= data_buffer[index + 1] << 8
         self._value |= data_buffer[index + 2]
         return self._byte_size
+
+    def get_as_buffer(self):
+        buffer = bytearray(self._byte_size)
+        buffer[0] = self._value
+
+        return buffer
     
 
 class RemoteParameterInt32(RemoteParameterInt):
@@ -171,6 +201,12 @@ class RemoteParameterInt32(RemoteParameterInt):
 
         self._value -= 0x80000000
         return self._byte_size
+
+    def get_as_buffer(self):
+        buffer = bytearray(self._byte_size)
+        buffer[0] = self._value
+
+        return buffer
     
 class RemoteParameterUint32(RemoteParameterInt):
 
@@ -189,3 +225,9 @@ class RemoteParameterUint32(RemoteParameterInt):
         self._value |= data_buffer[index + 2] << 8
         self._value |= data_buffer[index + 3]
         return self._byte_size
+
+    def get_as_buffer(self):
+        buffer = bytearray(self._byte_size)
+        buffer[0] = self._value
+
+        return buffer

@@ -291,7 +291,7 @@ class Stream_comStatistics(RemoteStream):
     INDEX_COM_STATUS = 5
 
     def __init__(self, id):
-        super().__init__(id, "status of the com system")
+        super().__init__(id, "status of the Com system")
 
         self._parameter_list.append(RemoteParameterUint32("transmitted", "number of transmitted messages"))
         self._parameter_list.append(RemoteParameterUint32("received", "number of recived messages thrue this device"))
@@ -299,7 +299,7 @@ class Stream_comStatistics(RemoteStream):
             RemoteParameterUint32("invalid", "number of invalid messages received thrue this device"))
         self._parameter_list.append(RemoteParameterUint32("lost", "number of lost mesages"))
         self._parameter_list.append(RemoteParameterUint32("undeliverable", "number of undeliverable mesages"))
-        self._parameter_list.append(RemoteParameterUint8("status", "actual status of the device com system"))
+        self._parameter_list.append(RemoteParameterUint8("status", "actual status of the device Com system"))
 
     def get_transmitted_messages_count(self):
         return self._parameter_list[Stream_comStatistics.INDEX_TRANSMITTED_MESSAGES].get_value()

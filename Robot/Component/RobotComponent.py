@@ -1,3 +1,4 @@
+from RoboControl.Com.RemoteData import RemoteData
 from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent
 from RoboControl.Robot.Component.ComponentProtocol import Cmd_getComponentSettings
 from RoboControl.Robot.Component.ComponentProtocol import Cmd_getComponentValue
@@ -29,6 +30,14 @@ class RobotComponent(AbstractComponent):
         if self._transmitter is not None:
             self._transmitter.transmitt(remote_data)
         return None
+
+    def device_send_data(self, data: RemoteData) -> bool:
+        data.set_source_address(self._device_address)
+        data.set_destination_address(1)
+        print("send : ", str(data))
+        if self._transmitter is None:
+            return False
+        return self._transmitter.transmitt(data)
 
     def remote_load_defaults(self):
         return self.send_data(Cmd_loadComponentDefaults.get_command(self._cmd_save_defaults, self._local_id))

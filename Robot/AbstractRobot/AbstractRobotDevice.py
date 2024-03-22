@@ -6,7 +6,6 @@ from RoboControl.Robot.AbstractRobot.AbstractComponent import AbstractComponent,
 
 
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
-from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Device.DeviceStartus import ComStatus, CpuStatus
 from RoboControl.Robot.Device.RemoteProcessor import RemoteProcessorList
 from RoboControl.Robot.Value.ComponentValue import ComponentValue

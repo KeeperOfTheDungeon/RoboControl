@@ -118,7 +118,7 @@ class Connection:  # ConnectionControlInterface, RemoteDataTransmitter
       #  else:
       #      remote_data.set_destination_address(self.device_id)
   
-        data_packet= remote_data.get_data_packet()
+        data_packet = remote_data.get_data_packet()
         
         if data_packet is None:
             raise ValueError(f"Incompatible remote_data type ({type(remote_data)}): {remote_data}")

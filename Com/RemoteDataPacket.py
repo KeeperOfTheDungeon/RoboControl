@@ -1,8 +1,9 @@
 import datetime
 
-#from RoboControl.Com.PacketLogger.LoggedDataPacket import DisplayDataWidth_e, render_data
 
-#from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
+# from RoboControl.Com.PacketLogger.LoggedDataPacket import DisplayDataWidth_e, render_data
+
+# from RoboControl.Com.PacketLogger.LoggedDataPacket import render_data, DisplayDataWidth_e
 
 
 class DataPacketType:
@@ -33,8 +34,8 @@ class RemoteDataPacket:
 
         self.data: bytearray = bytearray(data_size) if data_size else bytearray()
 
-        self._remote_data  = None
- 
+        self._remote_data = None
+
         self._type = override_type or self._type
 
     def set_source_address(self, source_address: int):
@@ -139,26 +140,26 @@ class RemoteDataPacket:
         # return "null" if self._type is None else str(self._type)
         res = f"RemoteDataPacket({self._id})"
         res += f"\n\t(source) {self._source_address} -> {self._destination_address} (destination)"
-        #res += f"\n\tdata: {render_data(self, DisplayDataWidth_e.WIDTH_8, True)}" #dont work with pico
+        # res += f"\n\tdata: {render_data(self, DisplayDataWidth_e.WIDTH_8, True)}" #dont work with pico
         res += f"\n\tremote_data: " + str(self._remote_data).split("\n")[0].strip()
         return res
 
-    def get_bit(self, position: int, bit: int) :
+    def get_bit(self, position: int, bit: int):
         bit_mask = (1 << bit)
         return (self.data[position] & bit_mask) > 0
 
     # def get_data_buffer(self) -> bytebuffer:
     #    return bytebuffer(self.data)
 
-    def has_remote_data(self) :
+    def has_remote_data(self):
         return self._remote_data is not None
 
-    def get_timestamp(self) :
+    def get_timestamp(self):
         return self._timestamp
 
     def get_payload(self):
         return self.get_remote_data().get_payload()
-    
+
 
 class RemoteCommandDataPacket(RemoteDataPacket):
     _type_name: str = "remote command"
@@ -171,8 +172,8 @@ class RemoteMessageDataPacket(RemoteDataPacket):
 
 
 class RemoteStreamDataPacket(RemoteDataPacket):
-	_type_name: str = "remote stream data"
-	_type: DataPacketType = DataPacketType.STREAM
+    _type_name: str = "remote stream data"
+    _type: DataPacketType = DataPacketType.STREAM
 
 
 class RemoteExceptionDataPacket(RemoteDataPacket):
@@ -187,4 +188,4 @@ class RemotePositiveAckDataPacket(RemoteDataPacket):
 
 class RemoteNegativeAckDataPacket(RemoteDataPacket):
     _type_name: str = "remote fail"
-    _type: DataPacketType = DataPacketType.FAIL#
+    _type: DataPacketType = DataPacketType.FAIL  #

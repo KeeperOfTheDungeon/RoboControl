@@ -1,7 +1,7 @@
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.Sensor.DistanceSensor import DistanceSensorSet, DistanceSensor
-from RoboControl.Robot.Component.Sensor.TMF882xProtocol import Msg_distance as Msg_distance
+from RoboControl.Robot.Component.Sensor.TMF882xProtocol import Msg_distance as Tmf_msg_distance
 from RoboControl.Robot.Component.Sensor.DistanceSensorProtocol import Cmd_getDistance, Msg_distance
 
 from RoboControl.Robot.Component.Sensor.TemperatureSensor import TemperatureSensor, TemperatureSensorSet
@@ -74,6 +74,7 @@ class TMF882xSet(ComponentSet):
     def get_message_processors(self):
         msg_list = super().get_message_processors()
         msg_list.append(RemoteProcessor(Msg_distance(self._msg_distance), self))
+        msg_list.append(RemoteProcessor(Tmf_msg_distance(self._msg_distance), self))
         msg_list.extend(self._temperature_sensor_set.get_message_processors())
         msg_list.extend(self._distance_sensor_set.get_message_processors())
         return msg_list
@@ -84,22 +85,6 @@ class TMF882xSet(ComponentSet):
         stream_list.extend(self._temperature_sensor_set.get_stream_processors())
         return stream_list
 
-    def get_component_on_local_id(self, index: int) -> TMF882x:
-        return super().get_component_on_local_id(index)
-
-    def process_sensor_distance(self, remote_data: Msg_distance) -> None:
-        index = remote_data.get_index()
-        print(remote_data)
-        #sensor = self.get_component_on_local_id(index)
-        #if sensor is not None:
-         #   sensor.set_distance(remote_data.get_distance())
-
-    def decode_message(self, remote_data):
-        if isinstance(remote_data, Msg_distance):
-            self.process_sensor_distance(remote_data)
-        else:
-            super().decode_message(remote_data)
-        return False
 
 
 class TMF882xDistanceSensor(DistanceSensor):

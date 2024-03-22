@@ -22,10 +22,10 @@ class RemoteProcessor:
 
     def execute(self, remote_data):
 
-        #remote_dict = remote_data.__dict__
-        #print(remote_dict)
-        #for parameter in remote_dict["_parameter_list"]:
-            #print(parameter.get_as_string(True))
+        remote_dict = remote_data.__dict__
+        print(remote_dict)
+        for parameter in remote_dict["_parameter_list"]:
+            print(parameter.get_as_string(True))
 
         if self._remote_processor is None:
             return
@@ -35,6 +35,7 @@ class RemoteProcessor:
         if isinstance(remote_data, RemoteCommand):
             self._remote_processor.decode_command(remote_data)
         elif isinstance(remote_data, RemoteMessage):
+
             self._remote_processor.decode_message(remote_data)
         elif isinstance(remote_data, RemoteStream):
             self._remote_processor.decode_stream(remote_data)

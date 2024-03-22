@@ -70,6 +70,7 @@ class DistanceSensorSet(ComponentSet):
 
     def process_sensor_distance(self, remote_data: Msg_distance) -> None:
         index = remote_data.get_index()
+        print(remote_data)
         sensor = self.get_component_on_local_id(index)
         if sensor is not None:
             sensor.set_distance(remote_data.get_distance())

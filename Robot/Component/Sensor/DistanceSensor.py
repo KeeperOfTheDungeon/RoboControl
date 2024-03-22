@@ -17,10 +17,10 @@ class DistanceSensor(Sensor):
         return self._distance_value
 
     def get_distance(self):
-        self._distance_value.get_millimeters()
+        return self._distance_value.get_millimeters()
 
     def set_distance(self, value):
-        self._distance_value.set_value(value)
+        val = self._distance_value.set_value(value)
 
     def remote_get_distance(self):
         cmd = Cmd_getDistance.get_command(self._cmd_get_value, self._local_id)

@@ -2,7 +2,7 @@ from PicoControl.Com.tmf8821.tmf8821_app import TMF8821MeasureResults
 from RoboControl.Robot.Component.ComponentSet import ComponentSet
 from RoboControl.Robot.Component.RobotComponent import RobotComponent
 from RoboControl.Robot.Component.Sensor.DistanceSensor import DistanceSensorSet, DistanceSensor
-from RoboControl.Robot.Component.Sensor.TMF882xProtocol import Msg_distance as TMF_Msg_distance
+from RoboControl.Robot.Component.Sensor.TMF882xProtocol import Msg_distance as Msg_distance
 from RoboControl.Robot.Component.Sensor.DistanceSensorProtocol import Cmd_getDistance, Msg_distance
 
 from RoboControl.Robot.Component.Sensor.TemperatureSensor import TemperatureSensor, TemperatureSensorSet
@@ -88,6 +88,20 @@ class TMF882xSet(ComponentSet):
     def get_component_on_local_id(self, index: int) -> TMF882x:
         return super().get_component_on_local_id(index)
 
+    def process_sensor_distance(self, remote_data: Msg_distance) -> None:
+        index = remote_data.get_index()
+        print(remote_data)
+        #sensor = self.get_component_on_local_id(index)
+        #if sensor is not None:
+         #   sensor.set_distance(remote_data.get_distance())
+
+    def decode_message(self, remote_data):
+        if isinstance(remote_data, Msg_distance):
+            self.process_sensor_distance(remote_data)
+        else:
+            super().decode_message(remote_data)
+        return False
+
 
 class TMF882xDistanceSensor(DistanceSensor):
     TMF882x_MAX_RANGE = 5000.0
@@ -111,11 +125,15 @@ class TMF882xDistanceSensor(DistanceSensor):
         self._distance_value.set_confidence(value)
 
     def get_confidence(self):
-        return self._distance_value.get_confidence()
+        val = self._distance_value.get_confidence()
+        return val
 
-    def Msg_distance(self):
-        cmd = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance())
-        self.send_data(cmd)
+    def remote_msg_distance(self):
+        cmd = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance(), self.get_confidence())
+        self.device_send_data(cmd)
+
+
+
 
 
 class TMF882xTemperatureSensor(TemperatureSensor):

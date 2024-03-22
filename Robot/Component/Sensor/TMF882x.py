@@ -113,9 +113,8 @@ class TMF882xDistanceSensor(DistanceSensor):
         return val
 
     def remote_msg_distance(self):
-        cmd = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance(), self.get_confidence())
+        cmd = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance())
         self.device_send_data(cmd)
-
 
 
 class TMF882xTemperatureSensor(TemperatureSensor):

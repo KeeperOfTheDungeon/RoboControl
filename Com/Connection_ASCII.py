@@ -1,3 +1,4 @@
+import warnings
 from asyncio import sleep
 import math
 import threading
@@ -347,7 +348,9 @@ class AsciiInput(RemoteDataInput):
                     and self._serial_input.is_open
                     and self._serial_input.in_waiting < 1
             ):
+                warnings.filterwarnings('ignore', category=RuntimeWarning)
                 sleep(0.001)
+
             if not self.running:
                 break
 

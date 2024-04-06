@@ -53,9 +53,10 @@ class Robot(AbstractRobot):
             pass  # FIXME DataHub has no .on_disconnected
         super().on_disconnected()
 
-    def receive(self, data_packet) :
+    def receive(self, data_packet):
         source = data_packet.get_source_address()
         device = self.get_device_on_id(source)
+        print(data_packet)
 
         if device is not None:
             device.receive(data_packet)

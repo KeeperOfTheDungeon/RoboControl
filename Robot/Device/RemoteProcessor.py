@@ -35,7 +35,6 @@ class RemoteProcessor:
         if isinstance(remote_data, RemoteCommand):
             self._remote_processor.decode_command(remote_data)
         elif isinstance(remote_data, RemoteMessage):
-
             self._remote_processor.decode_message(remote_data)
         elif isinstance(remote_data, RemoteStream):
             self._remote_processor.decode_stream(remote_data)
@@ -47,9 +46,9 @@ class RemoteProcessor:
 
 class RemoteProcessorList(list):
     def find_on_id(self, id):
-        #print("RPL : looking for id - ", id)
+        print("RPL : looking for id - ", id)
         for processor in self:
-            #print("RPL : ", processor, " id : ", processor.get_remote_id())
+            print("RPL : ", processor, " id : ", processor.get_remote_id())
             if processor.has_remote_id(id):
                 return processor
         return None

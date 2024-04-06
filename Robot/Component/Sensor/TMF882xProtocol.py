@@ -1,5 +1,6 @@
 from RoboControl.Com.RemoteData import RemoteMessage
-from RoboControl.Com.RemoteParameter import RemoteParameterUint8, RemoteParameterUint24
+from RoboControl.Com.RemoteParameter import RemoteParameterUint8, RemoteParameterUint24, RemoteParameterInt, \
+    RemoteParameterInt16
 
 INDEX_SENSOR = 0
 
@@ -11,8 +12,8 @@ class Msg_distance(RemoteMessage):
     def __init__(self, id: int):
         super().__init__(id, "actual distance measured by an distance sensor")
         self._parameter_list.append(RemoteParameterUint8("index", "sensor index"))
-        self._parameter_list.append(RemoteParameterUint24("distance", "distance value in mm"))
-        self._parameter_list.append(RemoteParameterUint24("confidence", "confidence of measured distance"))
+        self._parameter_list.append(RemoteParameterInt16("distance", "distance value in mm"))
+        self._parameter_list.append(RemoteParameterInt16("confidence", "confidence of measured distance"))
 
     @staticmethod
     def get_command(

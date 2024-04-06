@@ -86,7 +86,6 @@ class TMF882xSet(ComponentSet):
         return stream_list
 
 
-
 class TMF882xDistanceSensor(DistanceSensor):
     TMF882x_MAX_RANGE = 5000.0
     TMF882x_MIN_RANGE = 10.0
@@ -102,8 +101,7 @@ class TMF882xDistanceSensor(DistanceSensor):
         super().__init__(meta_data)
 
     def set_distance(self, value):
-        super().set_distance(value.distanceInMm)
-        self.set_confidence(value.confidence)
+        super().set_distance(value)
 
     def set_confidence(self, value):
         self._distance_value.set_confidence(value)
@@ -113,8 +111,8 @@ class TMF882xDistanceSensor(DistanceSensor):
         return val
 
     def remote_msg_distance(self):
-        cmd = Msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance())
-        self.device_send_data(cmd)
+        msg = Tmf_msg_distance.get_command(self._msg_distance, self._local_id, self.get_distance(), self.get_confidence())
+        self.device_send_data(msg)
 
 
 class TMF882xTemperatureSensor(TemperatureSensor):

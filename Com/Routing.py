@@ -1,5 +1,5 @@
+#imagine having typing module support to write
 #comsystem/routing/inc/com_routing.h
-
 class RoutingMsgTypes:
     INVALID_COM_ADRESS = "0xff"
     UNREACHED_COM_ADRESS = "0xfe"
@@ -13,19 +13,48 @@ class RoutingEntry:
 
     
 #comsystem/routing/inc/com_routing.h
+#comsystem/routing/inc/com_routing.h
 class RoutingTable:
     def __init__(self):
+        self.routing_entries : list[RoutingEntry]
+
+
+#has node limit 
+#comsystem/routing/inc/com_routing.h
+#framework\comSystem\routing\inc\com_routingDataHub.h
+class RoutingTableDataHub(RoutingTable):
+    def __init__(self):
+        super().__init__()
+
+    def insert(self, node_adress, interface_id):
+        """node adress is the element index in entry list"""
         pass
 
+    def get_interface_by_node_adress(node_adress):
+        """node adress is the element index in entry list"""
+        pass
+
+    def get_interface_by_node_id(node_id):
+        pass
+
+    def get_node_id(node_adress):
+        """node adress is the element index in entry list"""
+        pass
+    
+    def get_interface_id(node_adress):
+        """node adress is the element index in entry list"""
+        pass
+
+# has node limit
 #comsystem/routing/inc/com_routing.h
-class RoutingDataHub(RoutingTable):
-    pass
+class RoutingTableNode(RoutingTable):
+    def __init__(self):
+        super().__init__()
+
 #comsystem/routing/inc/com_routing.h
-class RoutingNode(RoutingTable):
-    pass
-#comsystem/routing/inc/com_routing.h
-class RoutingEndpoint(RoutingTable):
-    pass
+class RoutingTableEndpoint(RoutingTable):
+    def __init__(self):
+        super().__init__()
 
 
 
@@ -38,9 +67,9 @@ class RoutingType:
 #comsystem/routing/inc/com_routing.h
 class RoutingClassLookUp:
     map = {
-        RoutingType.HUB : RoutingDataHub,
-        RoutingType.NODE : RoutingNode,
-        RoutingType.ENDPOINT : RoutingEndpoint
+        RoutingType.HUB : RoutingTableDataHub,
+        RoutingType.NODE : RoutingTableNode,
+        RoutingType.ENDPOINT : RoutingTableEndpoint
     }
     
     @staticmethod 

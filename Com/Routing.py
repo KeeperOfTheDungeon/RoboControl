@@ -1,4 +1,3 @@
-#imagine having typing module support to write
 #comsystem/routing/inc/com_routing.h
 class RoutingMsgTypes:
     INVALID_COM_ADRESS = "0xff"
@@ -18,7 +17,11 @@ class RoutingTable:
     def __init__(self):
         self.routing_entries : list[RoutingEntry]
 
-
+    def insert(self):
+        raise NotImplementedError()
+    
+    def get_interface_by_node_adress(node_adress):
+        raise NotImplementedError()
 #has node limit 
 #comsystem/routing/inc/com_routing.h
 #framework\comSystem\routing\inc\com_routingDataHub.h
@@ -45,6 +48,9 @@ class RoutingTableDataHub(RoutingTable):
         """node adress is the element index in entry list"""
         pass
 
+    def set_node_at_id(node_adres, node_id):
+        pass
+
 # has node limit
 #comsystem/routing/inc/com_routing.h
 # framework\comSystem\routing\inc\com_routingNode.h
@@ -60,10 +66,18 @@ class RoutingTableNode(RoutingTable):
         pass
 
 #comsystem/routing/inc/com_routing.h
+#framework\comSystem\routing\inc\com_routingEndpoint.h
 class RoutingTableEndpoint(RoutingTable):
     def __init__(self):
         super().__init__()
 
+    def get_interface_by_node_id(node_id):
+        pass
+    
+    def get_interface_by_node_adress(node_adress):
+        """node adress is the element index in entry list"""
+        pass
+    
 
 
 #comsystem/routing/inc/com_routing.h

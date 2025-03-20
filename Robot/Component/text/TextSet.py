@@ -4,7 +4,7 @@ from RoboControl.Robot.Component.text.Text import Text
 from RoboControl.Robot.Component.text.protocol.Msg_textFragment import Msg_textFragment
 
 
-class TextSet(ComponentSet, list[Text]):
+class TextSet(ComponentSet):
 	""" "Super class for TSL 2561 Sensor sets." """
 
 	def __init__(self, components: list[dict], protocol: dict):

@@ -1,6 +1,3 @@
-from typing import List
-
-
 from RoboControl.Robot.Component.text.TextSet import TextSet
 from RoboControl.Robot.Component.text.protocol.Msg_textFragment import Msg_textFragment
 from RoboControl.Robot.Device.Generic.DataHub.DataHubAquisator import DataHubAquisator

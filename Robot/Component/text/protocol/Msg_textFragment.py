@@ -1,5 +1,3 @@
-from typing import List, Union
-
 from RoboControl.Com.RemoteParameter import RemoteParameterUint16, RemoteParameterUint8
 from RoboControl.Com.RemoteDataPacket import RemoteDataPacket
 from RoboControl.Com.RemoteData import RemoteMessage
@@ -12,7 +10,7 @@ INDEX_FIRST_CHAR = 2
 
 class Msg_textFragment(RemoteMessage):
     """ "Message containing fragment of a text" """
-    _parameter_list: List[Union[RemoteParameterUint8, RemoteParameterUint16]]
+    _parameter_list: list[RemoteParameterUint8 |  RemoteParameterUint16]
 
     def __init__(self, id: int = DataHubProtocol.MSG_TEXT_FRAGMENT):
         super().__init__(id, "message containing fragment of a text")
@@ -29,7 +27,7 @@ class Msg_textFragment(RemoteMessage):
         self._parameter_list[INDEX_TEXT].set_value(index)
         self._parameter_list[INDEX_START_CHAR].set_value(start_char)
 
-    def get_fragment(self) -> List[float]:
+    def get_fragment(self) -> list[float]:
         data = [None for i in range(self.get_payload_size() - INDEX_FIRST_CHAR)]
         cursor = 0
         for index in range(INDEX_FIRST_CHAR, self.get_payload_size()):

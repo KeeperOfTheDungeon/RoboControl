@@ -117,7 +117,7 @@ class RoutingTableNode(RoutingTable):
 #framework\comSystem\routing\inc\com_routingEndpoint.h
 class RoutingTableEndpoint(RoutingTable):
     def __init__(self):
-        super().__init__()
+        pass
     
     def insert():
         pass

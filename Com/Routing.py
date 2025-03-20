@@ -118,13 +118,16 @@ class RoutingTableNode(RoutingTable):
 class RoutingTableEndpoint(RoutingTable):
     def __init__(self):
         super().__init__()
+    
+    def insert():
+        pass
 
     def get_interface_by_node_id(node_id):
-        pass
+        return RoutingConst.COM_DEFAULT_UP_INTERFACE
     
     def get_interface_by_node_adress(node_adress):
         """node adress is the element index in entry list"""
-        pass
+        return RoutingConst.COM_DEFAULT_UP_INTERFACE
     
 
 

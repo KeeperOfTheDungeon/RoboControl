@@ -6,12 +6,22 @@ class ComStatusCodes:
     CSSC_INVALID_COMMAND = -101
     CSSC_WRONG_HEX_NUMBER = -102
 
+# framework\comSystem\inc\com_channel.h
+class ComChannel:
+
+
+# framework\comSystem\com_system.c
 class ComSystemStatus:
     connectedToMainHub = 0
+
+class ComChannelConfigData:
 
 # framework\comSystem\com_system.c
 # framework\comSystem\inc\com_system.h
 class ComSystem:
-    status = ComSystemStatus
 
-    
+    def __init__(self, list[ChannelConfigData]):
+        self.undeliverablePackets = 0
+        
+        self.status = ComSystemStatus
+        self.com_channels = [None for]

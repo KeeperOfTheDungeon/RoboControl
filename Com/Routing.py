@@ -32,6 +32,6 @@ class RoutingClassLookUp:
     @staticmethod 
     def get_class(t : int):
         try:
-            return map[t]
+            return RoutingClassLookUp.map[t]
         except KeyError:
             raise RuntimeError("routing type does not exist")

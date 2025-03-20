@@ -64,7 +64,6 @@ class RoutingTableDataHub(RoutingTable):
     def insert(self, node_adress, interface_id):
         """node adress is the element index in entry list"""
         if self.routing_entries[node_adress].interface_id != interface_id:
-            self.routing_entries[node_adress] != interface_id
             self.routing_entries[node_adress].node_id = RoutingConst.NODE_ID_INVALID
             self.routing_entries[node_adress].interface_id = interface_id
 

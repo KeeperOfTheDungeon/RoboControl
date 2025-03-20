@@ -3,6 +3,7 @@
 
 # NODEID.h
 # comsystem/routing/inc/com_routing.h
+# board.h
 class RoutingConst:
     INVALID_COM_ADRESS = 0xff
     UNREACHED_COM_ADRESS = 0xfe
@@ -27,14 +28,21 @@ class RoutingConst:
     COM_INTERFACE_COUNT = 2 
     DATA_PACKET_POOL_SIZE = 20
     DATA_PACKET_PAYLOAD_SIZE = 40
+    MAX_DATA_POINTS = 255 # used for RoutingTableNode entry count
 
+    COM_DEFAULT_UP_INTERFACE = 0
 class RoutingEntry:
     def __init__(self, node_id = None, interface_id = None):
         self.node_id : int | None = node_id
         self.interface_id: int | None = interface_id
 
+# framework\comSystem\routing\inc\com_routingNode.h
+class RoutingEntryNode:
+    def __init__(self, adress = None, interface_id = None):
+        self.adress : int | None = adress
+        self.interface_id: int | None = interface_id
+
     
-#comsystem/routing/inc/com_routing.h
 #comsystem/routing/inc/com_routing.h
 class RoutingTable:
     def __init__(self):
@@ -81,16 +89,29 @@ class RoutingTableDataHub(RoutingTable):
 
 #comsystem/routing/inc/com_routing.h
 # framework\comSystem\routing\inc\com_routingNode.h
+# framework\comSystem\routing\com_routingNode.c
 class RoutingTableNode(RoutingTable):
     def __init__(self):
-        super().__init__()
+        self.routing_entries : list[RoutingEntryNode]= [RoutingEntryNode(RoutingConst.INVALID_COM_ADRESS, RoutingConst.INVALID_COM_INTERFACE) for _ in range(RoutingConst.MAX_DATA_POINTS)]
+
 
     def insert(self, node_adress, interface_id):
-        pass
+        if interface_id == RoutingConst.COM_DEFAULT_UP_INTERFACE:
+            return
+        
+        for entry in self.routing_entries:
+            if entry.adress == node_adress:
+                entry.interface_id = interface_id
+                return
+            if entry.adress == RoutingConst.INVALID_COM_ADRESS:
+                entry.adress = node_adress
+                entry.interface_id = interface_id
+                return
+        
     
-    def get_interface_by_node_adress(node_adress):
+    def get_interface_by_node_adress(self, node_adress):
         """node adress is the element index in entry list"""
-        pass
+        return next((entry.interface_id for entry in self.routing_entries if entry.adress == node_adress), RoutingConst.COM_DEFAULT_UP_INTERFACE)
 
 #comsystem/routing/inc/com_routing.h
 #framework\comSystem\routing\inc\com_routingEndpoint.h

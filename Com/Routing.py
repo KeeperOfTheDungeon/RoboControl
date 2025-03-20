@@ -3,7 +3,6 @@
 
 # NODEID.h
 # comsystem/routing/inc/com_routing.h
-
 class RoutingConst:
     INVALID_COM_ADRESS = 0xff
     UNREACHED_COM_ADRESS = 0xfe
@@ -22,54 +21,64 @@ class RoutingConst:
     NODE_TYPE_MOTION_CONTROLLER = 10
     NODE_TYPE_HEAD_SENSORS = 11
     NODE_TYPE_IMU_BOARD = 12
+    
+    # com_config.h TODO: device config pass through that gets used here (e.g. pico 2x uart)
+    MAX_NODES = 50
+    COM_INTERFACE_COUNT = 2 
+    DATA_PACKET_POOL_SIZE = 20
+    DATA_PACKET_PAYLOAD_SIZE = 40
 
 class RoutingEntry:
-    def __init__(self, node_id, interface_id):
-        self.node_id : int = node_id
-        self.interface_id: int = interface_id
+    def __init__(self, node_id = None, interface_id = None):
+        self.node_id : int | None = node_id
+        self.interface_id: int | None = interface_id
 
     
 #comsystem/routing/inc/com_routing.h
 #comsystem/routing/inc/com_routing.h
 class RoutingTable:
     def __init__(self):
-        self.routing_entries : list[RoutingEntry]
+        self.routing_entries : list[RoutingEntry]= [RoutingEntry(RoutingConst.NODE_ID_INVALID, RoutingConst.INVALID_COM_INTERFACE) for _ in range(RoutingConst.MAX_NODES)]
 
     def insert(self):
         raise NotImplementedError()
     
     def get_interface_by_node_adress(node_adress):
         raise NotImplementedError()
-#has node limit 
-#comsystem/routing/inc/com_routing.h
-#framework\comSystem\routing\inc\com_routingDataHub.h
+    
+# comsystem/routing/inc/com_routing.h
+# framework\comSystem\routing\inc\com_routingDataHub.h
+# framework\comSystem\routing\com_routingDataHub.c
 class RoutingTableDataHub(RoutingTable):
     def __init__(self):
         super().__init__()
 
     def insert(self, node_adress, interface_id):
         """node adress is the element index in entry list"""
-        pass
+        if self.routing_entries[node_adress].interface_id != interface_id:
+            self.routing_entries[node_adress] != interface_id
+            self.routing_entries[node_adress].node_id = RoutingConst.NODE_ID_INVALID
+            self.routing_entries[node_adress].interface_id = interface_id
 
-    def get_interface_by_node_adress(node_adress):
+
+    def get_interface_by_node_adress(self, node_adress):
         """node adress is the element index in entry list"""
-        pass
+        return self.routing_entries[node_adress].interface_id
 
-    def get_interface_by_node_id(node_id):
-        pass
+    def get_interface_by_node_id(self, node_id):
+        return next((entry.interface_id for entry in self.routing_entries if entry.node_id == node_id), -1)
 
-    def get_node_id(node_adress):
+    def get_node_id(self, node_adress):
         """node adress is the element index in entry list"""
-        pass
+        return self.routing_entries[node_adress].node_id
     
-    def get_interface_id(node_adress):
+    def get_interface_id(self, node_adress):
         """node adress is the element index in entry list"""
-        pass
+        self.routing_entries[node_adress].interface_id
 
-    def set_node_at_id(node_adres, node_id):
-        pass
+    def set_node_at_adress(self, node_adress, new_node_id):
+        self.routing_entries[node_adress].node_id = new_node_id
 
-# has node limit
 #comsystem/routing/inc/com_routing.h
 # framework\comSystem\routing\inc\com_routingNode.h
 class RoutingTableNode(RoutingTable):

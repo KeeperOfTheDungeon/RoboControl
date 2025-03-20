@@ -1,9 +1,27 @@
-#comsystem/routing/inc/com_routing.h
-class RoutingMsgTypes:
-    INVALID_COM_ADRESS = "0xff"
-    UNREACHED_COM_ADRESS = "0xfe"
-    INVALID_COM_INTERFACE = "0xff"
 
+
+
+# NODEID.h
+# comsystem/routing/inc/com_routing.h
+
+class RoutingConst:
+    INVALID_COM_ADRESS = 0xff
+    UNREACHED_COM_ADRESS = 0xfe
+    INVALID_COM_INTERFACE = 0xff
+
+    NODE_ID_INVALID = 0xff
+    
+    NODE_ADRESS_DATA_HUB = 0
+    NODE_ADRESS_MOTION_CONTROLLER = 10
+    NODE_ADRESS_HEAD_CAMERA = 7
+    NODE_ADDRESS_HEAD_SENSORS = 11
+    NODE_ADDRESS_IMU_BOARD = 12
+
+    NODE_TYPE_DATA_HUB = 0
+    NODE_TYPE_HEAD_CAMERA = 7
+    NODE_TYPE_MOTION_CONTROLLER = 10
+    NODE_TYPE_HEAD_SENSORS = 11
+    NODE_TYPE_IMU_BOARD = 12
 
 class RoutingEntry:
     def __init__(self, node_id, interface_id):

@@ -47,9 +47,17 @@ class RoutingTableDataHub(RoutingTable):
 
 # has node limit
 #comsystem/routing/inc/com_routing.h
+# framework\comSystem\routing\inc\com_routingNode.h
 class RoutingTableNode(RoutingTable):
     def __init__(self):
         super().__init__()
+
+    def insert(self, node_adress, interface_id):
+        pass
+    
+    def get_interface_by_node_adress(node_adress):
+        """node adress is the element index in entry list"""
+        pass
 
 #comsystem/routing/inc/com_routing.h
 class RoutingTableEndpoint(RoutingTable):

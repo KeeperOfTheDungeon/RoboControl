@@ -31,6 +31,7 @@ class RoutingClassLookUp:
     
     @staticmethod 
     def get_class(t : int):
+        """returns routing class based on RoutingType"""
         try:
             return RoutingClassLookUp.map[t]
         except KeyError:

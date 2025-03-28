@@ -33,7 +33,10 @@ class RemoteParameter:
 
     def get_value(self) -> object:
         return self._value
-
+    def __repr__(self):
+        return f"{type(self).__name__}::{self._name} : {self._description} : {self._byte_size} : {self._value}"
+    def __str__(self):
+        return f"{type(self).__name__}::{self._name} : {self._description} : {self._byte_size} : {self._value}"
 
 class RemoteParameterInt(RemoteParameter):
     _value: int
